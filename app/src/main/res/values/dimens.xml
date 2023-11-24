@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="medium_padding">8dp</dimen>
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="settings_activity_text_size">16sp</dimen>
+    <dimen name="setting_frame_layout_padding_top">19dp</dimen>
+    <dimen name="setting_frame_layout_padding_bottom">18dp</dimen>
+    <dimen name="setting_frame_layout_padding_start">16dp</dimen>
+    <dimen name="setting_frame_layout_padding_end">12dp</dimen>
+</resources>

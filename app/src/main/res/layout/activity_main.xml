@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/yp_blue"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="52dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="62dp"
+            android:paddingBottom="12dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/find_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:paddingHorizontal="16dp"
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/button_find_text"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/find_icon"
+        app:iconGravity="textStart"
+        app:iconTint="@color/black">
+    </Button>
+
+    <Button
+        android:id="@+id/media_library_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:paddingHorizontal="16dp"
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/media_library"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/playlist_icon"
+        app:iconGravity="textStart"
+        app:iconTint="@color/black">
+    </Button>
+
+    <Button
+        android:id="@+id/settings_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="28dp"
+        android:paddingHorizontal="16dp"
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/settings"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:textSize="@dimen/text_size"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/settings_icon"
+        app:iconGravity="textStart"
+        app:iconTint="@color/black">
+    </Button>
+
+
+
+</LinearLayout>
