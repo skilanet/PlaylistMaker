@@ -7,4 +7,10 @@
     <dimen name="setting_frame_layout_padding_bottom">18dp</dimen>
     <dimen name="setting_frame_layout_padding_start">16dp</dimen>
     <dimen name="setting_frame_layout_padding_end">12dp</dimen>
+    <dimen name="main_button_hor_margin">16dp</dimen>
+    <dimen name="main_button_vertical_margin">8dp</dimen>
+    <dimen name="main_button_horizontal_padding">16dp</dimen>
+    <dimen name="main_button_radius">16dp</dimen>
+    <dimen name="settings_image_margin_start">4dp</dimen>
+    <dimen name="setting_text_margin_end">4dp</dimen>
 </resources>
