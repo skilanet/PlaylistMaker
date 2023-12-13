@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="main_button_style" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
+    <style name="settings_frame_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/setting_frame_layout_padding_start</item>
+        <item name="android:paddingTop">@dimen/setting_frame_layout_padding_top</item>
+        <item name="android:paddingEnd">@dimen/setting_frame_layout_padding_end</item>
+        <item name="android:paddingBottom">@dimen/setting_frame_layout_padding_bottom</item>
+    </style>
+
+    <style name="settings_frame_image_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginStart">@dimen/settings_frame_margin</item>
+    </style>
+
+    <style name="setting_textview_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginEnd">@dimen/settings_frame_margin</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/settings_activity_text_size </item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+</resources>
