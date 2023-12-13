@@ -45,6 +45,7 @@
         style="@style/settings_frame_style">
 
         <ImageView
+            android:id="@+id/image_share_app"
             style="@style/settings_frame_image_style"
             android:src="@drawable/share"
             android:importantForAccessibility="no" />
@@ -59,6 +60,7 @@
         style="@style/settings_frame_style">
 
         <ImageView
+            android:id="@+id/image_write_to_support"
             style="@style/settings_frame_image_style"
             android:importantForAccessibility="no"
             android:src="@drawable/support" />
@@ -73,6 +75,7 @@
         style="@style/settings_frame_style">
 
         <ImageView
+            android:id="@+id/image_user_agreement"
             style="@style/settings_frame_image_style"
             android:importantForAccessibility="no"
             android:src="@drawable/user_agreement" />
