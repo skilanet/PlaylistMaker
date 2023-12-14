@@ -12,4 +12,6 @@
     <string name="settings_email_title">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="settings_email_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="settings_user_agreement_url">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="toolbar_find_title">Поиск</string>
+    <string name="hint_find">Поиск</string>
 </resources>
