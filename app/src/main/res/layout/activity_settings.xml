@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Toolbar
+        android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="52dp"
+        android:navigationIcon="@drawable/button_back"
+        android:title="@string/settings" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="11dp"
+            android:paddingStart="9dp"
+            android:paddingEnd="12dp"
+            android:paddingVertical="11dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="21dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/switch_thieme_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_activity_text_size" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/setting_frame_layout_padding_start"
+        android:paddingTop="@dimen/setting_frame_layout_padding_top"
+        android:paddingEnd="@dimen/setting_frame_layout_padding_end"
+        android:paddingBottom="@dimen/setting_frame_layout_padding_bottom">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/settings_image_margin_start"
+            android:importantForAccessibility="no"
+            android:src="@drawable/share" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/share_app_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_activity_text_size" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/setting_frame_layout_padding_start"
+        android:paddingTop="@dimen/setting_frame_layout_padding_top"
+        android:paddingEnd="@dimen/setting_frame_layout_padding_end"
+        android:paddingBottom="@dimen/setting_frame_layout_padding_bottom">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/settings_image_margin_start"
+            android:importantForAccessibility="no"
+            android:src="@drawable/support" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/write_to_support_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_activity_text_size" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/setting_frame_layout_padding_start"
+        android:paddingTop="@dimen/setting_frame_layout_padding_top"
+        android:paddingEnd="@dimen/setting_frame_layout_padding_end"
+        android:paddingBottom="@dimen/setting_frame_layout_padding_bottom">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/settings_image_margin_start"
+            android:importantForAccessibility="no"
+            android:src="@drawable/user_agreement" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/user_agreement_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settings_activity_text_size" />
+
+    </FrameLayout>
+
+
+</LinearLayout>
