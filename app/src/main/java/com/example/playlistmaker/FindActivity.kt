@@ -14,9 +14,10 @@ class FindActivity : AppCompatActivity() {
     private var gettedString: String = DEFAULT
     private lateinit var binding: ActivityFindBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityFindBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        binding = ActivityFindBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         binding.findToolbar.setNavigationOnClickListener {
             finish()
