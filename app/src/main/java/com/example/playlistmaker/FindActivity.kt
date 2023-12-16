@@ -1,11 +1,60 @@
 package com.example.playlistmaker
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
+import com.example.playlistmaker.databinding.ActivityFindBinding
 
 class FindActivity : AppCompatActivity() {
+
+
+    private var gettedString: String = DEFAULT
+    private lateinit var binding: ActivityFindBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_find)
+        binding = ActivityFindBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        binding.findToolbar.setNavigationOnClickListener {
+            finish()
+        }
+
+        binding.ivClear.setOnClickListener {
+            binding.etFindText.setText("")
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        }
+
+        binding.etFindText.doOnTextChanged { text, start, before, count ->
+            gettedString = text.toString()
+            binding.ivClear.visibility = setButtonVisibility(text)
+        }
+    }
+
+    private fun setButtonVisibility(s: CharSequence?): Int {
+        return if (s.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY, gettedString)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        gettedString = savedInstanceState.getString(KEY, DEFAULT)
+    }
+
+    companion object {
+        const val KEY = "ADD KEY"
+        const val DEFAULT = "DEFAULT"
     }
 }
