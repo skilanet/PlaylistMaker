@@ -1,12 +1,15 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 
 class FindActivity : AppCompatActivity() {
@@ -21,9 +24,16 @@ class FindActivity : AppCompatActivity() {
 
         val inputText = findViewById<EditText>(R.id.find_input_text)
         val clearText = findViewById<ImageView>(R.id.clear_button)
+        val backButton = findViewById<Toolbar>(R.id.find_toolbar)
+
+        backButton.setNavigationOnClickListener {
+            finish()
+        }
 
         clearText.setOnClickListener {
             inputText.setText("")
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
 
         val textWatcher = object : TextWatcher {
