@@ -1,28 +1,23 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
+    private lateinit var binding: ActivitySettingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        val settingsToolbar = findViewById<Toolbar>(R.id.settings_toolbar)
-        settingsToolbar.setNavigationOnClickListener {
+        setContentView(binding.root)
+
+        binding.settingsToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        val shareApp = findViewById<ImageView>(R.id.image_share_app)
-        val writeToSupport = findViewById<ImageView>(R.id.image_write_to_support)
-        val userAgreement = findViewById<ImageView>(R.id.image_user_agreement)
-
-        shareApp.setOnClickListener {
+        binding.ivShareApp.setOnClickListener {
             val message = getString(R.string.settings_share_message)
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, message)
@@ -30,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        writeToSupport.setOnClickListener {
+        binding.ivWriteToSupport.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
             intent.data = Uri.parse("mailto:")
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.setting_email_addres)))
@@ -39,7 +34,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        userAgreement.setOnClickListener {
+        binding.ivUserAgreement.setOnClickListener {
             val url = Uri.parse(getString(R.string.settings_user_agreement_url))
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)

@@ -1,60 +1,40 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
+import com.example.playlistmaker.databinding.ActivityFindBinding
 
 class FindActivity : AppCompatActivity() {
 
 
     private var gettedString: String = DEFAULT
-
-    @SuppressLint("MissingInflatedId")
+    private lateinit var binding: ActivityFindBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityFindBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_find)
+        setContentView(binding.root)
 
-        val inputText = findViewById<EditText>(R.id.find_input_text)
-        val clearText = findViewById<ImageView>(R.id.clear_button)
-        val backButton = findViewById<Toolbar>(R.id.find_toolbar)
-
-        backButton.setNavigationOnClickListener {
+        binding.findToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        clearText.setOnClickListener {
-            inputText.setText("")
+        binding.ivClear.setOnClickListener {
+            binding.etFindText.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
 
-        val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//                TODO("Not yet implemented")
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                gettedString = s.toString()
-                clearText.visibility = clearButtonVisibility(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-//                TODO("Not yet implemented")
-            }
-
+        binding.etFindText.doOnTextChanged { text, start, before, count ->
+            gettedString = text.toString()
+            binding.ivClear.visibility = setButtonVisibility(text)
         }
-        inputText.addTextChangedListener(textWatcher)
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
+    private fun setButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
             View.GONE
         } else {

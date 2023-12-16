@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/find_layout"
+    android:id="@+id/activity_find"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -18,7 +18,7 @@
 
         <EditText
             style="@style/find_text_style"
-            android:id="@+id/find_input_text"
+            android:id="@+id/et_find_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -34,7 +34,7 @@
             android:importantForAutofill="no" />
 
         <ImageView
-            android:id="@+id/clear_button"
+            android:id="@+id/iv_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
