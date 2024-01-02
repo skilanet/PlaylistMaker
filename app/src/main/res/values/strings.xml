@@ -14,4 +14,7 @@
     <string name="settings_user_agreement_url">https://yandex.ru/legal/practicum_offer/</string>
     <string name="toolbar_find_title">Поиск</string>
     <string name="hint_find">Поиск</string>
+    <string name="track_name_plug">Track name plug</string>
+    <string name="info_plug">info_plug</string>
+    <string name="track_time_plug">track_time_plug</string>
 </resources>
