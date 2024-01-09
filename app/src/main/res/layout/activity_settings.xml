@@ -75,7 +75,7 @@
             android:id="@+id/iv_user_agreement"
             style="@style/settings_frame_image_style"
             android:importantForAccessibility="no"
-            android:src="@drawable/user_agreement" />
+            android:src="@drawable/arrow_right" />
 
         <TextView
             style="@style/setting_textview_style"
