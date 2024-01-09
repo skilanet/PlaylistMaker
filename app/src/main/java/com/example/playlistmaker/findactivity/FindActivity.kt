@@ -9,7 +9,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivityFindBinding
 
-val RECYCLER_TEST_TAG: String = "RECYCLER_TEST_TAG"
 class FindActivity : AppCompatActivity() {
 
     private var gettedString: String = DEFAULT
