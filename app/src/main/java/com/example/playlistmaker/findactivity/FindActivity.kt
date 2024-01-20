@@ -69,7 +69,6 @@ class FindActivity : AppCompatActivity() {
                             override fun onResponse(
                                 call: Call<SongResponse>, response: Response<SongResponse>
                             ) {
-                                Log.d(LOG_TAG, "Request complete with code: ${response.code()}")
                                 if (response.code() == 200) {
                                     tracks.clear()
                                     if (response.body()?.results?.isNotEmpty() == true) {
