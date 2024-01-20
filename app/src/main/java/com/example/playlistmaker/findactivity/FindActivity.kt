@@ -31,6 +31,7 @@ class FindActivity : AppCompatActivity() {
     private val LOG_TAG = "REQUEST LOG"
 
     private lateinit var binding: ActivityFindBinding
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFindBinding.inflate(layoutInflater)
@@ -108,6 +109,8 @@ class FindActivity : AppCompatActivity() {
             etFindText.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            tracks.clear()
+            adapter.notifyDataSetChanged()
         }
     }
 
