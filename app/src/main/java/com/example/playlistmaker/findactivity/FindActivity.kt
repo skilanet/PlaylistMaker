@@ -28,8 +28,6 @@ class FindActivity : AppCompatActivity() {
     private val tracks = ArrayList<SongDescription>()
     private val adapter = TrackAdapter()
 
-    private val LOG_TAG = "REQUEST LOG"
-
     private lateinit var binding: ActivityFindBinding
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
