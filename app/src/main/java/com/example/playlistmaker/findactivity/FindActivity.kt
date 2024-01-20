@@ -62,9 +62,7 @@ class FindActivity : AppCompatActivity() {
 
         etFindText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                Log.d(LOG_TAG, "Button was pressed")
                 if (etFindText.text.isNotEmpty()) {
-                    Log.d(LOG_TAG, "Text is not null (${etFindText.text})")
                     trackService.search(etFindText.text.toString())
                         .enqueue(object : Callback<SongResponse> {
                             @SuppressLint("NotifyDataSetChanged")
@@ -76,7 +74,6 @@ class FindActivity : AppCompatActivity() {
                                     tracks.clear()
                                     if (response.body()?.results?.isNotEmpty() == true) {
                                         tracks.addAll(response.body()?.results!!)
-                                        Log.d(LOG_TAG, tracks.toString())
                                         adapter.notifyDataSetChanged()
                                     }
                                     if (tracks.isEmpty()) {
