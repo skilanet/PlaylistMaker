@@ -22,16 +22,10 @@ class TrackViewHolder(binding: TrackBaseBinding) : RecyclerView.ViewHolder(bindi
 
     fun bind(model: SongDescription) {
         Glide.with(itemView).load(model.artworkUrl100).fitCenter()
-            .placeholder(R.drawable.find_image_plug)
+            .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(Utils.pxtodp(2f, itemView.context))).into(image)
-        if (model.trackName.length >= 33){
-            val newStr = model.trackName.substring(0, 33) + "..."
-            trackName.text = newStr
-        } else trackName.text = model.trackName
-        if (model.artistName.length >= 33){
-            val newStr = model.artistName.substring(0, 33) + "..."
-            trackAuthor.text = newStr
-        } else trackAuthor.text = model.artistName
+        trackName.text = model.trackName
+        trackAuthor.text = model.artistName
         trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(293000L)
         arrowRight.setOnClickListener {
             Toast.makeText(

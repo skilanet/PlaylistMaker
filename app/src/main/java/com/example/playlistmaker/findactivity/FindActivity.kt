@@ -3,13 +3,11 @@ package com.example.playlistmaker.findactivity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import retrofit2.Call
@@ -27,6 +25,7 @@ class FindActivity : AppCompatActivity() {
     private val trackService = retrofit.create(SongApi::class.java)
     private val tracks = ArrayList<SongDescription>()
     private val adapter = TrackAdapter()
+    private lateinit var gettedString: String
 
     private lateinit var binding: ActivityFindBinding
     @SuppressLint("NotifyDataSetChanged")
@@ -45,59 +44,70 @@ class FindActivity : AppCompatActivity() {
         adapter.tracks = tracks
         recycler.layoutManager = LinearLayoutManager(this)
 
+        fun changeVisibility(code: Int) {
+            when (code) {
+                0 -> {
+                    recycler.visibility = View.VISIBLE
+                    binding.llNothingNotFound.visibility = View.GONE
+                    binding.llNoInternetConnection.visibility = View.GONE
+                }
+
+                1 -> {
+                    recycler.visibility = View.GONE
+                    binding.llNothingNotFound.visibility = View.VISIBLE
+                }
+
+                2 -> {
+                    recycler.visibility = View.GONE
+                    binding.llNoInternetConnection.visibility = View.VISIBLE
+                }
+            }
+        }
+
         findToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                ivClear.visibility = setButtonVisibility(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-
+        etFindText.doOnTextChanged { text, _, _, _ ->
+            ivClear.visibility = setButtonVisibility(text)
         }
+
+        fun sendRequest(trackName: String) = trackService.search(trackName)
+            .enqueue(object : Callback<SongResponse> {
+                override fun onResponse(
+                    call: Call<SongResponse>, response: Response<SongResponse>
+                ) {
+                    if (response.code() == 200) {
+                        tracks.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            tracks.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                        } else {
+                            changeVisibility(1)
+
+                        }
+                    } else {
+                        changeVisibility(2)
+                        gettedString = trackName
+                    }
+                }
+
+                override fun onFailure(call: Call<SongResponse>, t: Throwable) {
+                    changeVisibility(2)
+                    gettedString = trackName
+                }
+
+            })
 
         etFindText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (etFindText.text.isNotEmpty()) {
-                    trackService.search(etFindText.text.toString())
-                        .enqueue(object : Callback<SongResponse> {
-                            @SuppressLint("NotifyDataSetChanged")
-                            override fun onResponse(
-                                call: Call<SongResponse>, response: Response<SongResponse>
-                            ) {
-                                if (response.code() == 200) {
-                                    tracks.clear()
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        tracks.addAll(response.body()?.results!!)
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                    if (tracks.isEmpty()) {
-                                        recycler.visibility = View.GONE
-                                        binding.llNothingNotFound.visibility = View.VISIBLE
-
-                                    }
-                                } else {
-                                    recycler.visibility = View.GONE
-                                    binding.llNoInternetConnection.visibility = View.VISIBLE
-                                }
-                            }
-
-                            override fun onFailure(call: Call<SongResponse>, t: Throwable) {
-                                recycler.visibility = View.GONE
-                                binding.llNoInternetConnection.visibility = View.VISIBLE
-                            }
-
-                        })
+                    changeVisibility(0)
+                    sendRequest(etFindText.text.toString())
                 }
             }
             false
         }
-
-        etFindText.addTextChangedListener(textWatcher)
 
         ivClear.setOnClickListener {
             etFindText.setText("")
@@ -105,6 +115,12 @@ class FindActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             tracks.clear()
             adapter.notifyDataSetChanged()
+            changeVisibility(0)
+        }
+
+        binding.btnUpdate.setOnClickListener {
+            changeVisibility(0)
+            sendRequest(gettedString)
         }
     }
 
@@ -114,5 +130,20 @@ class FindActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY, gettedString)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        gettedString = savedInstanceState.getString(KEY, DEFAULT)
+    }
+
+    companion object {
+        const val KEY = "ADD_KEY"
+        const val DEFAULT = "DEFAULT"
     }
 }

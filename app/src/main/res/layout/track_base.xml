@@ -16,29 +16,33 @@
             android:layout_marginVertical="8dp"
             android:layout_marginStart="13dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/find_image_plug" />
+            android:src="@drawable/placeholder" />
 
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="44dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_track_name"
                 style="@style/find_track_title_color"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:fontFamily="@font/ys_display_regular"
+                android:ellipsize="end"
                 android:textSize="@dimen/text_size_16sp"
+                android:maxLines="1"
                 tools:text="@string/track_name_plug" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
+                android:layout_marginEnd="119dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -46,13 +50,16 @@
                     style="@style/find_track_info_text_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:maxEms="9"
                     android:fontFamily="@font/ys_display_regular"
                     android:textSize="11sp"
                     tools:text="@string/info_plug" />
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:importantForAccessibility="no"
                     android:src="@drawable/dot" />
 
@@ -62,6 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ys_display_regular"
+                    android:maxLines="1"
                     android:textSize="11sp"
                     tools:text="@string/track_time_plug" />
             </LinearLayout>
