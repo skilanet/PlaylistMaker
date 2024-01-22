@@ -18,6 +18,7 @@
         android:layout_marginTop="24dp">
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sc_switch_light_night_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
