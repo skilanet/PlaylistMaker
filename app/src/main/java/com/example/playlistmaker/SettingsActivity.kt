@@ -6,13 +6,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
+
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+
+    private val sharedPreferences by lazy {
+        getSharedPreferences(SHARED_PREFERENCE_NAME, MODE_PRIVATE)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        binding.scSwitchLightNightMode.isChecked = sharedPreferences.getBoolean(THIEME_SWITCH_KEY, false)
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
@@ -39,6 +46,11 @@ class SettingsActivity : AppCompatActivity() {
             val url = Uri.parse(getString(R.string.settings_user_agreement_url))
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
+        }
+
+        binding.scSwitchLightNightMode.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchThieme(checked)
+            sharedPreferences.edit().putBoolean(THIEME_SWITCH_KEY, checked).apply()
         }
 
     }

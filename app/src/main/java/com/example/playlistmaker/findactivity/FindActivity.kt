@@ -40,6 +40,8 @@ class FindActivity : AppCompatActivity() {
         val ivClear = binding.ivClear
         val etFindText = binding.etFindText
 
+        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
+
         recycler.adapter = adapter
         adapter.tracks = tracks
         recycler.layoutManager = LinearLayoutManager(this)
@@ -69,6 +71,7 @@ class FindActivity : AppCompatActivity() {
         }
 
         etFindText.doOnTextChanged { text, _, _, _ ->
+            gettedString = text.toString()
             ivClear.visibility = setButtonVisibility(text)
         }
 
