@@ -2,9 +2,8 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-
-const val THIEME_SWITCH_KEY = "THIEME_SWITCH_KEY"
-const val SHARED_PREFERENCE_NAME = "THIEME_SWITCH_SHARED_PREFERENCE"
+import com.example.playlistmaker.objects.Const.SHARED_PREFERENCE_NAME
+import com.example.playlistmaker.objects.Const.THIEME_SWITCH_KEY
 
 class App : Application() {
 
