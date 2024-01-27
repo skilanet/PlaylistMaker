@@ -57,6 +57,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         val etFindText = binding.etFindText
         val rvHistoryOfSearch = binding.rvHistoryOfSearch
 
+        binding.rvFindShowTrack.visibility = View.GONE
+        binding.llNothingNotFound.visibility = View.GONE
+        binding.llNoInternetConnection.visibility = View.GONE
+        binding.llHistoryOfSearch.visibility = View.GONE
+
         findToolbar.setNavigationOnClickListener {
             finish()
         }
@@ -103,18 +108,33 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
             })
 
-        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
+//        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
 
         etFindText.doOnTextChanged { text, _, _, _ ->
             gettedString = text.toString()
             ivClear.visibility = setButtonVisibility(text)
-            binding.llHistoryOfSearch.visibility =
-                if (etFindText.hasFocus() && text?.isEmpty() == true) View.VISIBLE else View.GONE
+            if (etFindText.hasFocus() && text?.isEmpty() == true){
+                if (history.isEmpty()){
+                    binding.llHistoryOfSearch.visibility = View.GONE
+                } else{
+                    binding.llHistoryOfSearch.visibility = View.VISIBLE
+                }
+                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 3)
+            } else
+                binding.llHistoryOfSearch.visibility = View.GONE
+
         }
 
         etFindText.setOnFocusChangeListener { _, hasFocus ->
-            binding.llHistoryOfSearch.visibility =
-                if (hasFocus && etFindText.text.isEmpty()) View.VISIBLE else View.GONE
+            if (hasFocus && etFindText.text.isEmpty()){
+                if (history.isEmpty()){
+                    binding.llHistoryOfSearch.visibility = View.GONE
+                } else{
+                    binding.llHistoryOfSearch.visibility = View.VISIBLE
+                }
+                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 3)
+            } else
+                binding.llHistoryOfSearch.visibility = View.GONE
         }
 
         etFindText.setOnEditorActionListener { _, actionId, _ ->
@@ -173,6 +193,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             val size = history.size
             history.clear()
             historyAdapter.notifyItemRangeRemoved(0, size)
+            binding.llHistoryOfSearch.visibility = View.GONE
         }
     }
 
