@@ -188,7 +188,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
         binding.btnClearSearchHistory.setOnClickListener {
             sharedPrefs.edit()
-                .putString(ADD_HISTORY_LIST, "")
+                .clear()
                 .apply()
             val size = history.size
             history.clear()
@@ -260,7 +260,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
     override fun onItemClick(position: Int) {
         val sound = adapter.tracks[position]
         if (historyAdapter.tracks.size > 9){
-            historyAdapter.tracks.removeAt(8)
+            historyAdapter.tracks.removeAt(9)
             if (historyAdapter.tracks.contains(sound)) {
                 historyAdapter.tracks.remove(sound)
                 historyAdapter.tracks.add(0, sound)
