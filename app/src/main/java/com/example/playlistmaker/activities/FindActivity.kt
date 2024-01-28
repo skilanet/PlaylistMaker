@@ -57,10 +57,19 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         val etFindText = binding.etFindText
         val rvHistoryOfSearch = binding.rvHistoryOfSearch
 
+        rvFindShowTrack.adapter = adapter
+        adapter.tracks = tracks
+        rvFindShowTrack.layoutManager = LinearLayoutManager(this)
+
+        rvHistoryOfSearch.adapter = historyAdapter
+        history.addAll(createListFromJson(sharedPrefs.getString(ADD_HISTORY_LIST, "")!!).history)
+        historyAdapter.tracks = history
+        rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
+
         binding.rvFindShowTrack.visibility = View.GONE
         binding.llNothingNotFound.visibility = View.GONE
         binding.llNoInternetConnection.visibility = View.GONE
-        binding.llHistoryOfSearch.visibility = View.GONE
+        binding.llHistoryOfSearch.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
 
         findToolbar.setNavigationOnClickListener {
             finish()
@@ -151,15 +160,6 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             }
             false
         }
-
-        rvFindShowTrack.adapter = adapter
-        adapter.tracks = tracks
-        rvFindShowTrack.layoutManager = LinearLayoutManager(this)
-
-        rvHistoryOfSearch.adapter = historyAdapter
-        history.addAll(createListFromJson(sharedPrefs.getString(ADD_HISTORY_LIST, "")!!).history)
-        historyAdapter.tracks = history
-        rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
 
         ivClear.setOnClickListener {
             etFindText.setText("")
@@ -255,7 +255,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         Gson().toJson(historyOfSearch)
 
     private fun createListFromJson(json: String): HistoryOfSearch =
-        if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java) else HistoryOfSearch(ArrayList<SongDescription>())
+        if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java) else HistoryOfSearch(ArrayList())
 
     override fun onItemClick(position: Int) {
         val sound = adapter.tracks[position]
