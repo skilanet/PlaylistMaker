@@ -1,7 +1,6 @@
 package com.example.playlistmaker.activities
 
 import android.content.Context
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -36,9 +35,9 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             .build()
     private val trackService = retrofit.create(SongApi::class.java)
     private val tracks = ArrayList<SongDescription>()
-    private val adapter = SongsAdapter(this)
+    private val adapter = SongsAdapter(this, false)
     private val history = ArrayList<SongDescription>()
-    private val historyAdapter = SongsAdapter(this)
+    private val historyAdapter = SongsAdapter(this, true)
     private lateinit var gettedString: String
     private lateinit var binding: ActivityFindBinding
     private val sharedPrefs by lazy {
@@ -117,7 +116,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
             })
 
-//        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
+        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
 
         etFindText.doOnTextChanged { text, _, _, _ ->
             gettedString = text.toString()
@@ -171,20 +170,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             adapter.notifyItemRangeRemoved(0, tracksSize)
             changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 3)
         }
+
         binding.btnUpdate.setOnClickListener {
             changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 0)
             sendRequest(gettedString)
         }
-
-        val listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key === ADD_HISTORY_LIST) {
-                val history = sharedPreferences?.getString(ADD_HISTORY_LIST, null)
-                if (history != null) {
-                    historyAdapter.notifyItemRangeChanged(0, history.length)
-                }
-            }
-        }
-        sharedPrefs.registerOnSharedPreferenceChangeListener(listener)
 
         binding.btnClearSearchHistory.setOnClickListener {
             sharedPrefs.edit()
@@ -195,6 +185,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             historyAdapter.notifyItemRangeRemoved(0, size)
             binding.llHistoryOfSearch.visibility = View.GONE
         }
+
     }
 
     private fun setButtonVisibility(s: CharSequence?): Int {
@@ -257,7 +248,10 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
     private fun createListFromJson(json: String): HistoryOfSearch =
         if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java) else HistoryOfSearch(ArrayList())
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, isSearch: Boolean) {
+        if (isSearch) {
+            return
+        }
         val sound = adapter.tracks[position]
         if (historyAdapter.tracks.size > 9){
             historyAdapter.tracks.removeAt(9)
@@ -275,6 +269,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 historyAdapter.tracks.add(0, sound)
             }
         }
+        historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
         sharedPrefs.edit()
             .putString(ADD_HISTORY_LIST, createJsonFromList(HistoryOfSearch(historyAdapter.tracks)))
             .apply()

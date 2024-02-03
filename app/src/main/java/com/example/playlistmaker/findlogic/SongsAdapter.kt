@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackBaseBinding
 
-class SongsAdapter(private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<SongsViewHolder>() {
+class SongsAdapter(private val onItemClickListener: OnItemClickListener, private val isSearch: Boolean) : RecyclerView.Adapter<SongsViewHolder>() {
 
     var tracks = ArrayList<SongDescription>()
 
@@ -15,7 +15,7 @@ class SongsAdapter(private val onItemClickListener: OnItemClickListener) : Recyc
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ), onItemClickListener
+            ), onItemClickListener, isSearch
         )
 
     override fun getItemCount(): Int = tracks.size

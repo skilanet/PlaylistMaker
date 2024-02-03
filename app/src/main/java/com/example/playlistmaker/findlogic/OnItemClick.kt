@@ -1,5 +1,5 @@
 package com.example.playlistmaker.findlogic
 
 interface OnItemClickListener{
-    fun onItemClick(position: Int)
+    fun onItemClick(position: Int, isSearch: Boolean)
 }

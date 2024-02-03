@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class SongsViewHolder(private val binding: TrackBaseBinding, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(
+class SongsViewHolder(private val binding: TrackBaseBinding, private val onItemClickListener: OnItemClickListener, private val isSearch: Boolean) : RecyclerView.ViewHolder(
     binding.root
 ), View.OnClickListener{
     private val image: ImageView = binding.ivFindTrackImage
@@ -32,6 +32,6 @@ class SongsViewHolder(private val binding: TrackBaseBinding, private val onItemC
     }
 
     override fun onClick(v: View?) {
-        onItemClickListener.onItemClick(adapterPosition)
+        onItemClickListener.onItemClick(adapterPosition, isSearch)
     }
 }
