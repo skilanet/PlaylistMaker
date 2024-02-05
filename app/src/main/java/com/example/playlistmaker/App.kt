@@ -2,21 +2,20 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.objects.Const.SHARED_PREFERENCE_NAME
-import com.example.playlistmaker.objects.Const.THIEME_SWITCH_KEY
+import com.example.playlistmaker.objects.consts.SharedPreference
 
 class App : Application() {
 
     private var darkThieme = false
 
     private val sharedPrefs by lazy {
-        getSharedPreferences(SHARED_PREFERENCE_NAME, MODE_PRIVATE)
+        getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
     }
     override fun onCreate() {
         super.onCreate()
-        darkThieme = sharedPrefs.getBoolean(THIEME_SWITCH_KEY, false)
+        darkThieme = sharedPrefs.getBoolean(SharedPreference.THIEME_SWITCH_KEY, false)
         sharedPrefs.edit()
-            .putBoolean(THIEME_SWITCH_KEY, darkThieme)
+            .putBoolean(SharedPreference.THIEME_SWITCH_KEY, darkThieme)
             .apply()
         switchThieme(darkThieme)
     }

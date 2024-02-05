@@ -18,8 +18,8 @@ import com.example.playlistmaker.findlogic.SongApi
 import com.example.playlistmaker.findlogic.SongDescription
 import com.example.playlistmaker.findlogic.SongResponse
 import com.example.playlistmaker.findlogic.SongsAdapter
-import com.example.playlistmaker.objects.Const.ADD_HISTORY_LIST
-import com.example.playlistmaker.objects.Const.SHARED_PREFERENCE_NAME
+import com.example.playlistmaker.objects.consts.Code
+import com.example.playlistmaker.objects.consts.SharedPreference
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,13 +35,13 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             .build()
     private val trackService = retrofit.create(SongApi::class.java)
     private val tracks = ArrayList<SongDescription>()
-    private val adapter = SongsAdapter(this, false)
+    private val adapter = SongsAdapter(this, true)
     private val history = ArrayList<SongDescription>()
-    private val historyAdapter = SongsAdapter(this, true)
+    private val historyAdapter = SongsAdapter(this, false)
     private lateinit var gettedString: String
     private lateinit var binding: ActivityFindBinding
     private val sharedPrefs by lazy {
-        getSharedPreferences(SHARED_PREFERENCE_NAME, MODE_PRIVATE)
+        getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,13 +61,16 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         rvFindShowTrack.layoutManager = LinearLayoutManager(this)
 
         rvHistoryOfSearch.adapter = historyAdapter
-        history.addAll(createListFromJson(sharedPrefs.getString(ADD_HISTORY_LIST, "")!!).history)
+        history.addAll(createListFromJson(sharedPrefs.getString(SharedPreference.ADD_HISTORY_LIST, "")!!).history)
         historyAdapter.tracks = history
         rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
 
-        binding.rvFindShowTrack.visibility = View.GONE
-        binding.llNothingNotFound.visibility = View.GONE
-        binding.llNoInternetConnection.visibility = View.GONE
+        changeVisibility(
+            rvFindShowTrack,
+            binding.llNothingNotFound,
+            binding.llNoInternetConnection,
+            Code.HIDE_ALL
+        )
         binding.llHistoryOfSearch.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
 
         findToolbar.setNavigationOnClickListener {
@@ -89,7 +92,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                                 rvFindShowTrack,
                                 binding.llNothingNotFound,
                                 binding.llNoInternetConnection,
-                                1
+                                Code.UNHIDE_NNF
                             )
 
                         }
@@ -98,7 +101,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                             rvFindShowTrack,
                             binding.llNothingNotFound,
                             binding.llNoInternetConnection,
-                            2
+                            Code.UNHIDE_NIC
                         )
                         gettedString = trackName
                     }
@@ -109,7 +112,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                         rvFindShowTrack,
                         binding.llNothingNotFound,
                         binding.llNoInternetConnection,
-                        2
+                        Code.UNHIDE_NIC
                     )
                     gettedString = trackName
                 }
@@ -127,7 +130,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 } else{
                     binding.llHistoryOfSearch.visibility = View.VISIBLE
                 }
-                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 3)
+                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
 
@@ -140,7 +143,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 } else{
                     binding.llHistoryOfSearch.visibility = View.VISIBLE
                 }
-                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 3)
+                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
         }
@@ -152,7 +155,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                         rvFindShowTrack,
                         binding.llNothingNotFound,
                         binding.llNoInternetConnection,
-                        0
+                        Code.UNHIDE_R
                     )
                     sendRequest(etFindText.text.toString())
                 }
@@ -168,11 +171,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             val tracksSize = adapter.itemCount
             tracks.clear()
             adapter.notifyItemRangeRemoved(0, tracksSize)
-            changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 3)
+            changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
         }
 
         binding.btnUpdate.setOnClickListener {
-            changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, 0)
+            changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.UNHIDE_R)
             sendRequest(gettedString)
         }
 
@@ -218,23 +221,25 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         code: Int
     ) {
         when (code) {
-            0 -> {
+            Code.UNHIDE_R -> {
                 recycler.visibility = View.VISIBLE
                 llNothingNotFound.visibility = View.GONE
                 llNoInternetConnection.visibility = View.GONE
             }
 
-            1 -> {
+            Code.UNHIDE_NNF -> {
                 recycler.visibility = View.GONE
                 llNothingNotFound.visibility = View.VISIBLE
+                llNoInternetConnection.visibility = View.GONE
             }
 
-            2 -> {
+            Code.UNHIDE_NIC -> {
                 recycler.visibility = View.GONE
                 llNoInternetConnection.visibility = View.VISIBLE
+                llNothingNotFound.visibility = View.GONE
             }
 
-            3 -> {
+            Code.HIDE_ALL -> {
                 recycler.visibility = View.GONE
                 llNothingNotFound.visibility = View.GONE
                 llNoInternetConnection.visibility = View.GONE
@@ -249,7 +254,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java) else HistoryOfSearch(ArrayList())
 
     override fun onItemClick(position: Int, isSearch: Boolean) {
-        if (isSearch) {
+        if (!isSearch) {
             return
         }
         val sound = adapter.tracks[position]
@@ -271,7 +276,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         }
         historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
         sharedPrefs.edit()
-            .putString(ADD_HISTORY_LIST, createJsonFromList(HistoryOfSearch(historyAdapter.tracks)))
+            .putString(SharedPreference.ADD_HISTORY_LIST, createJsonFromList(HistoryOfSearch(historyAdapter.tracks)))
             .apply()
         Toast.makeText(this@FindActivity, "Track ${sound.trackName} добавлен в историю", Toast.LENGTH_SHORT).show()
     }
