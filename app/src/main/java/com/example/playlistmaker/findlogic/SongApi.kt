@@ -1,4 +1,4 @@
-package com.example.playlistmaker.findactivity
+package com.example.playlistmaker.findlogic
 
 import retrofit2.Call
 import retrofit2.http.GET

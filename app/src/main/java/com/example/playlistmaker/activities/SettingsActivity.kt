@@ -1,18 +1,29 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activities
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.objects.consts.SharedPreference
+
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+
+    private val sharedPreferences by lazy {
+        getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        binding.scSwitchLightNightMode.isChecked =
+            sharedPreferences.getBoolean(SharedPreference.THIEME_SWITCH_KEY, false)
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
@@ -39,6 +50,11 @@ class SettingsActivity : AppCompatActivity() {
             val url = Uri.parse(getString(R.string.settings_user_agreement_url))
             val intent = Intent(Intent.ACTION_VIEW, url)
             startActivity(intent)
+        }
+
+        binding.scSwitchLightNightMode.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchThieme(checked)
+            sharedPreferences.edit().putBoolean(SharedPreference.THIEME_SWITCH_KEY, checked).apply()
         }
 
     }
