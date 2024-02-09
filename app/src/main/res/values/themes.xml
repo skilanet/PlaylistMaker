@@ -18,10 +18,10 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginEnd">@dimen/settings_frame_margin</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/text_size_16sp </item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
-    
+
     <style name="toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -34,7 +34,7 @@
     </style>
 
     <style name="find_text_style">
-        <item name="android:textColorHint">@color/find_color</item>
+        <item name="android:textColorHint">@color/gray</item>
     </style>
 
     <style name="find_track_title_color">
@@ -42,7 +42,7 @@
     </style>
 
     <style name="find_track_info_text_color">
-        <item name="android:textColor">@color/find_text_color</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="error_tv">
@@ -71,6 +71,21 @@
     </style>
 
     <style name="history_of_search_title">
+        <item name="android:textColor">@color/yp_black</item>
+    </style>
+
+    <style name="activity_media_player_info">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="track_name_text_color">
         <item name="android:textColor">@color/yp_black</item>
     </style>
 

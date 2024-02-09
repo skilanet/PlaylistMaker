@@ -1,14 +1,14 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Playlist maker</string>
     <string name="button_find_text">Поиск</string>
     <string name="media_library">Медиатека</string>
     <string name="settings">Настройки</string>
     <string name="switch_thieme_text">Тёмная тема</string>
     <string name="share_app_text">Поделиться приложением</string>
-    <string name="write_to_support_text">Наисать в поддержку</string>
+    <string name="write_to_support_text">Написать в поддержку</string>
     <string name="user_agreement_text">Пользовательское соглашение</string>
     <string name="settings_share_message">https://practicum.yandex.ru/android-developer/?from=catalog</string>
-    <string name="setting_email_addres">filonuk05@gmail.com</string>
+    <string name="setting_email_address">filonuk05@gmail.com</string>
     <string name="settings_email_title">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="settings_email_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="settings_user_agreement_url">https://yandex.ru/legal/practicum_offer/</string>
@@ -23,4 +23,11 @@
     <string name="update">Обновить</string>
     <string name="history_of_search">История поиска</string>
     <string name="clear">Очистить историю</string>
+    <string name="country">Страна</string>
+    <string name="genre">Жанр</string>
+    <string name="year">Год</string>
+    <string name="album">Альбом</string>
+    <string name="duration">Длительность</string>
+    <string name="long_test_string" tools:ignore="Typos">very long long long long long long long long long long long long long long long long long long long long</string>
+    <string name="album_name_test">Yesterday (Remastered 2009)</string>
 </resources>

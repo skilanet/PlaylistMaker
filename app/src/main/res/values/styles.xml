@@ -40,4 +40,13 @@
         <item name="android:layout_marginTop">102dp</item>
     </style>
 
+    <style name="activity_media_player_info_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_marginBottom">17dp</item>
+    </style>
+
 </resources>
