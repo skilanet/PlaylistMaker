@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.ivWriteToSupport.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
             intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.setting_email_addres)))
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.setting_email_address)))
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_email_title))
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_email_text))
             startActivity(intent)
