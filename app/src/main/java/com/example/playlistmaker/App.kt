@@ -13,7 +13,10 @@ class App : Application() {
     }
     override fun onCreate() {
         super.onCreate()
-        darkThieme = sharedPrefs.getBoolean(SharedPreference.THIEME_SWITCH_KEY, false)
+        darkThieme = sharedPrefs.getBoolean(
+            SharedPreference.THIEME_SWITCH_KEY,
+            AppCompatDelegate.MODE_NIGHT_NO != AppCompatDelegate.getDefaultNightMode()
+        )
         sharedPrefs.edit()
             .putBoolean(SharedPreference.THIEME_SWITCH_KEY, darkThieme)
             .apply()

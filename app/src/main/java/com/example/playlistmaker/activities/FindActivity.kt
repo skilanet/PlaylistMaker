@@ -1,16 +1,17 @@
 package com.example.playlistmaker.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.MediaPlayerActivity
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.findlogic.HistoryOfSearch
 import com.example.playlistmaker.findlogic.OnItemClickListener
@@ -18,7 +19,9 @@ import com.example.playlistmaker.findlogic.SongApi
 import com.example.playlistmaker.findlogic.SongDescription
 import com.example.playlistmaker.findlogic.SongResponse
 import com.example.playlistmaker.findlogic.SongsAdapter
+import com.example.playlistmaker.objects.Utils
 import com.example.playlistmaker.objects.consts.Code
+import com.example.playlistmaker.objects.consts.IntentKey
 import com.example.playlistmaker.objects.consts.SharedPreference
 import com.google.gson.Gson
 import retrofit2.Call
@@ -38,8 +41,8 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
     private val adapter = SongsAdapter(this, true)
     private val history = ArrayList<SongDescription>()
     private val historyAdapter = SongsAdapter(this, false)
-    private lateinit var gettedString: String
     private lateinit var binding: ActivityFindBinding
+    private lateinit var gettedString: String
     private val sharedPrefs by lazy {
         getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
     }
@@ -50,11 +53,17 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         val view = binding.root
         setContentView(view)
 
+
         val rvFindShowTrack = binding.rvFindShowTrack
         val findToolbar = binding.findToolbar
         val ivClear = binding.ivClear
         val etFindText = binding.etFindText
         val rvHistoryOfSearch = binding.rvHistoryOfSearch
+
+        if (savedInstanceState != null) {
+            gettedString = savedInstanceState.getString(KEY, DEFAULT).toString()
+            etFindText.setText(gettedString)
+        }
 
         rvFindShowTrack.adapter = adapter
         adapter.tracks = tracks
@@ -103,7 +112,6 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                             binding.llNoInternetConnection,
                             Code.UNHIDE_NIC
                         )
-                        gettedString = trackName
                     }
                 }
 
@@ -114,12 +122,10 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                         binding.llNoInternetConnection,
                         Code.UNHIDE_NIC
                     )
-                    gettedString = trackName
                 }
 
             })
 
-        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
 
         etFindText.doOnTextChanged { text, _, _, _ ->
             gettedString = text.toString()
@@ -133,6 +139,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
+            gettedString = text.toString()
 
         }
 
@@ -211,7 +218,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
     companion object {
         const val KEY = "ADD_KEY"
-        const val DEFAULT = "DEFAULT"
+        const val DEFAULT = ""
     }
 
     private fun changeVisibility(
@@ -255,6 +262,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
     override fun onItemClick(position: Int, isSearch: Boolean) {
         if (!isSearch) {
+            val sound = historyAdapter.tracks[position]
+            Intent(this, MediaPlayerActivity::class.java).apply {
+                putExtra(IntentKey.INTENT_PLAYLIST_KEY, Utils.createJsonFromSong(sound))
+                startActivity(this)
+            }
             return
         }
         val sound = adapter.tracks[position]
@@ -278,6 +290,9 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         sharedPrefs.edit()
             .putString(SharedPreference.ADD_HISTORY_LIST, createJsonFromList(HistoryOfSearch(historyAdapter.tracks)))
             .apply()
-        Toast.makeText(this@FindActivity, "Track ${sound.trackName} добавлен в историю", Toast.LENGTH_SHORT).show()
+        Intent(this, MediaPlayerActivity::class.java).apply {
+            putExtra(IntentKey.INTENT_PLAYLIST_KEY, Utils.createJsonFromSong(sound))
+            startActivity(this)
+        }
     }
 }

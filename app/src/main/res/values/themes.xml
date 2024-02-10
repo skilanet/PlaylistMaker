@@ -29,7 +29,7 @@
         <item name="android:layout_marginStart">4dp</item>
         <item name="android:layout_marginEnd">52dp</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:navigationIcon">@drawable/button_back_light</item>
+        <item name="android:navigationIcon">@drawable/button_back</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
@@ -85,9 +85,22 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="track_name_text_color">
+    <style name="activity_media_player_top_info">
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:gravity">start</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="activity_media_player_time_color">
         <item name="android:textColor">@color/yp_black</item>
     </style>
 
-
+    <style name="activity_media_player_snackbar">
+        <item name="android:background">@color/yp_black</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
