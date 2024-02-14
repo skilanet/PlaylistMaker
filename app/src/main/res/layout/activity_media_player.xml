@@ -95,7 +95,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_country"
         app:layout_constraintEnd_toStartOf="@id/guideline_16_end"
         app:layout_constraintStart_toEndOf="@id/barrier_info"
-        tools:text="@string/country_test" />
+        tools:text="Великобритания" />
 
     <TextView
         android:id="@+id/tv_genre_text"
@@ -103,7 +103,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_genre"
         app:layout_constraintEnd_toStartOf="@id/guideline_16_end"
         app:layout_constraintStart_toEndOf="@id/barrier_info"
-        tools:text="@string/genre_test" />
+        tools:text="Rock" />
 
     <TextView
         android:id="@+id/tv_year_text"
@@ -111,7 +111,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_year"
         app:layout_constraintEnd_toStartOf="@id/guideline_16_end"
         app:layout_constraintStart_toEndOf="@id/barrier_info"
-        tools:text="@string/year_test" />
+        tools:text="1965" />
 
     <TextView
         android:id="@+id/tv_album_text"
@@ -119,7 +119,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_album"
         app:layout_constraintEnd_toStartOf="@id/guideline_16_end"
         app:layout_constraintStart_toEndOf="@id/barrier_info"
-        tools:text="@string/album_name_test" />
+        tools:text="Yesterday (Remastered 2009)" />
 
     <TextView
         android:id="@+id/tv_duration_text"
@@ -127,7 +127,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/tv_duration"
         app:layout_constraintEnd_toStartOf="@id/guideline_16_end"
         app:layout_constraintStart_toEndOf="@id/barrier_info"
-        tools:text="@string/duration_test" />
+        tools:text="5:35" />
 
     <TextView
         android:id="@+id/tv_now_time"
@@ -137,7 +137,7 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="@font/ys_display_medium"
         android:gravity="center"
-        android:text="@string/time_test"
+        tools:text="0:30"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/tv_duration"
         app:layout_constraintEnd_toEndOf="parent"
@@ -188,7 +188,7 @@
         app:layout_constraintBottom_toTopOf="@id/iv_stop_play_button"
         app:layout_constraintEnd_toStartOf="@id/guideline_24_end"
         app:layout_constraintStart_toEndOf="@id/guideline_24_start"
-        tools:text="@string/author_name_test" />
+        tools:text="The Beatles" />
 
     <TextView
         android:id="@+id/tv_album_text_top"
@@ -198,7 +198,7 @@
         app:layout_constraintBottom_toTopOf="@id/tv_track_author_top"
         app:layout_constraintEnd_toStartOf="@id/guideline_24_end"
         app:layout_constraintStart_toEndOf="@id/guideline_24_start"
-        tools:text="@string/album_name_test" />
+        tools:text="Yesterday (Remastered 2009)" />
 
     <ImageView
         style="@style/activity_media_player_time_color"

@@ -4,8 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
-import com.example.playlistmaker.objects.Utils
+import com.example.playlistmaker.findlogic.SongDescription
 import com.example.playlistmaker.objects.consts.IntentKey
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -18,7 +19,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
         val intent = intent
         val songString = intent.getStringExtra(IntentKey.INTENT_PLAYLIST_KEY)
-        val song = Utils.createSongFromJson(songString!!)
+        val song = createSongFromJson(songString!!)
 
         Glide.with(this)
             .load(song.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -36,4 +37,8 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun createSongFromJson(json: String): SongDescription =
+        Gson().fromJson(json, SongDescription::class.java)
+
 }

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name" translatable="false">Playlist maker</string>
     <string name="button_find_text">Поиск</string>
     <string name="media_library">Медиатека</string>
@@ -28,12 +28,4 @@
     <string name="year">Год</string>
     <string name="album">Альбом</string>
     <string name="duration">Длительность</string>
-    <string name="long_test_string" tools:ignore="Typos">very long long long long long long long long long long long long long long long long long long long long</string>
-    <string name="album_name_test">Yesterday (Remastered 2009)</string>
-    <string name="author_name_test">The Beatles</string>
-    <string name="duration_test">5:35</string>
-    <string name="year_test">1965</string>
-    <string name="genre_test">Rock</string>
-    <string name="country_test">Великобритания</string>
-    <string name="time_test">0:30</string>
 </resources>

@@ -2,8 +2,6 @@ package com.example.playlistmaker.objects
 
 import android.content.Context
 import android.util.TypedValue
-import com.example.playlistmaker.findlogic.SongDescription
-import com.google.gson.Gson
 
 object Utils {
     fun pxtodp(dp: Float, context: Context): Int {
@@ -12,6 +10,4 @@ object Utils {
         ).toInt()
     }
 
-    fun createJsonFromSong(songDescription: SongDescription): String = Gson().toJson(songDescription)
-    fun createSongFromJson(json: String): SongDescription = Gson().fromJson(json, SongDescription::class.java)
 }
