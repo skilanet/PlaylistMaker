@@ -9,4 +9,5 @@ object Utils {
             TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics
         ).toInt()
     }
+
 }

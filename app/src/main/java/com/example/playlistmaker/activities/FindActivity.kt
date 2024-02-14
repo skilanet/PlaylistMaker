@@ -1,16 +1,15 @@
 package com.example.playlistmaker.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.findlogic.HistoryOfSearch
 import com.example.playlistmaker.findlogic.OnItemClickListener
@@ -19,6 +18,7 @@ import com.example.playlistmaker.findlogic.SongDescription
 import com.example.playlistmaker.findlogic.SongResponse
 import com.example.playlistmaker.findlogic.SongsAdapter
 import com.example.playlistmaker.objects.consts.Code
+import com.example.playlistmaker.objects.consts.IntentKey
 import com.example.playlistmaker.objects.consts.SharedPreference
 import com.google.gson.Gson
 import retrofit2.Call
@@ -38,8 +38,8 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
     private val adapter = SongsAdapter(this, true)
     private val history = ArrayList<SongDescription>()
     private val historyAdapter = SongsAdapter(this, false)
-    private lateinit var gettedString: String
     private lateinit var binding: ActivityFindBinding
+    private var gettedString: String = ""
     private val sharedPrefs by lazy {
         getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
     }
@@ -50,11 +50,17 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         val view = binding.root
         setContentView(view)
 
+
         val rvFindShowTrack = binding.rvFindShowTrack
         val findToolbar = binding.findToolbar
         val ivClear = binding.ivClear
         val etFindText = binding.etFindText
         val rvHistoryOfSearch = binding.rvHistoryOfSearch
+
+        if (savedInstanceState != null) {
+            gettedString = savedInstanceState.getString(KEY, DEFAULT).toString()
+            etFindText.setText(gettedString)
+        }
 
         rvFindShowTrack.adapter = adapter
         adapter.tracks = tracks
@@ -65,10 +71,14 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         historyAdapter.tracks = history
         rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
 
-        changeVisibility(
-            rvFindShowTrack,
+        val layouts = Layouts(
+            binding.rvFindShowTrack,
             binding.llNothingNotFound,
-            binding.llNoInternetConnection,
+            binding.llNoInternetConnection
+        )
+
+        changeVisibility(
+            layouts,
             Code.HIDE_ALL
         )
         binding.llHistoryOfSearch.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
@@ -89,37 +99,28 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                             adapter.notifyItemRangeChanged(0, response.body()?.resultCount!!)
                         } else {
                             changeVisibility(
-                                rvFindShowTrack,
-                                binding.llNothingNotFound,
-                                binding.llNoInternetConnection,
+                                layouts,
                                 Code.UNHIDE_NNF
                             )
 
                         }
                     } else {
                         changeVisibility(
-                            rvFindShowTrack,
-                            binding.llNothingNotFound,
-                            binding.llNoInternetConnection,
+                            layouts,
                             Code.UNHIDE_NIC
                         )
-                        gettedString = trackName
                     }
                 }
 
                 override fun onFailure(call: Call<SongResponse>, t: Throwable) {
                     changeVisibility(
-                        rvFindShowTrack,
-                        binding.llNothingNotFound,
-                        binding.llNoInternetConnection,
+                        layouts,
                         Code.UNHIDE_NIC
                     )
-                    gettedString = trackName
                 }
 
             })
 
-        etFindText.setText(savedInstanceState?.getString(KEY, DEFAULT))
 
         etFindText.doOnTextChanged { text, _, _, _ ->
             gettedString = text.toString()
@@ -130,9 +131,10 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 } else{
                     binding.llHistoryOfSearch.visibility = View.VISIBLE
                 }
-                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
+                changeVisibility(layouts, Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
+            gettedString = text.toString()
 
         }
 
@@ -143,7 +145,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 } else{
                     binding.llHistoryOfSearch.visibility = View.VISIBLE
                 }
-                changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
+                changeVisibility(layouts, Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
         }
@@ -152,9 +154,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (etFindText.text.isNotEmpty()) {
                     changeVisibility(
-                        rvFindShowTrack,
-                        binding.llNothingNotFound,
-                        binding.llNoInternetConnection,
+                        layouts,
                         Code.UNHIDE_R
                     )
                     sendRequest(etFindText.text.toString())
@@ -171,11 +171,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             val tracksSize = adapter.itemCount
             tracks.clear()
             adapter.notifyItemRangeRemoved(0, tracksSize)
-            changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.HIDE_ALL)
+            changeVisibility(layouts, Code.HIDE_ALL)
         }
 
         binding.btnUpdate.setOnClickListener {
-            changeVisibility(rvFindShowTrack, binding.llNothingNotFound, binding.llNoInternetConnection, Code.UNHIDE_R)
+            changeVisibility(layouts, Code.UNHIDE_R)
             sendRequest(gettedString)
         }
 
@@ -211,38 +211,36 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
     companion object {
         const val KEY = "ADD_KEY"
-        const val DEFAULT = "DEFAULT"
+        const val DEFAULT = ""
     }
 
     private fun changeVisibility(
-        recycler: RecyclerView,
-        llNothingNotFound: LinearLayout,
-        llNoInternetConnection: LinearLayout,
+        layouts: Layouts,
         code: Int
     ) {
         when (code) {
             Code.UNHIDE_R -> {
-                recycler.visibility = View.VISIBLE
-                llNothingNotFound.visibility = View.GONE
-                llNoInternetConnection.visibility = View.GONE
+                layouts.rvFindShowTrack.visibility = View.VISIBLE
+                layouts.llNothingNotFound.visibility = View.GONE
+                layouts.llNoInternetConnection.visibility = View.GONE
             }
 
             Code.UNHIDE_NNF -> {
-                recycler.visibility = View.GONE
-                llNothingNotFound.visibility = View.VISIBLE
-                llNoInternetConnection.visibility = View.GONE
+                layouts.rvFindShowTrack.visibility = View.GONE
+                layouts.llNothingNotFound.visibility = View.VISIBLE
+                layouts.llNoInternetConnection.visibility = View.GONE
             }
 
             Code.UNHIDE_NIC -> {
-                recycler.visibility = View.GONE
-                llNoInternetConnection.visibility = View.VISIBLE
-                llNothingNotFound.visibility = View.GONE
+                layouts.rvFindShowTrack.visibility = View.GONE
+                layouts.llNothingNotFound.visibility = View.GONE
+                layouts.llNoInternetConnection.visibility = View.VISIBLE
             }
 
             Code.HIDE_ALL -> {
-                recycler.visibility = View.GONE
-                llNothingNotFound.visibility = View.GONE
-                llNoInternetConnection.visibility = View.GONE
+                layouts.rvFindShowTrack.visibility = View.GONE
+                layouts.llNothingNotFound.visibility = View.GONE
+                layouts.llNoInternetConnection.visibility = View.GONE
             }
         }
     }
@@ -255,6 +253,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
     override fun onItemClick(position: Int, isSearch: Boolean) {
         if (!isSearch) {
+            val sound = historyAdapter.tracks[position]
+            Intent(this, MediaPlayerActivity::class.java).apply {
+                putExtra(IntentKey.INTENT_PLAYLIST_KEY, createJsonFromSong(sound))
+                startActivity(this)
+            }
             return
         }
         val sound = adapter.tracks[position]
@@ -278,6 +281,19 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         sharedPrefs.edit()
             .putString(SharedPreference.ADD_HISTORY_LIST, createJsonFromList(HistoryOfSearch(historyAdapter.tracks)))
             .apply()
-        Toast.makeText(this@FindActivity, "Track ${sound.trackName} добавлен в историю", Toast.LENGTH_SHORT).show()
+        Intent(this, MediaPlayerActivity::class.java).apply {
+            putExtra(IntentKey.INTENT_PLAYLIST_KEY, createJsonFromSong(sound))
+            startActivity(this)
+        }
     }
+
+    private fun createJsonFromSong(songDescription: SongDescription): String =
+        Gson().toJson(songDescription)
 }
+
+//Data Class для сокращения кода при использовании метода changeVisibility
+private data class Layouts(
+    val rvFindShowTrack: View,
+    val llNothingNotFound: LinearLayout,
+    val llNoInternetConnection: LinearLayout
+)

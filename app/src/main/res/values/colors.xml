@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="yp_black">#1A1B22</color>
     <color name="yp_blue">#3772E7</color>
-    <color name="find_color">#AEAFB4</color>
     <color name="find_background">#E6E8EB</color>
-    <color name="find_text_color">#AEAFB4</color>
+    <color name="gray">#AEAFB4</color>
+    <color name="yp_gray">#401A1B22</color>
 </resources>
