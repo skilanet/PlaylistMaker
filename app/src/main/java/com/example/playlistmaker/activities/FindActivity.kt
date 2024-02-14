@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.MediaPlayerActivity
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.findlogic.HistoryOfSearch
 import com.example.playlistmaker.findlogic.OnItemClickListener
@@ -234,8 +233,8 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
 
             Code.UNHIDE_NIC -> {
                 layouts.rvFindShowTrack.visibility = View.GONE
-                layouts.llNothingNotFound.visibility = View.VISIBLE
-                layouts.llNoInternetConnection.visibility = View.GONE
+                layouts.llNothingNotFound.visibility = View.GONE
+                layouts.llNoInternetConnection.visibility = View.VISIBLE
             }
 
             Code.HIDE_ALL -> {
