@@ -137,7 +137,7 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="@font/ys_display_medium"
         android:gravity="center"
-        android:text="@string/zero"
+        tools:text="0:30"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/tv_duration"
         app:layout_constraintEnd_toEndOf="parent"

@@ -7,15 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.objects.Utils
 import com.example.playlistmaker.databinding.TrackBaseBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.playlistmaker.objects.Utils
 
 
-class SongsViewHolder(private val binding: TrackBaseBinding, private val onItemClickListener: OnItemClickListener, private val isSearch: Boolean) : RecyclerView.ViewHolder(
+class SongsViewHolder(
+    private val binding: TrackBaseBinding,
+    private val onItemClickListener: OnItemClickListener,
+    private val isSearch: Boolean
+) : RecyclerView.ViewHolder(
     binding.root
-), View.OnClickListener{
+), View.OnClickListener {
     private val image: ImageView = binding.ivFindTrackImage
     private val trackName: TextView = binding.tvTrackName
     private val trackAuthor: TextView = binding.tvTrackAuthor
@@ -25,9 +27,7 @@ class SongsViewHolder(private val binding: TrackBaseBinding, private val onItemC
         Glide.with(binding.root.context).load(model.artworkUrl100).fitCenter()
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(Utils.pxtodp(2f, itemView.context))).into(image)
-        trackName.text = model.trackName
-        trackAuthor.text = model.artistName
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(293000L)
+        model.fill(trackName, trackAuthor, trackTime)
         binding.root.setOnClickListener(this)
     }
 
