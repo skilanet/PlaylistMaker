@@ -28,4 +28,5 @@
     <string name="year">Год</string>
     <string name="album">Альбом</string>
     <string name="duration">Длительность</string>
+    <string name="zero">0:00</string>
 </resources>
