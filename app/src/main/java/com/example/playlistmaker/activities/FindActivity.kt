@@ -142,6 +142,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
             gettedString = text.toString()
+            Debounce().searchDebounce { sendRequest(text.toString()) }
 
         }
 
