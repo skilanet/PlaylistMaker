@@ -7,10 +7,13 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.findlogic.Debounce
 import com.example.playlistmaker.findlogic.HistoryOfSearch
 import com.example.playlistmaker.findlogic.OnItemClickListener
 import com.example.playlistmaker.findlogic.SongApi
@@ -29,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class FindActivity : AppCompatActivity(), OnItemClickListener {
 
-    private val baseUrl = "https://itunes.apple.com"
+    private val baseUrl = "https://itunes.apple.com/"
     private val retrofit =
         Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -43,7 +46,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
     private val sharedPrefs by lazy {
         getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
     }
-
+    private lateinit var pbLoading: ProgressBar
+    private lateinit var llNothingNotFound: LinearLayout
+    private lateinit var llNoInternetConnection: LinearLayout
+    private lateinit var rvFindShowTrack: RecyclerView
+    private lateinit var rvHistoryOfSearch: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFindBinding.inflate(layoutInflater)
@@ -51,11 +58,14 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         setContentView(view)
 
 
-        val rvFindShowTrack = binding.rvFindShowTrack
+        rvFindShowTrack = binding.rvFindShowTrack
+        rvHistoryOfSearch = binding.rvHistoryOfSearch
+        llNoInternetConnection = binding.llNoInternetConnection
+        llNothingNotFound = binding.llNothingNotFound
         val findToolbar = binding.findToolbar
         val ivClear = binding.ivClear
         val etFindText = binding.etFindText
-        val rvHistoryOfSearch = binding.rvHistoryOfSearch
+        pbLoading = binding.pbLoading
 
         if (savedInstanceState != null) {
             gettedString = savedInstanceState.getString(KEY, DEFAULT).toString()
@@ -71,16 +81,8 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         historyAdapter.tracks = history
         rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
 
-        val layouts = Layouts(
-            binding.rvFindShowTrack,
-            binding.llNothingNotFound,
-            binding.llNoInternetConnection
-        )
 
-        changeVisibility(
-            layouts,
-            Code.HIDE_ALL
-        )
+        changeVisibility(Code.HIDE_ALL)
         binding.llHistoryOfSearch.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
 
         findToolbar.setNavigationOnClickListener {
@@ -92,60 +94,56 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 override fun onResponse(
                     call: Call<SongResponse>, response: Response<SongResponse>
                 ) {
+                    changeVisibility(Code.HIDE_ALL)
                     if (response.code() == 200) {
                         tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
+                            changeVisibility(Code.SHOW_R)
                             tracks.addAll(response.body()?.results!!)
                             adapter.notifyItemRangeChanged(0, response.body()?.resultCount!!)
                         } else {
-                            changeVisibility(
-                                layouts,
-                                Code.UNHIDE_NNF
-                            )
-
+                            changeVisibility(Code.SHOW_NNF)
                         }
                     } else {
-                        changeVisibility(
-                            layouts,
-                            Code.UNHIDE_NIC
-                        )
+                        changeVisibility(Code.SHOW_NIC)
                     }
                 }
 
                 override fun onFailure(call: Call<SongResponse>, t: Throwable) {
-                    changeVisibility(
-                        layouts,
-                        Code.UNHIDE_NIC
-                    )
+                    changeVisibility(Code.SHOW_NIC)
                 }
-
             })
 
-
-        etFindText.doOnTextChanged { text, _, _, _ ->
+        etFindText.doOnTextChanged { text, _, _, count ->
             gettedString = text.toString()
             ivClear.visibility = setButtonVisibility(text)
             if (etFindText.hasFocus() && text?.isEmpty() == true){
+                etFindText.isCursorVisible = etFindText.hasFocus()
                 if (history.isEmpty()){
                     binding.llHistoryOfSearch.visibility = View.GONE
                 } else{
                     binding.llHistoryOfSearch.visibility = View.VISIBLE
                 }
-                changeVisibility(layouts, Code.HIDE_ALL)
+                changeVisibility(Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
             gettedString = text.toString()
+            if (count >= 2) Debounce().searchDebounce {
+                changeVisibility(Code.SHOW_PB)
+                sendRequest(text.toString())
+            }
 
         }
 
         etFindText.setOnFocusChangeListener { _, hasFocus ->
+            etFindText.isCursorVisible = hasFocus
             if (hasFocus && etFindText.text.isEmpty()){
                 if (history.isEmpty()){
                     binding.llHistoryOfSearch.visibility = View.GONE
                 } else{
                     binding.llHistoryOfSearch.visibility = View.VISIBLE
                 }
-                changeVisibility(layouts, Code.HIDE_ALL)
+                changeVisibility(Code.HIDE_ALL)
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
         }
@@ -153,10 +151,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         etFindText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (etFindText.text.isNotEmpty()) {
-                    changeVisibility(
-                        layouts,
-                        Code.UNHIDE_R
-                    )
+                    changeVisibility(Code.SHOW_PB)
                     sendRequest(etFindText.text.toString())
                 }
             }
@@ -171,11 +166,11 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             val tracksSize = adapter.itemCount
             tracks.clear()
             adapter.notifyItemRangeRemoved(0, tracksSize)
-            changeVisibility(layouts, Code.HIDE_ALL)
+            changeVisibility(Code.HIDE_ALL)
         }
 
         binding.btnUpdate.setOnClickListener {
-            changeVisibility(layouts, Code.UNHIDE_R)
+            changeVisibility(Code.SHOW_PB)
             sendRequest(gettedString)
         }
 
@@ -190,7 +185,6 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         }
 
     }
-
     private fun setButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
             View.GONE
@@ -215,32 +209,42 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun changeVisibility(
-        layouts: Layouts,
         code: Int
     ) {
         when (code) {
-            Code.UNHIDE_R -> {
-                layouts.rvFindShowTrack.visibility = View.VISIBLE
-                layouts.llNothingNotFound.visibility = View.GONE
-                layouts.llNoInternetConnection.visibility = View.GONE
+            Code.SHOW_R -> {
+                rvFindShowTrack.visibility = View.VISIBLE
+                llNothingNotFound.visibility = View.GONE
+                llNoInternetConnection.visibility = View.GONE
+                pbLoading.visibility = View.GONE
             }
 
-            Code.UNHIDE_NNF -> {
-                layouts.rvFindShowTrack.visibility = View.GONE
-                layouts.llNothingNotFound.visibility = View.VISIBLE
-                layouts.llNoInternetConnection.visibility = View.GONE
+            Code.SHOW_NNF -> {
+                rvFindShowTrack.visibility = View.GONE
+                llNothingNotFound.visibility = View.VISIBLE
+                llNoInternetConnection.visibility = View.GONE
+                pbLoading.visibility = View.GONE
             }
 
-            Code.UNHIDE_NIC -> {
-                layouts.rvFindShowTrack.visibility = View.GONE
-                layouts.llNothingNotFound.visibility = View.GONE
-                layouts.llNoInternetConnection.visibility = View.VISIBLE
+            Code.SHOW_NIC -> {
+                rvFindShowTrack.visibility = View.GONE
+                llNothingNotFound.visibility = View.GONE
+                llNoInternetConnection.visibility = View.VISIBLE
+                pbLoading.visibility = View.GONE
             }
 
             Code.HIDE_ALL -> {
-                layouts.rvFindShowTrack.visibility = View.GONE
-                layouts.llNothingNotFound.visibility = View.GONE
-                layouts.llNoInternetConnection.visibility = View.GONE
+                rvFindShowTrack.visibility = View.GONE
+                llNothingNotFound.visibility = View.GONE
+                llNoInternetConnection.visibility = View.GONE
+                pbLoading.visibility = View.GONE
+            }
+
+            Code.SHOW_PB -> {
+                rvFindShowTrack.visibility = View.GONE
+                llNothingNotFound.visibility = View.GONE
+                llNoInternetConnection.visibility = View.GONE
+                pbLoading.visibility = View.VISIBLE
             }
         }
     }
@@ -252,48 +256,46 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java) else HistoryOfSearch(ArrayList())
 
     override fun onItemClick(position: Int, isSearch: Boolean) {
-        if (!isSearch) {
-            val sound = historyAdapter.tracks[position]
+        if (Debounce().clickDebounce()) {
+            if (!isSearch) {
+                val sound = historyAdapter.tracks[position]
+                Intent(this, MediaPlayerActivity::class.java).apply {
+                    putExtra(IntentKey.INTENT_PLAYLIST_KEY, createJsonFromSong(sound))
+                    startActivity(this)
+                }
+                return
+            }
+            val sound = adapter.tracks[position]
+            if (historyAdapter.tracks.size > 9) {
+                historyAdapter.tracks.removeAt(9)
+                if (historyAdapter.tracks.contains(sound)) {
+                    historyAdapter.tracks.remove(sound)
+                    historyAdapter.tracks.add(0, sound)
+                } else {
+                    historyAdapter.tracks.add(0, sound)
+                }
+            } else {
+                if (historyAdapter.tracks.contains(sound)) {
+                    historyAdapter.tracks.remove(sound)
+                    historyAdapter.tracks.add(0, sound)
+                } else {
+                    historyAdapter.tracks.add(0, sound)
+                }
+            }
+            historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
+            sharedPrefs.edit()
+                .putString(
+                    SharedPreference.ADD_HISTORY_LIST,
+                    createJsonFromList(HistoryOfSearch(historyAdapter.tracks))
+                )
+                .apply()
             Intent(this, MediaPlayerActivity::class.java).apply {
                 putExtra(IntentKey.INTENT_PLAYLIST_KEY, createJsonFromSong(sound))
                 startActivity(this)
             }
-            return
-        }
-        val sound = adapter.tracks[position]
-        if (historyAdapter.tracks.size > 9){
-            historyAdapter.tracks.removeAt(9)
-            if (historyAdapter.tracks.contains(sound)) {
-                historyAdapter.tracks.remove(sound)
-                historyAdapter.tracks.add(0, sound)
-            } else {
-                historyAdapter.tracks.add(0, sound)
-            }
-        } else{
-            if (historyAdapter.tracks.contains(sound)) {
-                historyAdapter.tracks.remove(sound)
-                historyAdapter.tracks.add(0, sound)
-            } else {
-                historyAdapter.tracks.add(0, sound)
-            }
-        }
-        historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
-        sharedPrefs.edit()
-            .putString(SharedPreference.ADD_HISTORY_LIST, createJsonFromList(HistoryOfSearch(historyAdapter.tracks)))
-            .apply()
-        Intent(this, MediaPlayerActivity::class.java).apply {
-            putExtra(IntentKey.INTENT_PLAYLIST_KEY, createJsonFromSong(sound))
-            startActivity(this)
         }
     }
 
     private fun createJsonFromSong(songDescription: SongDescription): String =
         Gson().toJson(songDescription)
 }
-
-//Data Class для сокращения кода при использовании метода changeVisibility
-private data class Layouts(
-    val rvFindShowTrack: View,
-    val llNothingNotFound: LinearLayout,
-    val llNoInternetConnection: LinearLayout
-)

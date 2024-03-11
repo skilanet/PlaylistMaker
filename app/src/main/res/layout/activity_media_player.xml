@@ -137,7 +137,7 @@
         android:layout_marginBottom="30dp"
         android:fontFamily="@font/ys_display_medium"
         android:gravity="center"
-        android:text="0:30"
+        android:text="@string/zero"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/tv_duration"
         app:layout_constraintEnd_toEndOf="parent"
@@ -191,7 +191,7 @@
         tools:text="The Beatles" />
 
     <TextView
-        android:id="@+id/tv_track_name_top"
+        android:id="@+id/tv_album_text_top"
         style="@style/activity_media_player_top_info"
         android:layout_marginBottom="12dp"
         android:textSize="@dimen/text_size_22sp"
@@ -210,7 +210,7 @@
         android:background="@drawable/image_background"
         android:scaleType="fitCenter"
         android:src="@drawable/placeholder"
-        app:layout_constraintBottom_toTopOf="@id/tv_track_name_top"
+        app:layout_constraintBottom_toTopOf="@id/tv_album_text_top"
         app:layout_constraintTop_toBottomOf="@id/iv_back"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@id/guideline_24_end"

@@ -30,11 +30,10 @@
             android:textSize="16sp"
             android:inputType="text"
             android:fontFamily="@font/ys_display_regular"
-            android:maxLines="1"
             android:padding="10dp"
             android:imeOptions="actionDone"
             android:singleLine="true"
-            android:textCursorDrawable="@color/yp_blue"
+            android:textCursorDrawable="@drawable/cursor_shape"
             android:importantForAutofill="no" />
 
         <ImageView
@@ -53,6 +52,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp">
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="140dp"
+            android:visibility="gone" />
+
 
         <LinearLayout
             android:id="@+id/ll_nothing_not_found"

@@ -9,6 +9,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackBaseBinding
 import com.example.playlistmaker.objects.Utils
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class SongsViewHolder(
@@ -27,7 +29,9 @@ class SongsViewHolder(
         Glide.with(binding.root.context).load(model.artworkUrl100).fitCenter()
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(Utils.pxtodp(2f, itemView.context))).into(image)
-        model.fill(trackName, trackAuthor, trackTime)
+        trackName.text = model.trackName
+        trackAuthor.text = model.artistName
+        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(293000L)
         binding.root.setOnClickListener(this)
     }
 
