@@ -26,11 +26,13 @@ class MediaPlayerActivity : AppCompatActivity() {
     private var url = ""
     private val mediaPlayer = MediaPlayer()
     private var playerState = MediaPlayerState.STATE_DEFAULT
-    private var nowTime = 0L
-    private var elapsedTime = 0L
-    companion object{
-        private const val DELAY = 1000L
+    var nowTime = 0L
+    var elapsedTime = 0L
+
+    companion object {
+        private const val DELAY = 300L
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
@@ -43,8 +45,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         handler = Handler(Looper.getMainLooper())
         url = song.previewUrl
 
-        Glide.with(this)
-            .load(song.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+        Glide.with(this).load(song.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .into(binding.ivAlbumArtwork)
         binding.tvAlbumTextTop.text = song.collectionName
         binding.tvTrackAuthorTop.text = song.artistName
@@ -78,15 +79,21 @@ class MediaPlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             playerState = MediaPlayerState.STATE_PREPARED
             btnStartPause.setImageResource(R.drawable.play_image)
+            elapsedTime = 0L
+            nowTime = 0L
+            stopTimer()
+//            tvNowTime.text = getText(R.string.zero)
         }
 
     }
+
     private fun startPlayer() {
         mediaPlayer.start()
         btnStartPause.setImageResource(R.drawable.pause_image)
         playerState = MediaPlayerState.STATE_PLAYING
         startTimer()
     }
+
     private fun pausePlayer() {
         mediaPlayer.pause()
         btnStartPause.setImageResource(R.drawable.play_image)
@@ -94,23 +101,25 @@ class MediaPlayerActivity : AppCompatActivity() {
         stopTimer()
     }
 
-    private fun startTimer(){
+    private fun startTimer() {
         val startTime = System.currentTimeMillis()
-        handler.post(createUpdateTimer(
-            startTime - elapsedTime
-        ))
+        handler.post(
+            createUpdateTimer(
+                startTime - elapsedTime
+            )
+        )
     }
 
-    private fun stopTimer(){
+    private fun stopTimer() {
         handler.removeCallbacksAndMessages(null)
         tvNowTime.text = String.format("0:%02d", nowTime)
     }
 
-    private fun createUpdateTimer(startTime: Long): Runnable{
-        return object : Runnable{
+    private fun createUpdateTimer(startTime: Long): Runnable {
+        return object : Runnable {
             override fun run() {
                 val elapsedTime = System.currentTimeMillis() - startTime
-                val seconds = elapsedTime / DELAY
+                val seconds = elapsedTime / 1000L
                 tvNowTime.text = String.format("0:%02d", seconds)
                 nowTime = seconds
                 this@MediaPlayerActivity.elapsedTime = elapsedTime
@@ -120,8 +129,8 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun playbackControl(){
-        when (playerState){
+    private fun playbackControl() {
+        when (playerState) {
             MediaPlayerState.STATE_PLAYING -> pausePlayer()
             MediaPlayerState.STATE_PREPARED, MediaPlayerState.STATE_PAUSED -> startPlayer()
         }

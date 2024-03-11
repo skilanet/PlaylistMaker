@@ -82,11 +82,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
         rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
 
 
-
-        changeVisibility(
-
-            Code.HIDE_ALL
-        )
+        changeVisibility(Code.HIDE_ALL)
         binding.llHistoryOfSearch.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
 
         findToolbar.setNavigationOnClickListener {
@@ -98,9 +94,7 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                 override fun onResponse(
                     call: Call<SongResponse>, response: Response<SongResponse>
                 ) {
-                    changeVisibility(
-                        Code.HIDE_ALL
-                    )
+                    changeVisibility(Code.HIDE_ALL)
                     if (response.code() == 200) {
                         tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
@@ -108,31 +102,23 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
                             tracks.addAll(response.body()?.results!!)
                             adapter.notifyItemRangeChanged(0, response.body()?.resultCount!!)
                         } else {
-                            changeVisibility(
-                                Code.SHOW_NNF
-                            )
-
+                            changeVisibility(Code.SHOW_NNF)
                         }
                     } else {
-                        changeVisibility(
-                            Code.SHOW_NIC
-                        )
+                        changeVisibility(Code.SHOW_NIC)
                     }
                 }
 
                 override fun onFailure(call: Call<SongResponse>, t: Throwable) {
-                    changeVisibility(
-                        Code.SHOW_NIC
-                    )
+                    changeVisibility(Code.SHOW_NIC)
                 }
-
             })
 
-
-        etFindText.doOnTextChanged { text, _, _, _ ->
+        etFindText.doOnTextChanged { text, _, _, count ->
             gettedString = text.toString()
             ivClear.visibility = setButtonVisibility(text)
             if (etFindText.hasFocus() && text?.isEmpty() == true){
+                etFindText.isCursorVisible = etFindText.hasFocus()
                 if (history.isEmpty()){
                     binding.llHistoryOfSearch.visibility = View.GONE
                 } else{
@@ -142,11 +128,15 @@ class FindActivity : AppCompatActivity(), OnItemClickListener {
             } else
                 binding.llHistoryOfSearch.visibility = View.GONE
             gettedString = text.toString()
-            Debounce().searchDebounce { sendRequest(text.toString()) }
+            if (count >= 2) Debounce().searchDebounce {
+                changeVisibility(Code.SHOW_PB)
+                sendRequest(text.toString())
+            }
 
         }
 
         etFindText.setOnFocusChangeListener { _, hasFocus ->
+            etFindText.isCursorVisible = hasFocus
             if (hasFocus && etFindText.text.isEmpty()){
                 if (history.isEmpty()){
                     binding.llHistoryOfSearch.visibility = View.GONE
