@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.ui.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -7,15 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.objects.consts.SharedPreference
+import com.example.playlistmaker.presentation.model.Codes.SHARED_PREFERENCE_NAME
+import com.example.playlistmaker.presentation.model.Codes.THIEME_SWITCH_KEY
 
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
     private val sharedPreferences by lazy {
-        getSharedPreferences(SharedPreference.SHARED_PREFERENCE_NAME, MODE_PRIVATE)
+        getSharedPreferences(SHARED_PREFERENCE_NAME, MODE_PRIVATE)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -23,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.scSwitchLightNightMode.isChecked =
-            sharedPreferences.getBoolean(SharedPreference.THIEME_SWITCH_KEY, false)
+            sharedPreferences.getBoolean(THIEME_SWITCH_KEY, false)
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
@@ -54,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.scSwitchLightNightMode.setOnCheckedChangeListener { _, checked ->
             (applicationContext as App).switchThieme(checked)
-            sharedPreferences.edit().putBoolean(SharedPreference.THIEME_SWITCH_KEY, checked).apply()
+            sharedPreferences.edit().putBoolean(THIEME_SWITCH_KEY, checked).apply()
         }
 
     }

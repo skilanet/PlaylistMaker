@@ -1,4 +1,4 @@
-package com.example.playlistmaker.objects
+package com.example.playlistmaker
 
 import android.content.Context
 import android.util.TypedValue
