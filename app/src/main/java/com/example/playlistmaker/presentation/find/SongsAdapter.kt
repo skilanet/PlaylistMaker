@@ -1,16 +1,16 @@
-package com.example.playlistmaker.ui.find
+package com.example.playlistmaker.presentation.find
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackBaseBinding
 import com.example.playlistmaker.domain.models.Song
-import com.example.playlistmaker.findlogic.OnItemClickListener
 
-class SongsAdapter(private val onItemClickListener: OnItemClickListener, private val isSearch: Boolean) : RecyclerView.Adapter<SongsViewHolder>() {
+class SongsAdapter() : RecyclerView.Adapter<SongsViewHolder>() {
 
 
     var tracks = ArrayList<Song>()
+    var onItemClick: ((Song) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongsViewHolder =
         SongsViewHolder(
@@ -18,12 +18,16 @@ class SongsAdapter(private val onItemClickListener: OnItemClickListener, private
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ), onItemClickListener, isSearch
+            )
         )
 
     override fun getItemCount(): Int = tracks.size
 
     override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        val track = tracks[position]
+        holder.bind(track)
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(track)
+        }
     }
 }
