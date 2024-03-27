@@ -1,9 +1,12 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.databinding.ActivityMainBinding
+import com.example.playlistmaker.presentation.media.MediaActivity
+import com.example.playlistmaker.presentation.settings.SettingsActivity
+import com.example.playlistmaker.presentation.find.FindActivity
 
 class MainActivity : AppCompatActivity() {
 

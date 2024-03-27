@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.presentation.media
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
