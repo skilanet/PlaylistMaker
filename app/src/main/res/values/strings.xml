@@ -3,7 +3,7 @@
     <string name="button_find_text">Поиск</string>
     <string name="media_library">Медиатека</string>
     <string name="settings">Настройки</string>
-    <string name="switch_thieme_text">Тёмная тема</string>
+    <string name="switch_theme_text">Тёмная тема</string>
     <string name="share_app_text">Поделиться приложением</string>
     <string name="write_to_support_text">Написать в поддержку</string>
     <string name="user_agreement_text">Пользовательское соглашение</string>

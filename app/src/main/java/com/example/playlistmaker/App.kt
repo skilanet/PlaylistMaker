@@ -2,23 +2,23 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.utils.Creator
 
 class App : Application() {
 
-    private var darkThieme = false
-    private val sharedPreferenceInteractor = Creator.provideSharedPreferenceInteractor()
+    private var darkTheme = false
+    private val sharedPreferenceInteractor = Creator.provideThemeSharedPreference(this)
     override fun onCreate() {
         super.onCreate()
-        darkThieme = sharedPreferenceInteractor.getThiemeFromSharedPreference()
-        sharedPreferenceInteractor.setThiemeToSharedPreference(darkThieme)
-        switchThieme(darkThieme)
+        darkTheme = sharedPreferenceInteractor.getThemeFromSharedPreference()
+        sharedPreferenceInteractor.setThemeToSharedPreference(darkTheme)
+        switchTheme(darkTheme)
     }
 
-    fun switchThieme(darkThiemeEnable: Boolean) {
-        darkThieme = darkThiemeEnable
+    fun switchTheme(darkThemeEnable: Boolean) {
+        darkTheme = darkThemeEnable
         AppCompatDelegate.setDefaultNightMode(
-            if (darkThiemeEnable) {
+            if (darkThemeEnable) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
