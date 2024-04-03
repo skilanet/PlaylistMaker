@@ -1,8 +1,6 @@
 package com.example.playlistmaker.media_player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +10,8 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
 import com.example.playlistmaker.find.domain.models.Song
-import com.example.playlistmaker.media_player.view_model.MediaPlayerViewModel
-import com.example.playlistmaker.media_player.view_model.PlayingState
+import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
+import com.example.playlistmaker.media_player.ui.models.PlayingState
 import com.google.gson.Gson
 
 class MediaPlayerActivity : AppCompatActivity() {
@@ -34,16 +32,22 @@ class MediaPlayerActivity : AppCompatActivity() {
         val song = createSongFromJson(intent.getStringExtra(INTENT_PLAYLIST_KEY)!!)
         btnStartPause = binding.ivStopPlayButton
         tvNowTime = binding.tvNowTime
-        val handler = Handler(Looper.getMainLooper())
         viewModel = ViewModelProvider(
             this,
             MediaPlayerViewModel.getViewModelFactory(
-                song.previewUrl,
-                handler
+                song.previewUrl
             )
         )[MediaPlayerViewModel::class.java]
+        viewModel.observePlayingState().observe(this) {
+            setImage(it)
+            viewModel.stateControl()
+        }
+        viewModel.observeTimeState().observe(this) {
+            binding.tvNowTime.text = it
+            viewModel.updateTimeState()
+        }
 
-
+        // set info
         Glide.with(this.applicationContext).load(song.artworkUrl512)
             .into(binding.ivAlbumArtwork)
         binding.tvAlbumTextTop.text = song.collectionName
@@ -59,7 +63,9 @@ class MediaPlayerActivity : AppCompatActivity() {
             finish()
         }
 
+        viewModel.onPrepare()
         btnStartPause.setOnClickListener {
+            viewModel.playingControl()
         }
 
     }
@@ -70,7 +76,11 @@ class MediaPlayerActivity : AppCompatActivity() {
         btnStartPause.setImageDrawable(
             AppCompatResources.getDrawable(
                 this, when (state) {
-                    is PlayingState.Default, PlayingState.Prepared, PlayingState.Paused -> R.drawable.play_image
+                    is PlayingState.Default,
+                    PlayingState.Prepared,
+                    PlayingState.Paused,
+                    PlayingState.Complete -> R.drawable.play_image
+
                     is PlayingState.Playing -> R.drawable.pause_image
                 }
             )

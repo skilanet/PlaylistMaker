@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find.view_model
+package com.example.playlistmaker.find.ui.states
 
 import com.example.playlistmaker.find.domain.models.Song
 

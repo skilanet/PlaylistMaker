@@ -11,7 +11,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         darkTheme = sharedPreferenceInteractor.getThemeFromSharedPreference()
-        sharedPreferenceInteractor.setThemeToSharedPreference(darkTheme)
         switchTheme(darkTheme)
     }
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find.view_model
+package com.example.playlistmaker.find.presentation.view_model
 
 import android.app.Application
 import android.os.Handler
@@ -17,6 +17,8 @@ import com.example.playlistmaker.find.domain.models.HistoryOfSearch
 import com.example.playlistmaker.find.domain.models.Resource
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.find.domain.repository.SongsUseCase
+import com.example.playlistmaker.find.ui.states.HistoryState
+import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.utils.Creator
 
 private const val REQUEST_KEY = "REQUEST_KEY"
@@ -28,7 +30,7 @@ class FindViewModel(
     private var lastChangedText: String? = null
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 1000L
         private val SEARCH_REQUESTS_TOKEN = Any()
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -39,27 +41,30 @@ class FindViewModel(
 
     private val historySharedPreferenceInteractor =
         Creator.provideHistorySharedPreferenceInteractor(application)
-    private val historyState = MutableLiveData(
-        historySharedPreferenceInteractor.getSongsFromSharedPreference()
-    )
-
-    fun updateHistoryState(historyOfSearch: HistoryOfSearch = HistoryOfSearch(emptyList()), isClear: Boolean) {
-        if (!isClear) {
-            historySharedPreferenceInteractor.setSongsToSharedPreference(historyOfSearch)
-        } else {
-            historySharedPreferenceInteractor.clearSharedPreference()
-        }
-        historyState.postValue(historyOfSearch)
+    private val historyState = MutableLiveData<HistoryState>()
+    init {
+        val history = historySharedPreferenceInteractor.getSongsFromSharedPreference()
+        if (history.history.isEmpty()) historyState.postValue(HistoryState.Empty)
+        else historyState.postValue(HistoryState.Content(history.history))
     }
 
-    fun observeHistoryState(): LiveData<HistoryOfSearch> = historyState
+    fun updateHistoryState(history: List<Song>) {
+        if (history.isEmpty()) {
+            historyState.postValue(HistoryState.Empty)
+            historySharedPreferenceInteractor.clearSharedPreference()
+        }
+        else {
+            historyState.postValue(HistoryState.Content(history))
+            historySharedPreferenceInteractor.setSongsToSharedPreference(HistoryOfSearch(history))
+        }
+    }
 
+    fun observeHistoryState(): LiveData<HistoryState> = historyState
     private val handler = Handler(Looper.getMainLooper())
     private val searchState = MutableLiveData<TracksState>()
     private fun updateSearchState(state: TracksState) {
         searchState.postValue(state)
     }
-
     fun observeSearchState(): LiveData<TracksState> = searchState
     private val songUseCase = Creator.provideSongsUseCase()
     fun sendRequest(searchText: String) {
@@ -85,7 +90,6 @@ class FindViewModel(
             })
         }
     }
-
     fun searchDebounce(changedText: String) {
         if (lastChangedText == changedText) return
         lastChangedText = changedText
@@ -97,7 +101,6 @@ class FindViewModel(
         )
 
     }
-
     override fun onCleared() {
         super.onCleared()
         handler.removeCallbacksAndMessages(SEARCH_REQUESTS_TOKEN)

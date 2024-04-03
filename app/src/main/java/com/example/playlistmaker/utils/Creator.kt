@@ -35,8 +35,8 @@ object Creator {
     fun provideDebounceRepository(handler: Handler): DebounceInteractor =
         DebounceInteractorImpl(handler)
 
-    fun provideMediaPlayerInteractor(url: String, handler: Handler): MediaPlayerInteractor =
-        MediaPlayerInteractorImpl(url, handler)
+    fun provideMediaPlayerInteractor(url: String): MediaPlayerInteractor =
+        MediaPlayerInteractorImpl(url)
 
     fun provideSharingRepository(context: Context): SharingRepository =
         SharingRepositoryImpl(context)

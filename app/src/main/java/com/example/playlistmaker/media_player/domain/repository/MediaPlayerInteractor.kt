@@ -2,12 +2,11 @@ package com.example.playlistmaker.media_player.domain.repository
 
 interface MediaPlayerInteractor {
 
-    var currentTime: Int
+    var state: Int
     fun prepare()
     fun start()
     fun pause()
-    fun stop()
     fun release()
-    fun timeControl(): Runnable
+    fun getCurrentTime(): Int
 
 }
