@@ -33,6 +33,6 @@ class HistorySharedPreferenceInteractorImpl(context: Context) : HistorySharedPre
     private fun fromTracksToString(history: HistoryOfSearch): String = Gson().toJson(history)
     private fun fromJsonToHistory(json: String): HistoryOfSearch {
         return if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java)
-        else HistoryOfSearch(emptyList())
+        else HistoryOfSearch(ArrayList())
     }
 }

@@ -89,6 +89,8 @@ class FindActivity : AppCompatActivity() {
         binding.rvHistoryOfSearch.adapter = historyAdapter
         historyAdapter.onItemClick = { onItemClick(it) }
         binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
+        llHistoryOfSearch.visibility =
+            if (historyAdapter.tracks.isEmpty()) View.GONE else View.VISIBLE
 
         findToolbar.setNavigationOnClickListener {
             finish()
@@ -141,6 +143,7 @@ class FindActivity : AppCompatActivity() {
             adapter.tracks.clear()
             adapter.notifyItemRangeChanged(0, size)
             hideAll()
+            llHistoryOfSearch.visibility = View.VISIBLE
         }
 
         binding.btnUpdate.setOnClickListener {
@@ -183,9 +186,9 @@ class FindActivity : AppCompatActivity() {
         rvFindShowTrack.visibility = View.VISIBLE
     }
 
-    private fun showHistory(history: List<Song>) {
+    private fun showHistory(history: ArrayList<Song>) {
         hideAll()
-        historyAdapter.tracks.clear()
+        historyAdapter.tracks = ArrayList()
         historyAdapter.tracks.addAll(history)
         historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
         llHistoryOfSearch.visibility = View.VISIBLE
