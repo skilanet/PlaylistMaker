@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -36,26 +37,42 @@ class FindActivity : AppCompatActivity() {
 
     private val adapter = SongsAdapter()
     private val historyAdapter = SongsAdapter()
-    private lateinit var binding: ActivityFindBinding
+    private val binding: ActivityFindBinding by lazy {
+        ActivityFindBinding.inflate(layoutInflater)
+    }
     private var gettedString: String = ""
-    private lateinit var debounceInteractor: DebounceInteractor
-    private lateinit var pbLoading: ProgressBar
-    private lateinit var llNothingNotFound: LinearLayout
-    private lateinit var llNoInternetConnection: LinearLayout
-    private lateinit var llHistoryOfSearch: LinearLayout
-    private lateinit var rvFindShowTrack: RecyclerView
-    private lateinit var viewModel: FindViewModel
     private val handler = Handler(Looper.getMainLooper())
+    private val debounceInteractor: DebounceInteractor by lazy {
+        Creator.provideDebounceRepository(handler)
+    }
+    private val pbLoading: ProgressBar by lazy {
+        binding.pbLoading
+    }
+    private val llNothingNotFound: LinearLayout by lazy {
+        binding.llNothingNotFound
+    }
+    private val llNoInternetConnection: LinearLayout by lazy {
+        binding.llNoInternetConnection
+    }
+    private val llHistoryOfSearch: LinearLayout by lazy {
+        binding.llHistoryOfSearch
+    }
+    private val rvFindShowTrack: RecyclerView by lazy {
+        binding.rvFindShowTrack
+    }
+    private val viewModel: FindViewModel by lazy {
+        ViewModelProvider(
+            this,
+            FindViewModel.getViewModelFactory()
+        )[FindViewModel::class.java]
+    }
+    private val etFindText: EditText by lazy {
+        binding.etFindText
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFindBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        // viewmodel initialize
-        viewModel = ViewModelProvider(
-            this, FindViewModel.getViewModelFactory()
-        )[FindViewModel::class.java]
+        setContentView(binding.root)
 
         viewModel.observeSearchState().observe(this) {
             renderState(it)
@@ -64,16 +81,8 @@ class FindActivity : AppCompatActivity() {
             renderHistoryState(it)
         }
 
-        // lateinit initialize
-        debounceInteractor = Creator.provideDebounceRepository(handler)
-        rvFindShowTrack = binding.rvFindShowTrack
-        llNoInternetConnection = binding.llNoInternetConnection
-        llNothingNotFound = binding.llNothingNotFound
-        llHistoryOfSearch = binding.llHistoryOfSearch
-        pbLoading = binding.pbLoading
         val findToolbar = binding.findToolbar
         val ivClear = binding.ivClear
-        val etFindText = binding.etFindText
 
         // get string from savedInstance
         if (savedInstanceState != null) {
@@ -89,38 +98,25 @@ class FindActivity : AppCompatActivity() {
         binding.rvHistoryOfSearch.adapter = historyAdapter
         historyAdapter.onItemClick = { onItemClick(it) }
         binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
-        llHistoryOfSearch.visibility =
-            if (historyAdapter.tracks.isEmpty()) View.GONE else View.VISIBLE
 
         findToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        etFindText.doOnTextChanged { text, _, _, count ->
+        etFindText.doOnTextChanged { text, _, _, _ ->
             gettedString = text.toString()
             ivClear.visibility = setButtonVisibility(text)
             if (etFindText.hasFocus() && text?.isEmpty() == true) {
                 etFindText.isCursorVisible = etFindText.hasFocus()
-                if (historyAdapter.tracks.isEmpty()) {
-                    binding.llHistoryOfSearch.visibility = View.GONE
-                } else {
-                    binding.llHistoryOfSearch.visibility = View.VISIBLE
-                }
                 hideAll()
             } else binding.llHistoryOfSearch.visibility = View.GONE
             gettedString = text.toString()
-            if (count >= 2) viewModel.searchDebounce(text.toString())
-
+            viewModel.searchDebounce(text.toString())
         }
 
         etFindText.setOnFocusChangeListener { _, hasFocus ->
             etFindText.isCursorVisible = hasFocus
-            if (hasFocus && etFindText.text.isEmpty()) {
-                if (historyAdapter.tracks.isEmpty()) {
-                    binding.llHistoryOfSearch.visibility = View.GONE
-                } else {
-                    binding.llHistoryOfSearch.visibility = View.VISIBLE
-                }
+            if (hasFocus && etFindText.text.isNotEmpty()) {
                 hideAll()
             } else binding.llHistoryOfSearch.visibility = View.GONE
         }
@@ -191,7 +187,7 @@ class FindActivity : AppCompatActivity() {
         historyAdapter.tracks = ArrayList()
         historyAdapter.tracks.addAll(history)
         historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
-        llHistoryOfSearch.visibility = View.VISIBLE
+        llHistoryOfSearch.visibility = if (etFindText.text.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun showNothingNotFount() {

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.3.1"
+agp = "8.4.0-rc01"
 glide = "4.16.0"
 retrofit = "2.10.0"
 kotlin = "1.9.0"
