@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.playlistmaker"
-        minSdk = 29
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -28,8 +28,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -51,7 +50,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.glide)
     implementation(libs.retrofit)
+    implementation(libs.androidx.lifecycle.ktx)
     implementation(libs.retrofit.converter)
+    implementation(libs.androidx.activity.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
