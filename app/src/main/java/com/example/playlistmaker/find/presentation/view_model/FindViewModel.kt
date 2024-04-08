@@ -1,27 +1,22 @@
 package com.example.playlistmaker.find.presentation.view_model
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.App
 import com.example.playlistmaker.find.domain.models.HistoryOfSearch
 import com.example.playlistmaker.find.domain.models.Resource
 import com.example.playlistmaker.find.domain.models.Song
-import com.example.playlistmaker.find.domain.repository.SongsUseCase
+import com.example.playlistmaker.find.domain.repository.HistorySharedPreference
+import com.example.playlistmaker.find.domain.repository.SongsInteractor
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
-import com.example.playlistmaker.utils.Creator
 
 class FindViewModel(
-    application: Application
+    private val historySharedPreference: HistorySharedPreference,
+    private val songsInteractor: SongsInteractor
 ) : ViewModel() {
     private val tracks = ArrayList<Song>()
     private var lastChangedText: String? = null
@@ -29,19 +24,12 @@ class FindViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 1000L
         private val SEARCH_REQUESTS_TOKEN = Any()
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                FindViewModel(this[APPLICATION_KEY] as App)
-            }
-        }
     }
 
-    private val historySharedPreferenceInteractor =
-        Creator.provideHistorySharedPreferenceInteractor(application)
     private val historyState = MutableLiveData<HistoryState>()
 
     init {
-        val history = historySharedPreferenceInteractor.getSongsFromSharedPreference()
+        val history = historySharedPreference.getSongsFromSharedPreference()
         if (history.history.isEmpty()) historyState.postValue(HistoryState.Empty)
         else historyState.postValue(HistoryState.Content(history.history))
     }
@@ -49,10 +37,10 @@ class FindViewModel(
     fun updateHistoryState(history: ArrayList<Song>) {
         if (history.isEmpty()) {
             historyState.postValue(HistoryState.Empty)
-            historySharedPreferenceInteractor.clearSharedPreference()
+            historySharedPreference.clearSharedPreference()
         } else {
             historyState.postValue(HistoryState.Content(history))
-            historySharedPreferenceInteractor.setSongsToSharedPreference(HistoryOfSearch(history))
+            historySharedPreference.setSongsToSharedPreference(HistoryOfSearch(history))
         }
     }
 
@@ -64,11 +52,10 @@ class FindViewModel(
     }
 
     fun observeSearchState(): LiveData<TracksState> = searchState
-    private val songUseCase = Creator.provideSongsUseCase()
     fun sendRequest(searchText: String) {
         if (searchText.isNotEmpty()) {
             updateSearchState(TracksState.Loading)
-            songUseCase.searchSongs(searchText, object : SongsUseCase.SongsConsumer {
+            songsInteractor.searchSongs(searchText, object : SongsInteractor.SongsConsumer {
                 override fun consume(foundSongs: Resource<List<Song>>) {
                     when (foundSongs) {
                         is Resource.Success -> {
@@ -80,7 +67,7 @@ class FindViewModel(
                             }
                         }
 
-                        is Resource.Error -> updateSearchState(TracksState.Error(foundSongs.errorCode))
+                        is Resource.Error -> updateSearchState(TracksState.Error)
                     }
                 }
 

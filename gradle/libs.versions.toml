@@ -13,6 +13,7 @@ material = "1.11.0"
 activity = "1.8.2"
 activity-ktx = "1.8.2"
 constraintlayout = "2.1.4"
+koin="3.5.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-activity-ktx = {group = "androidx.activity", name = "activity-ktx", version.ref="activity-ktx"}
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+koin = {group="io.insert-koin", name="koin-android", version.ref="koin"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

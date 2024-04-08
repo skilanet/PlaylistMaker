@@ -17,7 +17,6 @@
     <string name="track_name_plug">Track name plug</string>
     <string name="info_plug">info_plug</string>
     <string name="track_time_plug">track_time_plug</string>
-    <string name="button_plug">Эта кнопка пока не работает:(</string>
     <string name="nothing_not_found">Ничего не нашлось</string>
     <string name="no_internet_connection_text">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="update">Обновить</string>
@@ -29,4 +28,5 @@
     <string name="album">Альбом</string>
     <string name="duration">Длительность</string>
     <string name="zero">00:00</string>
+    <string name="empty_string" />
 </resources>

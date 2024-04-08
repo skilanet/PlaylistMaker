@@ -1,17 +1,14 @@
 package com.example.playlistmaker.settings.domain.impl
 
-import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreferenceInteractor
+import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreference
 
-class ThemeSharedPreferenceInteractorImpl(context: Context) : ThemeSharedPreferenceInteractor {
+class ThemeSharedPreferenceImpl(
+    private val sharedPreferences: SharedPreferences
+) : ThemeSharedPreference {
     companion object {
-        const val SHARED_PREFERENCE_NAME = "PLAYLISTMAKER_SHARED_PREFS"
         const val THEME_SWITCH_KEY = "THEME_SWITCH_KEY"
-    }
-
-    private val sharedPreferences by lazy {
-        context.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
     override fun getThemeFromSharedPreference(): Boolean {
