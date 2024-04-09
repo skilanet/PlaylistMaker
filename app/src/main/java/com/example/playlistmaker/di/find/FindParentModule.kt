@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find.di
+package com.example.playlistmaker.di.find
 
 import org.koin.dsl.module
 

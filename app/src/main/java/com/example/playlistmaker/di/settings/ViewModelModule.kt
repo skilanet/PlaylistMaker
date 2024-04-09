@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings.di
+package com.example.playlistmaker.di.settings
 
 import com.example.playlistmaker.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel

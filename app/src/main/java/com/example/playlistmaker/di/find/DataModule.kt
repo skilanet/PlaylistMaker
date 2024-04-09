@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find.di
+package com.example.playlistmaker.di.find
 
 import android.content.Context
 import com.example.playlistmaker.find.data.impl.HistorySharedPreferenceImpl

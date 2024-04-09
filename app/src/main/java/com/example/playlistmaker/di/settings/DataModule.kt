@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings.di
+package com.example.playlistmaker.di.settings
 
 import com.example.playlistmaker.settings.domain.impl.ThemeSharedPreferenceImpl
 import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreference

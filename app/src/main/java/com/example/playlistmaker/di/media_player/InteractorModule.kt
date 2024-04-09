@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media_player.di
+package com.example.playlistmaker.di.media_player
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.media_player.data.impl.MediaPlayerInteractorImpl

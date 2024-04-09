@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find.di
+package com.example.playlistmaker.di.find
 
 import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel

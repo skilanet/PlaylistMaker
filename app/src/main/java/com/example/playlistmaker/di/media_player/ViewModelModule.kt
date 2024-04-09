@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media_player.di
+package com.example.playlistmaker.di.media_player
 
 import com.example.playlistmaker.media_player.domain.repository.MediaPlayerInteractor
 import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
