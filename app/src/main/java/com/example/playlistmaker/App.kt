@@ -2,11 +2,11 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.di.find.findParentModule
-import com.example.playlistmaker.di.media_player.mediaPlayerParentModule
-import com.example.playlistmaker.di.settings.settingsParentModule
-import com.example.playlistmaker.di.sharing.sharingRepositoryModule
+import com.example.playlistmaker.find.di.findModule
+import com.example.playlistmaker.media_player.di.mediaPlayerModule
+import com.example.playlistmaker.settings.di.settingsModule
 import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreference
+import com.example.playlistmaker.sharing.di.sharingModule
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -20,7 +20,12 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(findParentModule, mediaPlayerParentModule, settingsParentModule, sharingRepositoryModule)
+            modules(
+                findModule,
+                mediaPlayerModule,
+                settingsModule,
+                sharingModule
+            )
         }
         val sharedPreference = getKoin().get<ThemeSharedPreference>()
         darkTheme = sharedPreference.getThemeFromSharedPreference()
