@@ -5,6 +5,7 @@ import com.example.playlistmaker.media_player.domain.repository.MediaPlayerInter
 
 class MediaPlayerInteractorImpl(
     private val url: String,
+    private val mediaPlayer: MediaPlayer
 ) : MediaPlayerInteractor {
 
     private companion object {
@@ -14,7 +15,6 @@ class MediaPlayerInteractorImpl(
         const val STATE_PAUSED = 0x000003
     }
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
     override var state = STATE_DEFAULT
 
 

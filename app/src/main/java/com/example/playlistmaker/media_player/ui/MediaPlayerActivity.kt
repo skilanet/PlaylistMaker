@@ -5,7 +5,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
@@ -13,6 +12,8 @@ import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.media_player.ui.models.PlayingState
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MediaPlayerActivity : AppCompatActivity() {
 
@@ -23,21 +24,20 @@ class MediaPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaPlayerBinding
     private lateinit var btnStartPause: ImageView
     private lateinit var tvNowTime: TextView
-    private lateinit var viewModel: MediaPlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val song = createSongFromJson(intent.getStringExtra(INTENT_PLAYLIST_KEY)!!)
+        val url = song.previewUrl
         btnStartPause = binding.ivStopPlayButton
         tvNowTime = binding.tvNowTime
-        viewModel = ViewModelProvider(
-            this,
-            MediaPlayerViewModel.getViewModelFactory(
-                song.previewUrl
-            )
-        )[MediaPlayerViewModel::class.java]
+
+        val viewModel: MediaPlayerViewModel by viewModel {
+            parametersOf(url)
+        }
+
         viewModel.observePlayingState().observe(this) {
             setImage(it)
             viewModel.stateControl()

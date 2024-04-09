@@ -3,38 +3,20 @@ package com.example.playlistmaker.settings.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreferenceInteractor
+import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreference
 import com.example.playlistmaker.sharing.domain.models.EmailData
 import com.example.playlistmaker.sharing.domain.models.ShareAppData
 import com.example.playlistmaker.sharing.domain.models.TermsData
 import com.example.playlistmaker.sharing.domain.repository.SharingRepository
-import com.example.playlistmaker.utils.Creator
 
 class SettingsViewModel(
     sharingRepository: SharingRepository,
-    private val sharedPreferenceInteractor: ThemeSharedPreferenceInteractor
+    private val themeSharedPreference: ThemeSharedPreference
 ) : ViewModel() {
 
-    companion object {
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val context = this[APPLICATION_KEY]!!.applicationContext
-                SettingsViewModel(
-                    Creator.provideSharingRepository(context),
-                    Creator.provideThemeSharedPreference(context)
-                )
-            }
-        }
-    }
-
-    private val themeState = MutableLiveData(sharedPreferenceInteractor.getThemeFromSharedPreference())
+    private val themeState = MutableLiveData(themeSharedPreference.getThemeFromSharedPreference())
     fun updateThemeState(isDarkTheme: Boolean){
-        sharedPreferenceInteractor.setThemeToSharedPreference(isDarkTheme)
+        themeSharedPreference.setThemeToSharedPreference(isDarkTheme)
         themeState.postValue(isDarkTheme)
     }
     fun observeThemeState(): LiveData<Boolean> = themeState

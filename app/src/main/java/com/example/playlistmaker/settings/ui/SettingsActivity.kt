@@ -4,16 +4,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.view_model.SettingsViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
     private lateinit var scSwitchLightNightMode: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,10 +23,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(view)
 
         scSwitchLightNightMode = binding.scSwitchLightNightMode
-
-        viewModel = ViewModelProvider(
-            this, SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
 
         binding.scSwitchLightNightMode.isChecked = viewModel.observeThemeState().value!!
 

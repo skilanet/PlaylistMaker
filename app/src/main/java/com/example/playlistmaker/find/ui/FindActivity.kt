@@ -3,8 +3,6 @@ package com.example.playlistmaker.find.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -13,9 +11,9 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityFindBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.find.domain.repository.DebounceInteractor
@@ -23,8 +21,9 @@ import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
-import com.example.playlistmaker.utils.Creator
 import com.google.gson.Gson
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FindActivity : AppCompatActivity() {
 
@@ -41,10 +40,6 @@ class FindActivity : AppCompatActivity() {
         ActivityFindBinding.inflate(layoutInflater)
     }
     private var gettedString: String = ""
-    private val handler = Handler(Looper.getMainLooper())
-    private val debounceInteractor: DebounceInteractor by lazy {
-        Creator.provideDebounceRepository(handler)
-    }
     private val pbLoading: ProgressBar by lazy {
         binding.pbLoading
     }
@@ -60,12 +55,8 @@ class FindActivity : AppCompatActivity() {
     private val rvFindShowTrack: RecyclerView by lazy {
         binding.rvFindShowTrack
     }
-    private val viewModel: FindViewModel by lazy {
-        ViewModelProvider(
-            this,
-            FindViewModel.getViewModelFactory()
-        )[FindViewModel::class.java]
-    }
+    private val debounceInteractor: DebounceInteractor by inject()
+    private val viewModel by viewModel<FindViewModel>()
     private val etFindText: EditText by lazy {
         binding.etFindText
     }
@@ -131,7 +122,7 @@ class FindActivity : AppCompatActivity() {
         }
 
         ivClear.setOnClickListener {
-            etFindText.setText("")
+            etFindText.setText(getString(R.string.empty_string))
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
@@ -217,7 +208,7 @@ class FindActivity : AppCompatActivity() {
         if (debounceInteractor.clickDebounce()) {
             val contains = historyAdapter.tracks.contains(song)
             updateHistoryAdapter(contains, song)
-            if (historyAdapter.tracks.size > 9) {
+            if (historyAdapter.tracks.size > 10) {
                 historyAdapter.tracks.removeAt(9)
             }
             viewModel.updateHistoryState(historyAdapter.tracks)

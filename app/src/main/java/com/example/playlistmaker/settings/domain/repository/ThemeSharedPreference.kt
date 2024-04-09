@@ -1,6 +1,6 @@
 package com.example.playlistmaker.settings.domain.repository
 
-interface ThemeSharedPreferenceInteractor {
+interface ThemeSharedPreference {
     fun getThemeFromSharedPreference(): Boolean
     fun setThemeToSharedPreference(theme: Boolean)
 }

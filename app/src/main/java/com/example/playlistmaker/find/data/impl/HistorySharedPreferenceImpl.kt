@@ -1,18 +1,16 @@
 package com.example.playlistmaker.find.data.impl
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.find.domain.models.HistoryOfSearch
-import com.example.playlistmaker.find.domain.repository.HistorySharedPreferenceInteractor
+import com.example.playlistmaker.find.domain.repository.HistorySharedPreference
 import com.google.gson.Gson
 
-class HistorySharedPreferenceInteractorImpl(context: Context) : HistorySharedPreferenceInteractor {
+class HistorySharedPreferenceImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : HistorySharedPreference {
     private companion object {
-        const val SHARED_PREFERENCE_NAME = "PLAYLISTMAKER_SHARED_PREFS"
         const val HISTORY_LIST_KEY = "ADD_HISTORY_LIST"
-    }
-
-    private val sharedPreferences by lazy {
-        context.getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
     }
 
     override fun getSongsFromSharedPreference(): HistoryOfSearch {
@@ -30,9 +28,9 @@ class HistorySharedPreferenceInteractorImpl(context: Context) : HistorySharedPre
         sharedPreferences.edit().remove(HISTORY_LIST_KEY).apply()
     }
 
-    private fun fromTracksToString(history: HistoryOfSearch): String = Gson().toJson(history)
+    private fun fromTracksToString(history: HistoryOfSearch): String = gson.toJson(history)
     private fun fromJsonToHistory(json: String): HistoryOfSearch {
-        return if (json.isNotEmpty()) Gson().fromJson(json, HistoryOfSearch::class.java)
+        return if (json.isNotEmpty()) gson.fromJson(json, HistoryOfSearch::class.java)
         else HistoryOfSearch(ArrayList())
     }
 }

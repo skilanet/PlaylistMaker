@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.koin )
     implementation(libs.glide)
     implementation(libs.retrofit)
     implementation(libs.androidx.lifecycle.ktx)
