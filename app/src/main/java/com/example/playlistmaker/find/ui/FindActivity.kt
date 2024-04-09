@@ -208,7 +208,7 @@ class FindActivity : AppCompatActivity() {
         if (debounceInteractor.clickDebounce()) {
             val contains = historyAdapter.tracks.contains(song)
             updateHistoryAdapter(contains, song)
-            if (historyAdapter.tracks.size > 9) {
+            if (historyAdapter.tracks.size > 10) {
                 historyAdapter.tracks.removeAt(9)
             }
             viewModel.updateHistoryState(historyAdapter.tracks)
