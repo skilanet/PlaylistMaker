@@ -74,7 +74,7 @@
             <ImageView
                 style="@style/error_iv"
                 android:importantForAccessibility="no"
-                android:src="@drawable/nothing_not_found_image" />
+                android:src="@drawable/error_image" />
 
             <TextView
                 style="@style/error_tv"

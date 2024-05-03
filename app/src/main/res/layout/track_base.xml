@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/tv_track_name"
-                style="@style/find_track_title_color"
+                style="@style/text_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
