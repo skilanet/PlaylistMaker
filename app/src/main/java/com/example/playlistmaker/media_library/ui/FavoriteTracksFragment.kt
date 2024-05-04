@@ -19,4 +19,13 @@ class FavoriteTracksFragment : Fragment() {
         _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    companion object{
+        fun newInstance() = FavoriteTracksFragment()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

@@ -18,4 +18,12 @@ class PlaylistsFragment : Fragment() {
         _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    companion object{
+        fun newInstance() = PlaylistsFragment()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

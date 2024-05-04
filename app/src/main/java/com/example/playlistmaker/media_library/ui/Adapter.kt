@@ -9,12 +9,9 @@ class Adapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : Fragment
     fragmentManager, lifecycle
 ) {
 
-    private val chooseFragment = arrayOf(
-        { FavoriteTracksFragment() },
-        { PlaylistsFragment() }
-    )
-
     override fun getItemCount(): Int = 2
 
-    override fun createFragment(position: Int): Fragment = chooseFragment[position].invoke()
+    override fun createFragment(position: Int): Fragment =
+        if (position == 0) FavoriteTracksFragment.newInstance()
+        else PlaylistsFragment.newInstance()
 }
