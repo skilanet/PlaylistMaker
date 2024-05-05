@@ -4,6 +4,7 @@
     android:id="@+id/activity_find"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/background"
     android:orientation="vertical">
 
     <Toolbar
@@ -74,7 +75,7 @@
             <ImageView
                 style="@style/error_iv"
                 android:importantForAccessibility="no"
-                android:src="@drawable/nothing_not_found_image" />
+                android:src="@drawable/error_image" />
 
             <TextView
                 style="@style/error_tv"
