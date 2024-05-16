@@ -1,7 +1,6 @@
 package com.example.playlistmaker.find.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -21,7 +21,7 @@ import com.example.playlistmaker.find.domain.repository.DebounceInteractor
 import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
-import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
+import com.example.playlistmaker.media_player.ui.MediaPlayerFragment
 import com.example.playlistmaker.util.FragmentBinding
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
@@ -186,10 +186,10 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
             }
             viewModel.updateHistoryState(historyAdapter.tracks)
             historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
-            Intent(requireContext(), MediaPlayerActivity::class.java).apply {
-                putExtra(MediaPlayerActivity.SONG_TRANS_KEY, createJsonFromSong(song))
-                startActivity(this)
-            }
+            findNavController().navigate(
+                R.id.action_findFragment_to_mediaPlayerFragment,
+                MediaPlayerFragment.createArgs(createJsonFromSong(song))
+            )
         }
     }
 

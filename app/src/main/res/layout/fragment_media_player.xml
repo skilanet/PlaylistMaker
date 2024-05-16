@@ -6,7 +6,7 @@
     style="@style/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".media_player.ui.MediaPlayerActivity">
+    tools:context=".media_player.ui.MediaPlayerFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_24_start"
