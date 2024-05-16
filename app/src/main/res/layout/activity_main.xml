@@ -25,7 +25,7 @@
         style="@style/main_button_style"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/button_find_text"
+        android:text="@string/search"
         android:textSize="@dimen/text_size_22sp"
         app:icon="@drawable/find_icon" />
 

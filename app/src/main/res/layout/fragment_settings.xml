@@ -5,7 +5,9 @@
     style="@style/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".settings.ui.SettingFragment">
 
     <Toolbar
         android:id="@+id/settings_toolbar"
