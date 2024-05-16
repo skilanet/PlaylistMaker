@@ -3,43 +3,34 @@ package com.example.playlistmaker.find.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.databinding.FragmentFindBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.find.domain.repository.DebounceInteractor
 import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
+import com.example.playlistmaker.util.FragmentBinding
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FindActivity : AppCompatActivity() {
-
-
-    private companion object {
-        const val KEY = "ADD_KEY"
-        const val DEFAULT = ""
-        const val INTENT_PLAYLIST_KEY = "INTENT_PLAYLIST_KEY"
-    }
+class FindFragment : FragmentBinding<FragmentFindBinding>() {
 
     private val adapter = SongsAdapter()
     private val historyAdapter = SongsAdapter()
-    private val binding: ActivityFindBinding by lazy {
-        ActivityFindBinding.inflate(layoutInflater)
-    }
-    private var gettedString: String = ""
     private val pbLoading: ProgressBar by lazy {
         binding.pbLoading
     }
@@ -61,47 +52,37 @@ class FindActivity : AppCompatActivity() {
         binding.etFindText
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun createBinding(
+        layoutInflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFindBinding = FragmentFindBinding.inflate(layoutInflater, container, false)
 
-        viewModel.observeSearchState().observe(this) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.observeSearchState().observe(viewLifecycleOwner) {
             renderState(it)
         }
-        viewModel.observeHistoryState().observe(this) {
+        viewModel.observeHistoryState().observe(viewLifecycleOwner) {
             renderHistoryState(it)
         }
 
-        val findToolbar = binding.findToolbar
         val ivClear = binding.ivClear
-
-        // get string from savedInstance
-        if (savedInstanceState != null) {
-            gettedString = savedInstanceState.getString(KEY, DEFAULT).toString()
-            etFindText.setText(gettedString)
-        }
 
         // adapter initialize
         rvFindShowTrack.adapter = adapter
         adapter.onItemClick = { onItemClick(it) }
-        rvFindShowTrack.layoutManager = LinearLayoutManager(this)
+        rvFindShowTrack.layoutManager = LinearLayoutManager(requireContext())
 
         binding.rvHistoryOfSearch.adapter = historyAdapter
         historyAdapter.onItemClick = { onItemClick(it) }
-        binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
-
-        findToolbar.setNavigationOnClickListener {
-            finish()
-        }
+        binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(requireContext())
 
         etFindText.doOnTextChanged { text, _, _, _ ->
-            gettedString = text.toString()
             ivClear.visibility = setButtonVisibility(text)
             if (etFindText.hasFocus() && text?.isEmpty() == true) {
                 etFindText.isCursorVisible = etFindText.hasFocus()
                 hideAll()
             } else binding.llHistoryOfSearch.visibility = View.GONE
-            gettedString = text.toString()
             viewModel.searchDebounce(text.toString())
         }
 
@@ -124,8 +105,11 @@ class FindActivity : AppCompatActivity() {
         ivClear.setOnClickListener {
             etFindText.setText(getString(R.string.empty_string))
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(
+                requireActivity().currentFocus?.windowToken,
+                0
+            )
             val size = adapter.itemCount
             adapter.tracks.clear()
             adapter.notifyItemRangeChanged(0, size)
@@ -134,7 +118,7 @@ class FindActivity : AppCompatActivity() {
         }
 
         binding.btnUpdate.setOnClickListener {
-            viewModel.sendRequest(gettedString)
+            viewModel.sendRequest(etFindText.text.toString())
         }
 
         binding.btnClearSearchHistory.setOnClickListener {
@@ -144,7 +128,6 @@ class FindActivity : AppCompatActivity() {
             viewModel.updateHistoryState(historyAdapter.tracks)
             hideAll()
         }
-
     }
 
     private fun setButtonVisibility(s: CharSequence?): Int {
@@ -153,16 +136,6 @@ class FindActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(KEY, gettedString)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        gettedString = savedInstanceState.getString(KEY, DEFAULT)
     }
 
     private fun showRecycle(tracks: List<Song>) {
@@ -213,8 +186,8 @@ class FindActivity : AppCompatActivity() {
             }
             viewModel.updateHistoryState(historyAdapter.tracks)
             historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
-            Intent(this, MediaPlayerActivity::class.java).apply {
-                putExtra(INTENT_PLAYLIST_KEY, createJsonFromSong(song))
+            Intent(requireContext(), MediaPlayerActivity::class.java).apply {
+                putExtra(MediaPlayerActivity.SONG_TRANS_KEY, createJsonFromSong(song))
                 startActivity(this)
             }
         }

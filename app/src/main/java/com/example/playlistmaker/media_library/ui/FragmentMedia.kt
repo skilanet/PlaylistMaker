@@ -1,25 +1,27 @@
 package com.example.playlistmaker.media_library.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.databinding.FragmentMediaBinding
+import com.example.playlistmaker.util.FragmentBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MediaActivity : AppCompatActivity() {
+class FragmentMedia : FragmentBinding<FragmentMediaBinding>() {
 
-    private lateinit var binding: ActivityMediaBinding
+    override fun createBinding(
+        layoutInflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMediaBinding = FragmentMediaBinding.inflate(layoutInflater, container, false)
+
     private lateinit var tabLayoutMediator: TabLayoutMediator
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMediaBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        binding.mediaToolbar.setNavigationOnClickListener {
-            finish()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.vpMedia.adapter = Adapter(supportFragmentManager, lifecycle)
+        binding.vpMedia.adapter = Adapter(childFragmentManager, lifecycle)
         tabLayoutMediator = TabLayoutMediator(binding.tlMedia, binding.vpMedia) { tab, position ->
             when (position) {
                 0 -> {

@@ -53,7 +53,7 @@ class SettingFragment : FragmentBinding<FragmentSettingsBinding>() {
     }
 
     private fun switchTheme(isDarkTheme: Boolean) {
-        (requireContext() as App).switchTheme(isDarkTheme)
+        (requireActivity().application as App).switchTheme(isDarkTheme)
         viewModel.updateThemeState(isDarkTheme)
     }
 

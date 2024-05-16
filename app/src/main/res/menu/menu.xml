@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/search"
+    <item
+        android:id="@+id/findFragment"
+        android:title="@string/search"
         android:icon="@drawable/search_icon"/>
-    <item android:title="@string/media_library"
+    <item
+        android:id="@+id/fragmentMedia"
+        android:title="@string/media_library"
         android:icon="@drawable/playlist_icon"/>
     <item
         android:id="@+id/settingFragment"

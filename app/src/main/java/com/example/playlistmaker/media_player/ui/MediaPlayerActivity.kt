@@ -17,8 +17,8 @@ import org.koin.core.parameter.parametersOf
 
 class MediaPlayerActivity : AppCompatActivity() {
 
-    private companion object {
-        const val INTENT_PLAYLIST_KEY = "INTENT_PLAYLIST_KEY"
+    companion object {
+        const val SONG_TRANS_KEY = "song_trans_key"
     }
 
     private lateinit var binding: ActivityMediaPlayerBinding
@@ -29,7 +29,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val song = createSongFromJson(intent.getStringExtra(INTENT_PLAYLIST_KEY)!!)
+        val song = createSongFromJson(intent.getStringExtra(SONG_TRANS_KEY)!!)
         val url = song.previewUrl
         btnStartPause = binding.ivStopPlayButton
         tvNowTime = binding.tvNowTime
