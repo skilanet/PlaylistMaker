@@ -20,11 +20,11 @@
         android:label="fragment_find"
         tools:layout="@layout/fragment_find" >
         <action
-            android:id="@+id/action_findFragment_to_mediaPlayerFragment"
-            app:destination="@id/mediaPlayerFragment" />
+            android:id="@+id/action_findFragment_to_mediaPlayerActivity"
+            app:destination="@id/mediaPlayerActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/mediaPlayerFragment"
-        android:name="com.example.playlistmaker.media_player.ui.MediaPlayerFragment"
-        android:label="MediaPlayerFragment" />
+    <activity
+        android:id="@+id/mediaPlayerActivity"
+        android:name="com.example.playlistmaker.media_player.ui.MediaPlayerActivity"
+        android:label="MediaPlayerActivity" />
 </navigation>

@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackBaseBinding
 import com.example.playlistmaker.find.domain.models.Song
 
-class SongsAdapter: RecyclerView.Adapter<SongsViewHolder>() {
+class SongsAdapter(private val isHistory: Boolean): RecyclerView.Adapter<SongsViewHolder>() {
 
 
     var tracks = ArrayList<Song>()
-    var onItemClick: ((Song) -> Unit)? = null
+    var onItemClick: ((Song, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongsViewHolder =
         SongsViewHolder(
@@ -27,7 +27,7 @@ class SongsAdapter: RecyclerView.Adapter<SongsViewHolder>() {
         val track = tracks[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(track)
+            onItemClick?.invoke(track, isHistory)
         }
     }
 }

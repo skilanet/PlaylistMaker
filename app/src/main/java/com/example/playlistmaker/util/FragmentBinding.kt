@@ -1,6 +1,7 @@
 package com.example.playlistmaker.util
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +22,5 @@ abstract class FragmentBinding<T : ViewBinding> : Fragment() {
     ): View? {
         _binding = createBinding(inflater, container)
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

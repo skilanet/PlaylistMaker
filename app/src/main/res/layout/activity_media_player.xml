@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cl_main"
+    android:id="@+id/cl_activity_media_player"
     style="@style/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".media_player.ui.MediaPlayerFragment">
+    tools:context=".media_player.ui.MediaPlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_24_start"
