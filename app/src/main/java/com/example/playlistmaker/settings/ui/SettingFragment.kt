@@ -20,15 +20,7 @@ class SettingFragment : FragmentBinding<FragmentSettingsBinding>() {
         container: ViewGroup?
     ): FragmentSettingsBinding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
 
-    private val viewModel: SettingsViewModel by viewModel()
-    private lateinit var scSwitchLightNightMode: SwitchMaterial
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        scSwitchLightNightMode = binding.scSwitchLightNightMode
-
-        binding.scSwitchLightNightMode.isChecked = viewModel.observeThemeState().value!!
-
+    override fun setupListeners() {
         binding.ivShareApp.setOnClickListener {
             viewModel.observeShareAppState().observe(viewLifecycleOwner) {
                 shareApp(it.url)
@@ -46,6 +38,16 @@ class SettingFragment : FragmentBinding<FragmentSettingsBinding>() {
                 goToTerms(it.url)
             }
         }
+    }
+
+    private val viewModel: SettingsViewModel by viewModel()
+    private lateinit var scSwitchLightNightMode: SwitchMaterial
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        scSwitchLightNightMode = binding.scSwitchLightNightMode
+
+        binding.scSwitchLightNightMode.isChecked = viewModel.observeThemeState().value!!
 
         scSwitchLightNightMode.setOnCheckedChangeListener { _, isDarkTheme ->
             switchTheme(isDarkTheme)

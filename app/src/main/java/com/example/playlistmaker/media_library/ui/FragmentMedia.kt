@@ -16,6 +16,8 @@ class FragmentMedia : FragmentBinding<FragmentMediaBinding>() {
         container: ViewGroup?
     ): FragmentMediaBinding = FragmentMediaBinding.inflate(layoutInflater, container, false)
 
+    override fun setupListeners() {}
+
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

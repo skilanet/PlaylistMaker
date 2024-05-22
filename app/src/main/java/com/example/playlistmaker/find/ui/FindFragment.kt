@@ -2,7 +2,6 @@ package com.example.playlistmaker.find.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,48 +23,22 @@ import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
+import com.example.playlistmaker.util.FragmentBinding
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val VISIBILITY_TAG = "VISIBILITY_TAG"
-private const val LIFECYCLE_TAG = "LIFECYCLE_TAG"
+class FindFragment : FragmentBinding<FragmentFindBinding>() {
 
-class FindFragment : Fragment() {
+    override fun createBinding(
+        layoutInflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFindBinding = FragmentFindBinding.inflate(layoutInflater, container, false)
 
-    private var _binding: FragmentFindBinding? = null
-    private val binding get() = _binding!!
     private val adapter = SongsAdapter(false)
     private val historyAdapter = SongsAdapter(true)
     private val debounceInteractor: DebounceInteractor by inject()
     private val viewModel by viewModel<FindViewModel>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Log.d(LIFECYCLE_TAG, "onCreateView")
-        _binding = FragmentFindBinding.inflate(inflater, container, false)
-        binding.rvFindShowTrack.adapter = adapter
-        binding.rvFindShowTrack.layoutManager = LinearLayoutManager(requireActivity())
-
-        binding.rvHistoryOfSearch.adapter = historyAdapter
-        binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(requireActivity())
-
-        adapter.onItemClick = { song, isHistory ->
-            onItemClick(song, isHistory)
-        }
-        historyAdapter.onItemClick = { song, isHistory -> onItemClick(song, isHistory) }
-        viewModel.observeSearchState().observe(viewLifecycleOwner) {
-            renderState(it)
-
-        }
-        viewModel.observeHistoryState().observe(viewLifecycleOwner) {
-            renderHistoryState(it)
-        }
-        return binding.root
-    }
 
     private var lastState = true
 
@@ -92,13 +64,24 @@ class FindFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(LIFECYCLE_TAG, "onViewCreated")
+        binding.rvFindShowTrack.adapter = adapter
+        binding.rvFindShowTrack.layoutManager = LinearLayoutManager(requireActivity())
 
-        Log.d(
-            VISIBILITY_TAG,
-            "rvFindShow = {${binding.rvFindShowTrack.visibility}}\nrvHistory = {${binding.llHistoryOfSearch.visibility}}" +
-                    "\nllNothing = {${binding.llNothingNotFound.visibility}}\nllNoInternet = {${binding.llNoInternetConnection.visibility}}"
-        )
+        binding.rvHistoryOfSearch.adapter = historyAdapter
+        binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(requireActivity())
+
+        adapter.onItemClick = { song, isHistory ->
+            onItemClick(song, isHistory)
+        }
+        historyAdapter.onItemClick = { song, isHistory -> onItemClick(song, isHistory) }
+
+        viewModel.observeSearchState().observe(viewLifecycleOwner) {
+            renderState(it)
+
+        }
+        viewModel.observeHistoryState().observe(viewLifecycleOwner) {
+            renderHistoryState(it)
+        }
 
         val ivClear = binding.ivClear
 
@@ -126,8 +109,10 @@ class FindFragment : Fragment() {
             }
             false
         }
+    }
 
-        ivClear.setOnClickListener {
+    override fun setupListeners() {
+        binding.ivClear.setOnClickListener {
             etFindText.setText(getString(R.string.empty_string))
             val inputMethodManager =
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -139,7 +124,7 @@ class FindFragment : Fragment() {
             adapter.tracks.clear()
             adapter.notifyItemRangeChanged(0, size)
             hideAll()
-            llHistoryOfSearch.isVisible = true
+            llHistoryOfSearch.isVisible = historyAdapter.tracks.isNotEmpty()
         }
 
         binding.btnUpdate.setOnClickListener {
@@ -153,7 +138,6 @@ class FindFragment : Fragment() {
             viewModel.updateHistoryState(historyAdapter.tracks)
             hideAll()
         }
-
     }
 
     private fun showRecycle(tracks: List<Song>) {
@@ -193,7 +177,6 @@ class FindFragment : Fragment() {
         llNoInternetConnection.visibility = View.GONE
         pbLoading.visibility = View.GONE
         llHistoryOfSearch.visibility = View.GONE
-        Log.d(VISIBILITY_TAG, "hideAll() method")
     }
 
     private fun onItemClick(song: Song, isHistory: Boolean) {
@@ -220,9 +203,8 @@ class FindFragment : Fragment() {
         super.onResume()
         if (lastState) {
             hideAll()
-            llHistoryOfSearch.isVisible = true
-        }
-        else {
+            llHistoryOfSearch.isVisible = true && historyAdapter.tracks.isNotEmpty()
+        } else {
             hideAll()
             rvFindShowTrack.isVisible = true
         }
