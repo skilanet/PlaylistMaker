@@ -7,4 +7,5 @@
     <dimen name="setting_frame_layout_padding_start">16dp</dimen>
     <dimen name="setting_frame_layout_padding_end">12dp</dimen>
     <dimen name="settings_frame_margin">4dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

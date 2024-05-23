@@ -1,45 +1,47 @@
 package com.example.playlistmaker.find.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityFindBinding
+import com.example.playlistmaker.databinding.FragmentFindBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.find.domain.repository.DebounceInteractor
 import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
+import com.example.playlistmaker.util.FragmentBinding
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FindActivity : AppCompatActivity() {
+class FindFragment : FragmentBinding<FragmentFindBinding>() {
 
+    override fun createBinding(
+        layoutInflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentFindBinding = FragmentFindBinding.inflate(layoutInflater, container, false)
 
-    private companion object {
-        const val KEY = "ADD_KEY"
-        const val DEFAULT = ""
-        const val INTENT_PLAYLIST_KEY = "INTENT_PLAYLIST_KEY"
-    }
+    private val adapter = SongsAdapter(false)
+    private val historyAdapter = SongsAdapter(true)
+    private val debounceInteractor: DebounceInteractor by inject()
+    private val viewModel by viewModel<FindViewModel>()
 
-    private val adapter = SongsAdapter()
-    private val historyAdapter = SongsAdapter()
-    private val binding: ActivityFindBinding by lazy {
-        ActivityFindBinding.inflate(layoutInflater)
-    }
-    private var gettedString: String = ""
+    private var lastState = true
+
     private val pbLoading: ProgressBar by lazy {
         binding.pbLoading
     }
@@ -55,53 +57,40 @@ class FindActivity : AppCompatActivity() {
     private val rvFindShowTrack: RecyclerView by lazy {
         binding.rvFindShowTrack
     }
-    private val debounceInteractor: DebounceInteractor by inject()
-    private val viewModel by viewModel<FindViewModel>()
     private val etFindText: EditText by lazy {
         binding.etFindText
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeSearchState().observe(this) {
-            renderState(it)
+        binding.rvFindShowTrack.adapter = adapter
+        binding.rvFindShowTrack.layoutManager = LinearLayoutManager(requireActivity())
+
+        binding.rvHistoryOfSearch.adapter = historyAdapter
+        binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(requireActivity())
+
+        adapter.onItemClick = { song, isHistory ->
+            onItemClick(song, isHistory)
         }
-        viewModel.observeHistoryState().observe(this) {
+        historyAdapter.onItemClick = { song, isHistory -> onItemClick(song, isHistory) }
+
+        viewModel.observeSearchState().observe(viewLifecycleOwner) {
+            renderState(it)
+
+        }
+        viewModel.observeHistoryState().observe(viewLifecycleOwner) {
             renderHistoryState(it)
         }
 
-        val findToolbar = binding.findToolbar
         val ivClear = binding.ivClear
 
-        // get string from savedInstance
-        if (savedInstanceState != null) {
-            gettedString = savedInstanceState.getString(KEY, DEFAULT).toString()
-            etFindText.setText(gettedString)
-        }
-
-        // adapter initialize
-        rvFindShowTrack.adapter = adapter
-        adapter.onItemClick = { onItemClick(it) }
-        rvFindShowTrack.layoutManager = LinearLayoutManager(this)
-
-        binding.rvHistoryOfSearch.adapter = historyAdapter
-        historyAdapter.onItemClick = { onItemClick(it) }
-        binding.rvHistoryOfSearch.layoutManager = LinearLayoutManager(this)
-
-        findToolbar.setNavigationOnClickListener {
-            finish()
-        }
-
         etFindText.doOnTextChanged { text, _, _, _ ->
-            gettedString = text.toString()
-            ivClear.visibility = setButtonVisibility(text)
+            ivClear.isVisible = !text.isNullOrEmpty()
             if (etFindText.hasFocus() && text?.isEmpty() == true) {
                 etFindText.isCursorVisible = etFindText.hasFocus()
                 hideAll()
             } else binding.llHistoryOfSearch.visibility = View.GONE
-            gettedString = text.toString()
             viewModel.searchDebounce(text.toString())
         }
 
@@ -120,21 +109,26 @@ class FindActivity : AppCompatActivity() {
             }
             false
         }
+    }
 
-        ivClear.setOnClickListener {
+    override fun setupListeners() {
+        binding.ivClear.setOnClickListener {
             etFindText.setText(getString(R.string.empty_string))
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(
+                requireActivity().currentFocus?.windowToken,
+                0
+            )
             val size = adapter.itemCount
             adapter.tracks.clear()
             adapter.notifyItemRangeChanged(0, size)
             hideAll()
-            llHistoryOfSearch.visibility = View.VISIBLE
+            llHistoryOfSearch.isVisible = historyAdapter.tracks.isNotEmpty()
         }
 
         binding.btnUpdate.setOnClickListener {
-            viewModel.sendRequest(gettedString)
+            viewModel.sendRequest(etFindText.text.toString())
         }
 
         binding.btnClearSearchHistory.setOnClickListener {
@@ -144,25 +138,6 @@ class FindActivity : AppCompatActivity() {
             viewModel.updateHistoryState(historyAdapter.tracks)
             hideAll()
         }
-
-    }
-
-    private fun setButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(KEY, gettedString)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        gettedString = savedInstanceState.getString(KEY, DEFAULT)
     }
 
     private fun showRecycle(tracks: List<Song>) {
@@ -178,7 +153,7 @@ class FindActivity : AppCompatActivity() {
         historyAdapter.tracks = ArrayList()
         historyAdapter.tracks.addAll(history)
         historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
-        llHistoryOfSearch.visibility = if (etFindText.text.isEmpty()) View.VISIBLE else View.GONE
+        llHistoryOfSearch.isVisible = etFindText.text.isEmpty()
     }
 
     private fun showNothingNotFount() {
@@ -204,7 +179,7 @@ class FindActivity : AppCompatActivity() {
         llHistoryOfSearch.visibility = View.GONE
     }
 
-    private fun onItemClick(song: Song) {
+    private fun onItemClick(song: Song, isHistory: Boolean) {
         if (debounceInteractor.clickDebounce()) {
             val contains = historyAdapter.tracks.contains(song)
             updateHistoryAdapter(contains, song)
@@ -213,10 +188,25 @@ class FindActivity : AppCompatActivity() {
             }
             viewModel.updateHistoryState(historyAdapter.tracks)
             historyAdapter.notifyItemRangeChanged(0, historyAdapter.itemCount)
-            Intent(this, MediaPlayerActivity::class.java).apply {
-                putExtra(INTENT_PLAYLIST_KEY, createJsonFromSong(song))
-                startActivity(this)
+            hideAll()
+            lastState = isHistory
+            val bundle = Bundle().apply {
+                putString(MediaPlayerActivity.INTENT_PLAYLIST_KEY, createJsonFromSong(song))
             }
+            findNavController().navigate(
+                R.id.action_findFragment_to_mediaPlayerActivity, bundle
+            )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (lastState) {
+            hideAll()
+            llHistoryOfSearch.isVisible = true && historyAdapter.tracks.isNotEmpty()
+        } else {
+            hideAll()
+            rvFindShowTrack.isVisible = true
         }
     }
 
@@ -243,5 +233,4 @@ class FindActivity : AppCompatActivity() {
     }
 
     private fun createJsonFromSong(song: Song): String = Gson().toJson(song)
-
 }

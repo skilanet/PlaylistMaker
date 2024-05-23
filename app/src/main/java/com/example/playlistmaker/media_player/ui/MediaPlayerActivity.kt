@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
@@ -17,7 +18,7 @@ import org.koin.core.parameter.parametersOf
 
 class MediaPlayerActivity : AppCompatActivity() {
 
-    private companion object {
+    companion object {
         const val INTENT_PLAYLIST_KEY = "INTENT_PLAYLIST_KEY"
     }
 
@@ -29,13 +30,12 @@ class MediaPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val song = createSongFromJson(intent.getStringExtra(INTENT_PLAYLIST_KEY)!!)
-        val url = song.previewUrl
+        val song = createSongFromJson(intent.extras!!.getString(INTENT_PLAYLIST_KEY)!!)
         btnStartPause = binding.ivStopPlayButton
         tvNowTime = binding.tvNowTime
 
         val viewModel: MediaPlayerViewModel by viewModel {
-            parametersOf(url)
+            parametersOf(song.previewUrl)
         }
 
         viewModel.observePlayingState().observe(this) {
@@ -47,7 +47,6 @@ class MediaPlayerActivity : AppCompatActivity() {
             viewModel.updateTimeState()
         }
 
-        // set info
         Glide.with(this.applicationContext).load(song.artworkUrl512)
             .into(binding.ivAlbumArtwork)
         binding.tvAlbumTextTop.text = song.collectionName

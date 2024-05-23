@@ -3,50 +3,51 @@ package com.example.playlistmaker.settings.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.example.playlistmaker.App
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.settings.view_model.SettingsViewModel
+import com.example.playlistmaker.util.FragmentBinding
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+class SettingFragment : FragmentBinding<FragmentSettingsBinding>() {
 
-class SettingsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySettingsBinding
-    private val viewModel: SettingsViewModel by viewModel()
-    private lateinit var scSwitchLightNightMode: SwitchMaterial
+    override fun createBinding(
+        layoutInflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSettingsBinding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        scSwitchLightNightMode = binding.scSwitchLightNightMode
-
-        binding.scSwitchLightNightMode.isChecked = viewModel.observeThemeState().value!!
-
-        binding.settingsToolbar.setNavigationOnClickListener {
-            finish()
-        }
-
+    override fun setupListeners() {
         binding.ivShareApp.setOnClickListener {
-            viewModel.observeShareAppState().observe(this) {
+            viewModel.observeShareAppState().observe(viewLifecycleOwner) {
                 shareApp(it.url)
             }
         }
 
         binding.ivWriteToSupport.setOnClickListener {
-            viewModel.observeWriteToSupportState().observe(this) {
+            viewModel.observeWriteToSupportState().observe(viewLifecycleOwner) {
                 writeToSupport(it.email, it.subject, it.text)
             }
         }
 
         binding.ivUserAgreement.setOnClickListener {
-            viewModel.observeTermsState().observe(this) {
+            viewModel.observeTermsState().observe(viewLifecycleOwner) {
                 goToTerms(it.url)
             }
         }
+    }
+
+    private val viewModel: SettingsViewModel by viewModel()
+    private lateinit var scSwitchLightNightMode: SwitchMaterial
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        scSwitchLightNightMode = binding.scSwitchLightNightMode
+
+        binding.scSwitchLightNightMode.isChecked = viewModel.observeThemeState().value!!
 
         scSwitchLightNightMode.setOnCheckedChangeListener { _, isDarkTheme ->
             switchTheme(isDarkTheme)
@@ -54,7 +55,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun switchTheme(isDarkTheme: Boolean) {
-        (applicationContext as App).switchTheme(isDarkTheme)
+        (requireActivity().application as App).switchTheme(isDarkTheme)
         viewModel.updateThemeState(isDarkTheme)
     }
 

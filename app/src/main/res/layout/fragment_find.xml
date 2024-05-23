@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".find.ui.FindFragment">
 
     <Toolbar
         android:id="@+id/find_toolbar"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:background="@drawable/find_custom"
-            android:drawableStart="@drawable/search_icon"
+            android:drawableStart="@drawable/fragment_find_search_icon"
             android:drawablePadding="10dp"
             android:hint="@string/hint_find"
             android:textSize="16sp"

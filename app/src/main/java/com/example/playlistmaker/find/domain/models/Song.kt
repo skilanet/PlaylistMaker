@@ -10,5 +10,5 @@ data class Song(
     val primaryGenreName: String,
     val previewUrl: String,
     val currentTime: String,
-    val currentDate: String
+    val currentDate: String,
 )

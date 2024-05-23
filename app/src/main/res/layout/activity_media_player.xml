@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cl_main"
+    android:id="@+id/cl_activity_media_player"
+    style="@style/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/background">
+    tools:context=".media_player.ui.MediaPlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_24_start"
@@ -202,20 +203,20 @@
         tools:text="Yesterday (Remastered 2009)" />
 
     <ImageView
-        style="@style/activity_media_player_time_color"
         android:id="@+id/iv_album_artwork"
+        style="@style/activity_media_player_time_color"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="24dp"
-        android:importantForAccessibility="no"
         android:background="@drawable/image_background"
+        android:importantForAccessibility="no"
         android:scaleType="fitCenter"
         android:src="@drawable/placeholder"
         app:layout_constraintBottom_toTopOf="@id/tv_album_text_top"
-        app:layout_constraintTop_toBottomOf="@id/iv_back"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@id/guideline_24_end"
-        app:layout_constraintStart_toEndOf="@id/guideline_24_start" />
+        app:layout_constraintStart_toEndOf="@id/guideline_24_start"
+        app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
     <ImageView
         android:id="@+id/iv_back"
@@ -234,13 +235,14 @@
     <TextView
         android:id="@+id/tv_creating_playlist"
         style="@style/activity_media_player_snackbar"
-        android:layout_marginHorizontal="7dp"
-        android:layout_marginBottom="48dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ys_display_regular"
+        android:layout_marginHorizontal="7dp"
+        android:layout_marginBottom="48dp"
         android:ellipsize="end"
+        android:fontFamily="@font/ys_display_regular"
         android:gravity="center"
+        android:lines="1"
         android:paddingVertical="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
@@ -249,7 +251,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:lines="1"
         tools:text="Плейлист «BeSt SoNg EvEr!» создан" />
 
 
