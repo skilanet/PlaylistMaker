@@ -1,7 +1,8 @@
 package com.example.playlistmaker.find.data.repository
 
-import com.example.playlistmaker.find.data.dto.Response
+import com.example.playlistmaker.find.data.dto.SongResponse
+import retrofit2.Response
 
 interface SongNetworkClient {
-    fun doRequest(term: String): Response
+    suspend fun doRequest(term: String): Response<SongResponse>
 }

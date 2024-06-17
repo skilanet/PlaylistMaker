@@ -1,6 +1,8 @@
 package com.example.playlistmaker.media_player.ui
 
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,7 @@ import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.media_player.ui.models.PlayingState
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -21,6 +24,8 @@ class MediaPlayerActivity : AppCompatActivity() {
     companion object {
         const val INTENT_PLAYLIST_KEY = "INTENT_PLAYLIST_KEY"
     }
+
+    private lateinit var viewModel: MediaPlayerViewModel
 
     private lateinit var binding: ActivityMediaPlayerBinding
     private lateinit var btnStartPause: ImageView
@@ -34,17 +39,16 @@ class MediaPlayerActivity : AppCompatActivity() {
         btnStartPause = binding.ivStopPlayButton
         tvNowTime = binding.tvNowTime
 
-        val viewModel: MediaPlayerViewModel by viewModel {
+        viewModel = getViewModel {
             parametersOf(song.previewUrl)
         }
 
-        viewModel.observePlayingState().observe(this) {
-            setImage(it)
-            viewModel.stateControl()
+        viewModel.observePlayingState().observe(this) { state ->
+            renderState(state)
         }
-        viewModel.observeTimeState().observe(this) {
-            binding.tvNowTime.text = it
-            viewModel.updateTimeState()
+
+        btnStartPause.setOnClickListener {
+            viewModel.onButtonClicked()
         }
 
         Glide.with(this.applicationContext).load(song.artworkUrl512)
@@ -62,27 +66,17 @@ class MediaPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel.onPrepare()
-        btnStartPause.setOnClickListener {
-            viewModel.playingControl()
-        }
-
     }
 
     private fun createSongFromJson(json: String): Song = Gson().fromJson(json, Song::class.java)
+    private fun renderState(state: PlayingState){
+        btnStartPause.isEnabled = state.isButtonEnable
+        btnStartPause.setImageDrawable(AppCompatResources.getDrawable(this, state.buttonBackground))
+        tvNowTime.text = state.currentTime
+    }
 
-    private fun setImage(state: PlayingState) {
-        btnStartPause.setImageDrawable(
-            AppCompatResources.getDrawable(
-                this, when (state) {
-                    is PlayingState.Default,
-                    PlayingState.Prepared,
-                    PlayingState.Paused,
-                    PlayingState.Complete -> R.drawable.play_image
-
-                    is PlayingState.Playing -> R.drawable.pause_image
-                }
-            )
-        )
+    override fun onPause() {
+        super.onPause()
+        viewModel.onPause()
     }
 }
