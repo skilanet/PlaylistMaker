@@ -22,7 +22,7 @@ class RootActivity : AppCompatActivity() {
         val navHostManager =
             supportFragmentManager.findFragmentById(R.id.main_fragment_container_view) as NavHostFragment
         val navController = navHostManager.navController.apply {
-            addOnDestinationChangedListener {_, destination, _ ->
+            addOnDestinationChangedListener { _, destination, _ ->
                 binding.bottomNavView.isVisible = destination.id != R.id.mediaPlayerActivity
             }
         }

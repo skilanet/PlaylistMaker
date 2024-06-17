@@ -12,10 +12,13 @@ import kotlinx.coroutines.flow.flow
 class SongRepositoryImpl(private val networkClient: SongNetworkClient) : SongRepository {
     override suspend fun getSongs(term: String): Flow<Resource<List<Song>>> = flow {
         val response = networkClient.doRequest(term)
-        if (response.isSuccessful){
-            val data = SongMapper.map(response.body()?.results)
-            emit(Resource.Success(data, response.code()))
+        when (response.resultCode) {
+            200 -> with(response as SongResponse) {
+                val data = SongMapper.map(response.results)
+                emit(Resource.Success(data, 200))
+            }
+
+            else -> emit(Resource.Error(response.resultCode))
         }
-        else emit(Resource.Error(response.code()))
     }
 }
