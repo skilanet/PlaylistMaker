@@ -1,14 +1,12 @@
 package com.example.playlistmaker.find.di
 
 import android.content.Context
-import com.example.playlistmaker.find.data.impl.DebounceInteractorImpl
 import com.example.playlistmaker.find.data.impl.HistorySharedPreferenceImpl
 import com.example.playlistmaker.find.data.impl.SongRepositoryImpl
 import com.example.playlistmaker.find.data.network.SongApi
 import com.example.playlistmaker.find.data.network.SongRetrofitNetworkClient
 import com.example.playlistmaker.find.data.repository.SongNetworkClient
 import com.example.playlistmaker.find.domain.impl.SongsInteractorImpl
-import com.example.playlistmaker.find.domain.repository.DebounceInteractor
 import com.example.playlistmaker.find.domain.repository.HistorySharedPreference
 import com.example.playlistmaker.find.domain.repository.SongRepository
 import com.example.playlistmaker.find.domain.repository.SongsInteractor
@@ -34,10 +32,6 @@ val findModule = module {
     }
     single<HistorySharedPreference> {
         HistorySharedPreferenceImpl(get(), get())
-    }
-
-    single<DebounceInteractor> {
-        DebounceInteractorImpl()
     }
     single<SongsInteractor> {
         SongsInteractorImpl(get())

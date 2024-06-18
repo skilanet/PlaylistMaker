@@ -6,18 +6,19 @@ import com.example.playlistmaker.find.data.repository.SongNetworkClient
 import com.example.playlistmaker.find.domain.models.Resource
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.find.domain.repository.SongRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class SongRepositoryImpl(private val networkClient: SongNetworkClient) : SongRepository {
-
-    override fun getSongs(term: String): Resource<List<Song>> {
+    override suspend fun getSongs(term: String): Flow<Resource<List<Song>>> = flow {
         val response = networkClient.doRequest(term)
-        if (response is SongResponse) {
-            if (response.results.isNotEmpty()) {
-                val songs = response.results.map { SongMapper.map(it) }
-                return Resource.Success(songs)
-            } else return Resource.Success(emptyList())
-        } else {
-            return Resource.Error(response.resultCode)
+        when (response.resultCode) {
+            200 -> with(response as SongResponse) {
+                val data = SongMapper.map(response.results)
+                emit(Resource.Success(data, 200))
+            }
+
+            else -> emit(Resource.Error(response.resultCode))
         }
     }
 }
