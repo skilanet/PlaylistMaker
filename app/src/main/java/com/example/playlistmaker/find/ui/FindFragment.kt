@@ -12,20 +12,21 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFindBinding
 import com.example.playlistmaker.find.domain.models.Song
-import com.example.playlistmaker.find.domain.repository.DebounceInteractor
 import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
 import com.example.playlistmaker.util.FragmentBinding
 import com.google.gson.Gson
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FindFragment : FragmentBinding<FragmentFindBinding>() {
@@ -35,10 +36,14 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
         container: ViewGroup?
     ): FragmentFindBinding = FragmentFindBinding.inflate(layoutInflater, container, false)
 
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
     private val adapter = SongsAdapter(false)
     private val historyAdapter = SongsAdapter(true)
-    private val debounceInteractor: DebounceInteractor by inject()
     private val viewModel by viewModel<FindViewModel>()
+    private var isClickAllowed = true
 
     private var lastState = true
 
@@ -180,7 +185,7 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
     }
 
     private fun onItemClick(song: Song, isHistory: Boolean) {
-        if (debounceInteractor.clickDebounce()) {
+        if (clickDebounce()) {
             val contains = historyAdapter.tracks.contains(song)
             updateHistoryAdapter(contains, song)
             if (historyAdapter.tracks.size > 10) {
@@ -233,4 +238,16 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
     }
 
     private fun createJsonFromSong(song: Song): String = Gson().toJson(song)
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
 }
