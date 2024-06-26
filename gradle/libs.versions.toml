@@ -2,21 +2,23 @@
 agp = "8.5.0"
 glide = "4.16.0"
 retrofit = "2.11.0"
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
-lifecycle-ktx = "2.8.0"
+lifecycle-ktx = "2.8.2"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.6.1"
+junitVersion = "1.2.0"
+espressoCore = "3.6.0"
+appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
 koin = "3.5.6"
-fragment = "1.7.1"
+fragment = "1.8.0"
 viewpager2 = "1.1.0"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
+ksp = "2.0.0-1.0.21"
+room = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,7 +40,11 @@ androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", versio
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiller = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
