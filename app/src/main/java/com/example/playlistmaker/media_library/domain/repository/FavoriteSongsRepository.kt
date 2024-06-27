@@ -5,4 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoriteSongsRepository {
     fun favoriteSongs(): Flow<List<Song>>
+    fun getTrackByTrackId(trackId: Int): Flow<Song?>
+    suspend fun insertSong(song: Song)
+    suspend fun deleteSongByTrackId(trackId: Int)
 }

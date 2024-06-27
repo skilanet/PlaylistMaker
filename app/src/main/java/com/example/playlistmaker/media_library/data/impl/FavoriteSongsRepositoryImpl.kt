@@ -12,4 +12,18 @@ class FavoriteSongsRepositoryImpl(private val appDatabase: AppDatabase): Favorit
         val movies = appDatabase.getDao().getFavoriteSongs()
         emit(Converter.fromEntitiesToModels(movies))
     }
+
+    override fun getTrackByTrackId(trackId: Int): Flow<Song?> = flow {
+        val track = appDatabase.getDao().getTrackByTrackId(trackId)
+        emit(Converter.fromEntityToModel(entity = track))
+    }
+
+    override suspend fun insertSong(song: Song) {
+        val songEntity = Converter.fromModelToEntity(song)
+        appDatabase.getDao().insertSongIntoTable(songEntity)
+    }
+
+    override suspend fun deleteSongByTrackId(trackId: Int) {
+        appDatabase.getDao().deleteSongByTrackId(trackId)
+    }
 }

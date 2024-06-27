@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class SongDto(
+    val trackId: Int,
     val trackName: String,
     val artistName: String,
     val artworkUrl100: String,

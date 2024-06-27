@@ -8,6 +8,7 @@ object Converter {
     fun fromEntitiesToModels(entities: List<SongEntity>?): List<Song> = entities?.let {
         it.map { entity ->
             Song(
+                trackId = entity.trackId,
                 trackName = entity.trackName,
                 artistName = entity.artistName,
                 artworkUrl512 = entity.artworkUrl512,
@@ -23,6 +24,7 @@ object Converter {
     } ?: emptyList()
 
     fun fromModelToEntity(song: Song): SongEntity = SongEntity(
+        trackId = song.trackId,
         trackName = song.trackName,
         artistName = song.artistName,
         artworkUrl512 = song.artworkUrl512,
@@ -34,4 +36,21 @@ object Converter {
         currentTime = song.currentTime,
         currentDate = song.currentDate
     )
+
+    fun fromEntityToModel(entity: SongEntity?): Song? {
+        return if (entity != null) Song(
+            trackId = entity.trackId,
+            trackName = entity.trackName,
+            artistName = entity.artistName,
+            artworkUrl512 = entity.artworkUrl512,
+            artworkUrl100 = entity.artworkUrl100,
+            collectionName = entity.collectionName,
+            country = entity.country,
+            primaryGenreName = entity.primaryGenreName,
+            previewUrl = entity.previewUrl,
+            currentTime = entity.currentTime,
+            currentDate = entity.currentDate
+        )
+        else null
+    }
 }

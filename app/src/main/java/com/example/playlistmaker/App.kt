@@ -3,6 +3,7 @@ package com.example.playlistmaker
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.find.di.findModule
+import com.example.playlistmaker.media_library.di.mediaLibraryModule
 import com.example.playlistmaker.media_player.di.mediaPlayerModule
 import com.example.playlistmaker.settings.di.settingsModule
 import com.example.playlistmaker.settings.domain.repository.ThemeSharedPreference
@@ -24,7 +25,8 @@ class App : Application() {
                 findModule,
                 mediaPlayerModule,
                 settingsModule,
-                sharingModule
+                sharingModule,
+                mediaLibraryModule
             )
         }
         val sharedPreference = getKoin().get<ThemeSharedPreference>()

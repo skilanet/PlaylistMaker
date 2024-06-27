@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class SongEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val trackId: Int,
     val trackName: String,
     val artistName: String,
     val artworkUrl512: String = "",
@@ -16,6 +17,5 @@ data class SongEntity(
     val primaryGenreName: String,
     val previewUrl: String,
     val currentTime: String,
-    val currentDate: String,
-    val addedTime: Long = System.currentTimeMillis()
+    val currentDate: String
 )

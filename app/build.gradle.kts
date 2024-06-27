@@ -25,6 +25,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -52,7 +56,7 @@ dependencies {
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.lifecycle.ktx)
     implementation(libs.androidx.viewpager2)
-    
+
     implementation(libs.glide)
     implementation(libs.koin)
     implementation(libs.material)
@@ -63,6 +67,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
+    implementation(libs.room)
     implementation(libs.room.ktx)
     ksp(libs.room.compiller)
 
