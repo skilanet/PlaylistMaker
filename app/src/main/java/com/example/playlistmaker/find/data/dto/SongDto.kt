@@ -1,6 +1,5 @@
 package com.example.playlistmaker.find.data.dto
 
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -19,11 +18,8 @@ data class SongDto(
     val artworkUrl512: String
         get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     val currentTime: String
-        get() {
-            val convertedString = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
-            Log.d("CONVERT_TAG", "$trackTimeMillis -> $convertedString")
-            return convertedString
-        }
+        get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+
 
     val currentDate: String
         get() {

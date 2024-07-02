@@ -17,7 +17,7 @@ class FavoriteTracksViewModel(
     fun observeViewState(): LiveData<FavoriteTracksState> = viewState
     private fun updateViewState(newState: FavoriteTracksState) = viewState.postValue(newState)
 
-    fun makeQueryToDB(){
+    fun refreshTracks(){
         viewModelScope.launch {
             favoriteSongsInteractor.favoriteSongs().collect { songs ->
                 renderQuery(songs)

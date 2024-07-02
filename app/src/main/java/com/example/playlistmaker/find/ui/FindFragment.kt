@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.core.SongsAdapter
 import com.example.playlistmaker.databinding.FragmentFindBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.find.presentation.view_model.FindViewModel

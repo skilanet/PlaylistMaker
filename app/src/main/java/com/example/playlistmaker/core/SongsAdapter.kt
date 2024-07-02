@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media_library.ui
+package com.example.playlistmaker.core
 
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -12,14 +12,23 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackBaseBinding
 import com.example.playlistmaker.find.domain.models.Song
 
-class FavoriteTracksAdapter :
-    RecyclerView.Adapter<FavoriteTracksAdapter.ViewHolder>() {
-    inner class ViewHolder(private val binding: TrackBaseBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+class SongsAdapter(private val isHistory: Boolean = false) :
+    RecyclerView.Adapter<SongsAdapter.SongsViewHolder>() {
+
+
+    var tracks = ArrayList<Song>()
+    var onItemClick: ((Song, Boolean) -> Unit)? = null
+
+    inner class SongsViewHolder(
+        private val binding: TrackBaseBinding,
+    ) : RecyclerView.ViewHolder(
+        binding.root
+    ) {
         private val image: ImageView = binding.ivFindTrackImage
         private val trackName: TextView = binding.tvTrackName
         private val trackAuthor: TextView = binding.tvTrackAuthor
         private val trackTime: TextView = binding.tvTrackTime
+
         fun bind(model: Song) {
             val context = binding.root.context
             Glide.with(context).load(model.artworkUrl100).fitCenter()
@@ -37,21 +46,22 @@ class FavoriteTracksAdapter :
         }
     }
 
-    var tracks = ArrayList<Song>()
-    var onItemClick: ((Song) -> Unit)? = null
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        TrackBaseBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongsViewHolder =
+        SongsViewHolder(
+            TrackBaseBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     override fun getItemCount(): Int = tracks.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        tracks[position].also { song ->
-            holder.bind(song)
-            holder.itemView.setOnClickListener {
-                onItemClick?.invoke(song)
-            }
+    override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
+        val track = tracks[position]
+        holder.bind(track)
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(track, isHistory)
         }
     }
 }
