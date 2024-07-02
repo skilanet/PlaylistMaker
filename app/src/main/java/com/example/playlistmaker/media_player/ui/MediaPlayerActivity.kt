@@ -1,22 +1,19 @@
 package com.example.playlistmaker.media_player.ui
 
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
+import com.example.playlistmaker.media_player.ui.models.FavoriteState
 import com.example.playlistmaker.media_player.ui.models.PlayingState
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.getViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class MediaPlayerActivity : AppCompatActivity() {
@@ -40,10 +37,14 @@ class MediaPlayerActivity : AppCompatActivity() {
         tvNowTime = binding.tvNowTime
 
         viewModel = getViewModel {
-            parametersOf(song.previewUrl)
+            parametersOf(song)
         }
 
         viewModel.observePlayingState().observe(this) { state ->
+            renderState(state)
+        }
+
+        viewModel.observeFavoriteState().observe(this) { state ->
             renderState(state)
         }
 
@@ -61,6 +62,9 @@ class MediaPlayerActivity : AppCompatActivity() {
         binding.tvGenreText.text = song.primaryGenreName
         binding.tvCountryText.text = song.country
 
+        binding.ivLike.setOnClickListener {
+            viewModel.onLikeClicked()
+        }
 
         binding.ivBack.setOnClickListener {
             finish()
@@ -69,10 +73,22 @@ class MediaPlayerActivity : AppCompatActivity() {
     }
 
     private fun createSongFromJson(json: String): Song = Gson().fromJson(json, Song::class.java)
-    private fun renderState(state: PlayingState){
+    private fun renderState(state: PlayingState) {
         btnStartPause.isEnabled = state.isButtonEnable
         btnStartPause.setImageDrawable(AppCompatResources.getDrawable(this, state.buttonBackground))
         tvNowTime.text = state.currentTime
+    }
+
+    private fun renderState(state: FavoriteState) {
+        binding.ivLike.setImageDrawable(
+            AppCompatResources.getDrawable(
+                this,
+                when (state) {
+                    is FavoriteState.InFavorite -> R.drawable.like_image_filled
+                    is FavoriteState.NotInFavorite -> R.drawable.like_image_unfilled
+                }
+            )
+        )
     }
 
     override fun onPause() {

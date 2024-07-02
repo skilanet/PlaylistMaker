@@ -7,10 +7,11 @@
     tools:context=".media_library.ui.FavoriteTracksFragment">
 
     <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_empty_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_tags="iv_error_image, tv_your_media_empty"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/iv_error_image"
@@ -42,6 +43,7 @@
         android:id="@+id/rv_favorite_tracks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:listitem="@layout/track_base"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

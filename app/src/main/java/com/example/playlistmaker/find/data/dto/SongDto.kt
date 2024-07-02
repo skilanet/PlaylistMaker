@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class SongDto(
+    val trackId: Int,
     val trackName: String,
     val artistName: String,
     val artworkUrl100: String,
@@ -18,6 +19,7 @@ data class SongDto(
         get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     val currentTime: String
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+
 
     val currentDate: String
         get() {

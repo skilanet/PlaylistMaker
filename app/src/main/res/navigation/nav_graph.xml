@@ -13,7 +13,11 @@
         android:id="@+id/fragmentMedia"
         android:name="com.example.playlistmaker.media_library.ui.FragmentMedia"
         android:label="fragment_media"
-        tools:layout="@layout/fragment_media" />
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_fragmentMedia_to_mediaPlayerActivity"
+            app:destination="@id/mediaPlayerActivity" />
+    </fragment>
     <fragment
         android:id="@+id/findFragment"
         android:name="com.example.playlistmaker.find.ui.FindFragment"

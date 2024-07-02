@@ -1,6 +1,12 @@
-package com.example.playlistmaker.find.domain.models
+package com.example.playlistmaker.media_library.data.dao
 
-data class Song(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "favorite_table")
+data class SongEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -11,5 +17,5 @@ data class Song(
     val primaryGenreName: String,
     val previewUrl: String,
     val currentTime: String,
-    val currentDate: String,
+    val currentDate: String
 )

@@ -7,6 +7,7 @@ object SongMapper {
 
     fun map(dto: List<SongDto>?): List<Song> = dto?.map { song ->
         Song(
+            trackId = song.trackId,
             trackName = song.trackName,
             artistName = song.artistName,
             artworkUrl512 = song.artworkUrl512,

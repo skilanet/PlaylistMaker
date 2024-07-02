@@ -1,8 +1,8 @@
 package com.example.playlistmaker.media_player.di
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -13,10 +13,11 @@ val mediaPlayerModule = module {
         MediaPlayer()
     }
 
-    viewModel { (url: String) ->
+    viewModel { (song: Song) ->
         MediaPlayerViewModel(
-            url = url,
+            song = song,
             mediaPlayer = get(),
+            favoriteSongsInteractor = get()
         )
     }
 }
