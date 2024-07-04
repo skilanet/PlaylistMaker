@@ -117,4 +117,22 @@
     <style name="bottom_nav_view">
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="playlist_creation">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">"@drawable/background_for_input</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">18dp</item>
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:textColorHint">@color/yp_black</item>
+        <item name="android:textColor">@color/yp_black</item>
+    </style>
+
+    <style name="add_playlist_text_input_field" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxStrokeColor">@drawable/text_field_outline</item>
+    </style>
 </resources>

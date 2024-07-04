@@ -119,4 +119,16 @@
     <style name="bottom_nav_view">
         <item name="android:background">@color/yp_black</item>
     </style>
+
+    <style name="playlist_creation">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">"@drawable/background_for_input</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">18dp</item>
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
