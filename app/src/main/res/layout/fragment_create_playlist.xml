@@ -57,6 +57,8 @@
         android:orientation="vertical"/>
     
     <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/et_playlist_name"
         style="@style/add_playlist_text_input_field"
         app:layout_constraintStart_toStartOf="@id/guideline_16dp_start"
@@ -67,7 +69,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textCursorDrawable="@drawable/cursor_shape"/>
+            android:textCursorDrawable="@drawable/cursor_shape"
+            android:textSize="16sp"
+            android:fontFamily="@font/ys_display_regular"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
