@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".new_playlist.ui.AddPlaylistFragment">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/button_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/new_playlist"
+        android:textSize="22sp"
+        app:layout_constraintStart_toEndOf="@id/iv_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_photo_input"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="26dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/background_for_adding_photo"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_16dp_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_16dp_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_playlist_name"
+        style="@style/add_playlist_text_input_layout"
+        android:hint="@string/playlist_name"
+        app:layout_constraintEnd_toEndOf="@id/guideline_16dp_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_16dp_start"
+        app:layout_constraintTop_toBottomOf="@id/iv_photo_input">
+
+        <com.google.android.material.textfield.TextInputEditText style="@style/add_playlist_text_input_layout.text_field" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/add_playlist_text_input_layout"
+        android:layout_marginTop="16dp"
+        android:hint="@string/description"
+        android:importantForAutofill="no"
+        app:layout_constraintEnd_toEndOf="@id/guideline_16dp_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_16dp_start"
+        app:layout_constraintTop_toBottomOf="@id/et_playlist_name">
+
+        <com.google.android.material.textfield.TextInputEditText style="@style/add_playlist_text_input_layout.text_field" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@drawable/playlist_add_button"
+        android:enabled="true"
+        android:fontFamily="@font/ys_display_medium"
+        android:gravity="center"
+        android:paddingVertical="12.5dp"
+        android:text="@string/create"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_16dp_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_16dp_start" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

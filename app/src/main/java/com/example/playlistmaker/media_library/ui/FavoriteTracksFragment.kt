@@ -1,7 +1,6 @@
 package com.example.playlistmaker.media_library.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
+import com.example.playlistmaker.core.SongsAdapter
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.presentation.FavoriteTracksViewModel
@@ -30,7 +30,7 @@ class FavoriteTracksFragment : FragmentBinding<FragmentFavoriteTracksBinding>() 
 
     override fun setupListeners() {}
 
-    private val adapter = FavoriteTracksAdapter()
+    private val adapter = SongsAdapter()
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
@@ -42,9 +42,7 @@ class FavoriteTracksFragment : FragmentBinding<FragmentFavoriteTracksBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("LIFECYCLE", "onViewCreated")
-
-        adapter.onItemClick = { song -> onItemClick(song) }
+        adapter.onItemClick = { song, _ -> onItemClick(song) }
         binding.rvFavoriteTracks.adapter = adapter
         binding.rvFavoriteTracks.layoutManager = LinearLayoutManager(requireActivity())
         viewModel.observeViewState().observe(viewLifecycleOwner) { state ->
@@ -52,20 +50,9 @@ class FavoriteTracksFragment : FragmentBinding<FragmentFavoriteTracksBinding>() 
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("LIFECYCLE", "onStart")
-    }
-
     override fun onResume() {
         super.onResume()
-        viewModel.makeQueryToDB()
-        Log.d("LIFECYCLE", "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("LIFECYCLE", "onPause")
+        viewModel.refreshTracks()
     }
 
     private fun renderState(newState: FavoriteTracksState) {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/photo_frame"
+        android:gravity="center"/>
+    <item android:drawable="@drawable/baseline_add_photo"
+        android:width="79.2dp"
+        android:height="79.2dp"
+        android:gravity="center"/>
+
+</layer-list>

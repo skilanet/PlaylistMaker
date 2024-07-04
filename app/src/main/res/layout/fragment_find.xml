@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="30dp"
             android:background="@color/find_background"
             android:src="@drawable/clear"
             android:visibility="gone"
