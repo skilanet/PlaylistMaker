@@ -117,7 +117,7 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
         }
     }
 
-    override fun setupListeners() {
+    override fun setup() {
         binding.ivClear.setOnClickListener {
             etFindText.setText(getString(R.string.empty_string))
             val inputMethodManager =

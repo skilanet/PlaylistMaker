@@ -1,17 +1,26 @@
 package com.example.playlistmaker.media_player.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
 import com.example.playlistmaker.find.domain.models.Song
+import com.example.playlistmaker.main.ui.RootActivity
+import com.example.playlistmaker.media_library.domain.models.Playlist
+import com.example.playlistmaker.media_library.ui.models.PlaylistsState
 import com.example.playlistmaker.media_player.presentation.view_model.MediaPlayerViewModel
 import com.example.playlistmaker.media_player.ui.models.FavoriteState
+import com.example.playlistmaker.media_player.ui.models.InPlaylistState
 import com.example.playlistmaker.media_player.ui.models.PlayingState
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
@@ -20,6 +29,8 @@ class MediaPlayerActivity : AppCompatActivity() {
 
     companion object {
         const val INTENT_PLAYLIST_KEY = "INTENT_PLAYLIST_KEY"
+        const val FRAGMENT_KEY = "FRAGMENT_KEY"
+        const val FRAGMENT_CODE = 1
     }
 
     private lateinit var viewModel: MediaPlayerViewModel
@@ -28,6 +39,8 @@ class MediaPlayerActivity : AppCompatActivity() {
     private lateinit var btnStartPause: ImageView
     private lateinit var tvNowTime: TextView
 
+    private val adapter = PlaylistsAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMediaPlayerBinding.inflate(layoutInflater)
@@ -35,6 +48,12 @@ class MediaPlayerActivity : AppCompatActivity() {
         val song = createSongFromJson(intent.extras!!.getString(INTENT_PLAYLIST_KEY)!!)
         btnStartPause = binding.ivStopPlayButton
         tvNowTime = binding.tvNowTime
+
+        adapter.onItemClick = { playlist -> onItemClick(playlist, song) }
+
+        binding.rvMediaPlayerAddToPlaylist.adapter = adapter
+        binding.rvMediaPlayerAddToPlaylist.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         viewModel = getViewModel {
             parametersOf(song)
@@ -48,8 +67,16 @@ class MediaPlayerActivity : AppCompatActivity() {
             renderState(state)
         }
 
+        viewModel.observeInPlaylistState().observe(this) { state ->
+            renderState(state)
+        }
+
+        viewModel.observePlaylistsState().observe(this) { state ->
+            renderState(state)
+        }
+
         btnStartPause.setOnClickListener {
-            viewModel.onButtonClicked()
+            viewModel.onPlayButtonClicked()
         }
 
         Glide.with(this.applicationContext).load(song.artworkUrl512)
@@ -69,7 +96,26 @@ class MediaPlayerActivity : AppCompatActivity() {
         binding.ivBack.setOnClickListener {
             finish()
         }
+        val bottomSheetContainer = binding.llBottomSheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.ivAddToPlayList.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
 
+        binding.btnNewPlaylist.setOnClickListener {
+            Intent(this, RootActivity::class.java).apply {
+                putExtra(FRAGMENT_KEY, FRAGMENT_CODE)
+                startActivity(this)
+            }
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylists()
     }
 
     private fun createSongFromJson(json: String): Song = Gson().fromJson(json, Song::class.java)
@@ -89,6 +135,49 @@ class MediaPlayerActivity : AppCompatActivity() {
                 }
             )
         )
+    }
+
+    private fun renderState(state: InPlaylistState) {
+        binding.ivAddToPlayList.setImageDrawable(
+            AppCompatResources.getDrawable(
+                this,
+                when (state) {
+                    is InPlaylistState.InPlaylist -> R.drawable.added_to_playlist_image
+                    is InPlaylistState.NotInPlaylist -> R.drawable.add_to_playlist_image
+                }
+            )
+        )
+    }
+
+    private fun renderState(state: PlaylistsState) {
+        when (state) {
+            is PlaylistsState.Empty -> binding.rvMediaPlayerAddToPlaylist.isVisible = false
+            is PlaylistsState.Content -> showPlaylists(state.data)
+        }
+    }
+
+    private fun onItemClick(playlist: Playlist, song: Song) {
+        if (playlist.tracks.tracks.contains(song)) Toast.makeText(
+            this,
+            getString(R.string.this_track_is_in_playlist), Toast.LENGTH_SHORT
+        ).show()
+        else {
+            playlist.tracks.tracks.add(song)
+            viewModel.refreshPlaylists(playlist)
+            Toast.makeText(
+                this,
+                "Трек ${song.trackName} успешно добавлен в плейлист: ${playlist.name}",
+                Toast.LENGTH_SHORT
+            ).show()
+            viewModel.onPlaylistButtonClicked()
+        }
+    }
+
+    private fun showPlaylists(playlists: List<Playlist>) {
+        binding.rvMediaPlayerAddToPlaylist.isVisible = true
+        adapter.playlists.clear()
+        adapter.playlists.addAll(playlists)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onPause() {

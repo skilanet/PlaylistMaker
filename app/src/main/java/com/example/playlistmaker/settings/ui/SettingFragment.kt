@@ -20,7 +20,7 @@ class SettingFragment : FragmentBinding<FragmentSettingsBinding>() {
         container: ViewGroup?
     ): FragmentSettingsBinding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
 
-    override fun setupListeners() {
+    override fun setup() {
         binding.ivShareApp.setOnClickListener {
             viewModel.observeShareAppState().observe(viewLifecycleOwner) {
                 shareApp(it.url)

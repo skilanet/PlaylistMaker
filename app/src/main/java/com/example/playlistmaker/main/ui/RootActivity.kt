@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
+import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
 
 class RootActivity : AppCompatActivity() {
 
@@ -28,6 +29,11 @@ class RootActivity : AppCompatActivity() {
         }
         val bottomNavView = binding.bottomNavView
         bottomNavView.setupWithNavController(navController)
+
+        when (intent.extras?.getInt(MediaPlayerActivity.FRAGMENT_KEY)) {
+            1 -> navController.navigate(R.id.addPlaylistFragment)
+            else -> {}
+        }
 
     }
 

@@ -14,7 +14,8 @@ import org.koin.dsl.module
 
 val mediaLibraryModule = module {
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "favorite_db.db")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -27,6 +28,6 @@ val mediaLibraryModule = module {
     }
 
     viewModel {
-        PlaylistsViewModel()
+        PlaylistsViewModel(get())
     }
 }

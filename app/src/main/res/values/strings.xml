@@ -38,4 +38,11 @@
     <string name="playlist_name">Название*</string>
     <string name="description">Описание</string>
     <string name="create">Создать</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="cancel_playlist_creating">Завершить создание плейлиста?</string>
+    <string name="all_unsave_data_will_be_lost">Все несохраненные данные будут потеряны</string>
+    <string name="cancel">Отмена</string>
+    <string name="yes">Да</string>
+    <string name="permission_is_required_to_create_playlist">Разрешение необходимо для создания плейлиста!</string>
+    <string name="this_track_is_in_playlist">Такой трек уже есть в плейлисте!</string>
 </resources>

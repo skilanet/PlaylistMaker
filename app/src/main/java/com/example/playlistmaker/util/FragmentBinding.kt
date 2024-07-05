@@ -14,7 +14,7 @@ abstract class FragmentBinding<T : ViewBinding> : Fragment() {
 
     abstract fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?): T
 
-    abstract fun setupListeners()
+    abstract fun setup()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,7 +22,7 @@ abstract class FragmentBinding<T : ViewBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = createBinding(inflater, container)
-        setupListeners()
+        setup()
         return binding.root
     }
 

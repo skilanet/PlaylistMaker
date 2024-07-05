@@ -9,21 +9,21 @@ import kotlinx.coroutines.flow.flow
 
 class FavoriteSongsRepositoryImpl(private val appDatabase: AppDatabase): FavoriteSongsRepository {
     override fun favoriteSongs(): Flow<List<Song>> = flow {
-        val movies = appDatabase.getDao().getFavoriteSongs()
+        val movies = appDatabase.getSongDao().getFavoriteSongs()
         emit(Converter.fromEntitiesToModels(movies))
     }
 
     override fun getTrackByTrackId(trackId: Int): Flow<Song?> = flow {
-        val track = appDatabase.getDao().getTrackByTrackId(trackId)
+        val track = appDatabase.getSongDao().getTrackByTrackId(trackId)
         emit(Converter.fromEntityToModel(entity = track))
     }
 
     override suspend fun insertSong(song: Song) {
         val songEntity = Converter.fromModelToEntity(song)
-        appDatabase.getDao().insertSongIntoTable(songEntity)
+        appDatabase.getSongDao().insertSongIntoTable(songEntity)
     }
 
     override suspend fun deleteSongByTrackId(trackId: Int) {
-        appDatabase.getDao().deleteSongByTrackId(trackId)
+        appDatabase.getSongDao().deleteSongByTrackId(trackId)
     }
 }

@@ -28,7 +28,7 @@ class FavoriteTracksFragment : FragmentBinding<FragmentFavoriteTracksBinding>() 
     ): FragmentFavoriteTracksBinding =
         FragmentFavoriteTracksBinding.inflate(layoutInflater, container, false)
 
-    override fun setupListeners() {}
+    override fun setup() {}
 
     private val adapter = SongsAdapter()
 

@@ -33,9 +33,12 @@
     <activity
         android:id="@+id/mediaPlayerActivity"
         android:name="com.example.playlistmaker.media_player.ui.MediaPlayerActivity"
-        android:label="MediaPlayerActivity" />
+        android:label="MediaPlayerActivity"
+        tools:layout="@layout/activity_media_player"/>
     <fragment
         android:id="@+id/addPlaylistFragment"
         android:name="com.example.playlistmaker.new_playlist.ui.AddPlaylistFragment"
-        android:label="AddPlaylistFragment" />
+        android:label="AddPlaylistFragment"
+        tools:layout="@layout/fragment_create_playlist">
+    </fragment>
 </navigation>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_playlist_cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/shapeable_imageview"
+        app:srcCompat="@drawable/placeholder"
+        android:layout_marginEnd="4dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_playlist_name"
+        style="@style/item_playlist_text"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@id/iv_playlist_cover"
+        app:layout_constraintStart_toStartOf="@id/iv_playlist_cover"
+        app:layout_constraintTop_toBottomOf="@id/iv_playlist_cover"
+        tools:text="Example" />
+
+    <TextView
+        android:id="@+id/tv_count_of_songs"
+        style="@style/item_playlist_text"
+        app:layout_constraintEnd_toEndOf="@id/iv_playlist_cover"
+        app:layout_constraintStart_toStartOf="@id/iv_playlist_cover"
+        app:layout_constraintTop_toBottomOf="@id/tv_playlist_name"
+        tools:text="Example" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
