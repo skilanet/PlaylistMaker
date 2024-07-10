@@ -65,7 +65,8 @@
         android:hint="@string/playlist_name"
         app:layout_constraintEnd_toEndOf="@id/guideline_16dp_end"
         app:layout_constraintStart_toStartOf="@id/guideline_16dp_start"
-        app:layout_constraintTop_toBottomOf="@id/iv_photo_input">
+        app:layout_constraintTop_toBottomOf="@id/iv_photo_input"
+        app:cursorColor="@color/yp_blue">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tiet_playlist_name"
@@ -80,7 +81,8 @@
         android:importantForAutofill="no"
         app:layout_constraintEnd_toEndOf="@id/guideline_16dp_end"
         app:layout_constraintStart_toStartOf="@id/guideline_16dp_start"
-        app:layout_constraintTop_toBottomOf="@id/til_playlist_name">
+        app:layout_constraintTop_toBottomOf="@id/til_playlist_name"
+        app:cursorColor="@color/yp_blue">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tiet_playlist_description"

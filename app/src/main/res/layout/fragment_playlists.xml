@@ -57,10 +57,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_playlists"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/btn_create_playlist"
-        android:layout_marginTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        android:layout_marginHorizontal="16dp"/>
+        android:layout_marginHorizontal="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

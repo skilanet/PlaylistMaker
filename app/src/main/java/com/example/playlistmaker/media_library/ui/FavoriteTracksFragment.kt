@@ -15,7 +15,7 @@ import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.presentation.FavoriteTracksViewModel
 import com.example.playlistmaker.media_library.ui.models.FavoriteTracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
-import com.example.playlistmaker.util.FragmentBinding
+import com.example.playlistmaker.core.FragmentBinding
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -92,7 +92,7 @@ class FavoriteTracksFragment : FragmentBinding<FragmentFavoriteTracksBinding>() 
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
+            lifecycleScope.launch {
                 delay(CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
             }

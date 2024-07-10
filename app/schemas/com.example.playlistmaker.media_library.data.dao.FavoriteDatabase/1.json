@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "a3417005f1cdc1b1a5c84f4f46bd9051",
+    "version": 1,
+    "identityHash": "dea4d22442363e5ed714704772d9bc53",
     "entities": [
       {
         "tableName": "favorite_table",
@@ -89,62 +89,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "playlists_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `uri` TEXT NOT NULL, `tracks` TEXT NOT NULL, `countOfTracks` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "description",
-            "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "uri",
-            "columnName": "uri",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "tracks",
-            "columnName": "tracks",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "countOfTracks",
-            "columnName": "countOfTracks",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3417005f1cdc1b1a5c84f4f46bd9051')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dea4d22442363e5ed714704772d9bc53')"
     ]
   }
 }

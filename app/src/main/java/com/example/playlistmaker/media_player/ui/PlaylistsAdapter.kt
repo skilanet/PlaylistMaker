@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media_player.ui
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +9,8 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ItemPlaylistLinearBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 
-class PlaylistsAdapter : RecyclerView.Adapter<PlaylistsAdapter.ViewHolder>() {
+class PlaylistsAdapter(private val context: Context) :
+    RecyclerView.Adapter<PlaylistsAdapter.ViewHolder>() {
 
     val playlists = ArrayList<Playlist>()
     var onItemClick: ((Playlist) -> Unit)? = null
@@ -19,12 +21,16 @@ class PlaylistsAdapter : RecyclerView.Adapter<PlaylistsAdapter.ViewHolder>() {
         private val playlistName = binding.tvPlaylistName
         val countOfTracks = binding.tvCountOfSongs
         fun bind(playlist: Playlist) {
-            if (playlist.uri == Uri.EMPTY) cover.setImageResource(R.drawable.placeholder)
-            else cover.setImageURI(playlist.uri)
+            if (playlist.uri.isNotEmpty()) {
+                cover.setImageURI(Uri.parse(playlist.uri))
+            } else cover.setImageResource(R.drawable.placeholder)
             playlistName.text = playlist.name
-            val string = StringBuilder()
-            countOfTracks.text = if (playlist.countOfTracks == 1) string.append("1 трек").toString()
-            else string.append("${playlist.countOfTracks} треков").toString()
+            countOfTracks.text =
+                context.resources.getQuantityString(
+                    R.plurals.tracks,
+                    playlist.countOfTracks,
+                    playlist.countOfTracks
+                )
         }
 
     }

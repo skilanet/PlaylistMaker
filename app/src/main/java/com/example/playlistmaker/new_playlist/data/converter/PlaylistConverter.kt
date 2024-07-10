@@ -1,6 +1,5 @@
 package com.example.playlistmaker.new_playlist.data.converter
 
-import android.net.Uri
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.new_playlist.data.dao.PlaylistEntity
 import com.example.playlistmaker.new_playlist.domain.models.TracksInPlaylist
@@ -11,18 +10,20 @@ object PlaylistConverter {
         Playlist(
             name = entity.name,
             description = entity.description,
-            uri = Uri.parse(entity.uri),
+            uri = entity.uri,
             tracks = fromJson(entity.tracks),
             countOfTracks = entity.countOfTracks
         )
     }
+
     fun fromModelToEntity(model: Playlist): PlaylistEntity = PlaylistEntity(
         name = model.name,
         description = model.description,
-        uri = model.uri.toString(),
+        uri = model.uri,
         tracks = Gson().toJson(model.tracks),
         countOfTracks = model.tracks.tracks.size,
     )
+
     fun fromEntitiesToModels(entities: List<PlaylistEntity>?): List<Playlist> = entities?.let {
         it.mapNotNull { entity ->
             fromEntityToModel(entity)

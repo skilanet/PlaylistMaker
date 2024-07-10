@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.settings.view_model.SettingsViewModel
-import com.example.playlistmaker.util.FragmentBinding
+import com.example.playlistmaker.core.FragmentBinding
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

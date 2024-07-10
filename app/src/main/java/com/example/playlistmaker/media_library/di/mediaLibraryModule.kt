@@ -1,7 +1,7 @@
 package com.example.playlistmaker.media_library.di
 
 import androidx.room.Room
-import com.example.playlistmaker.media_library.data.dao.AppDatabase
+import com.example.playlistmaker.media_library.data.dao.FavoriteDatabase
 import com.example.playlistmaker.media_library.data.impl.FavoriteSongsRepositoryImpl
 import com.example.playlistmaker.media_library.domain.impl.FavoriteSongsInteractorImpl
 import com.example.playlistmaker.media_library.domain.repository.FavoriteSongsInteractor
@@ -13,8 +13,13 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val mediaLibraryModule = module {
+
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+        Room.databaseBuilder(
+            androidContext(),
+            FavoriteDatabase::class.java,
+            "favorite_database.db"
+        )
             .fallbackToDestructiveMigration()
             .build()
     }

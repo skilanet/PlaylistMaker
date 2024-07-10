@@ -54,5 +54,10 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
+    
+    <style name="MyAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/yp_blue</item>
+        <item name="colorOnPrimary">@color/yp_blue</item>
+    </style>
 
 </resources>

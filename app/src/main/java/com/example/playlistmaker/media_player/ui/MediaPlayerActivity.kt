@@ -3,6 +3,7 @@ package com.example.playlistmaker.media_player.ui
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -34,12 +35,11 @@ class MediaPlayerActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: MediaPlayerViewModel
-
     private lateinit var binding: ActivityMediaPlayerBinding
     private lateinit var btnStartPause: ImageView
     private lateinit var tvNowTime: TextView
-
-    private val adapter = PlaylistsAdapter()
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private val adapter = PlaylistsAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +97,7 @@ class MediaPlayerActivity : AppCompatActivity() {
             finish()
         }
         val bottomSheetContainer = binding.llBottomSheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
         binding.ivAddToPlayList.setOnClickListener {
@@ -159,16 +159,17 @@ class MediaPlayerActivity : AppCompatActivity() {
     private fun onItemClick(playlist: Playlist, song: Song) {
         if (playlist.tracks.tracks.contains(song)) Toast.makeText(
             this,
-            getString(R.string.this_track_is_in_playlist), Toast.LENGTH_SHORT
+            getString(R.string.this_track_already_in_playlist, playlist.name), Toast.LENGTH_SHORT
         ).show()
         else {
             playlist.tracks.tracks.add(song)
             viewModel.refreshPlaylists(playlist)
             Toast.makeText(
                 this,
-                "Трек ${song.trackName} успешно добавлен в плейлист: ${playlist.name}",
+                getString(R.string.added_to_playlist, playlist.name),
                 Toast.LENGTH_SHORT
             ).show()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             viewModel.onPlaylistButtonClicked()
         }
     }

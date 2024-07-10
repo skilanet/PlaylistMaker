@@ -24,7 +24,7 @@ import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
-import com.example.playlistmaker.util.FragmentBinding
+import com.example.playlistmaker.core.FragmentBinding
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

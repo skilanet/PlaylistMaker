@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media_player.presentation.view_model
 
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -139,7 +140,7 @@ class MediaPlayerViewModel(
         playingState.postValue(PlayingState.Paused(getCurrentTime()))
     }
 
-    private fun onRelease() {
+    fun onRelease() {
         mediaPlayer.stop()
         mediaPlayer.release()
         playingState.postValue(PlayingState.Default)
@@ -166,5 +167,6 @@ class MediaPlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         onRelease()
+        Log.i("LIFECYCLE_TAG", "viewmodel: onCleared")
     }
 }

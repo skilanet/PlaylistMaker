@@ -18,7 +18,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_library.presentation.PlaylistsViewModel
 import com.example.playlistmaker.media_library.ui.models.PlaylistsState
-import com.example.playlistmaker.util.FragmentBinding
+import com.example.playlistmaker.core.FragmentBinding
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
         layoutInflater: LayoutInflater, container: ViewGroup?
     ): FragmentPlaylistsBinding = FragmentPlaylistsBinding.inflate(layoutInflater, container, false)
 
-    private val adapter = PlaylistsAdapter()
+    private lateinit var adapter: PlaylistsAdapter
     private val viewModel by viewModel<PlaylistsViewModel>()
 
     override fun setup() {
@@ -66,6 +66,7 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = PlaylistsAdapter(requireContext())
         binding.rvPlaylists.adapter = adapter
         binding.rvPlaylists.layoutManager =
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
