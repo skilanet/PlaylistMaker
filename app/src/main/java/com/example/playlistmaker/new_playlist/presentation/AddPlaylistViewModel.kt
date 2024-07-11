@@ -10,6 +10,7 @@ import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsInterac
 import com.example.playlistmaker.new_playlist.ui.models.PlaylistExistsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class AddPlaylistViewModel(
@@ -56,8 +57,8 @@ class AddPlaylistViewModel(
     fun putImageToLocalStorage(uri: String, playlistName: String) {
         viewModelScope.launch {
             fileInteractor.saveToLocalStorage(uri, playlistName)
-            viewModelScope.launch {
-                fileInteractor.getFromLocalStorage(playlistName)
+            fileInteractor.getFromLocalStorage(playlistName).collectLatest {
+                _fileState.value = it
             }
         }
     }

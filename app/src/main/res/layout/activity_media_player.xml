@@ -295,6 +295,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp"
             android:fontFamily="@font/ys_display_medium"
             android:paddingHorizontal="14dp"
             android:paddingVertical="10dp"
@@ -308,7 +309,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             tools:listitem="@layout/item_playlist_linear"
             android:layout_marginBottom="16dp"/>
     </LinearLayout>

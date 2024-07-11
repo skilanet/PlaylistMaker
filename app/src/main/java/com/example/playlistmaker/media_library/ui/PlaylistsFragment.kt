@@ -1,24 +1,20 @@
 package com.example.playlistmaker.media_library.ui
 
-import android.Manifest
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
+import com.example.playlistmaker.core.FragmentBinding
+import com.example.playlistmaker.core.PermissionRequests
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_library.presentation.PlaylistsViewModel
 import com.example.playlistmaker.media_library.ui.models.PlaylistsState
-import com.example.playlistmaker.core.FragmentBinding
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import kotlinx.coroutines.launch
@@ -34,34 +30,18 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
     private val viewModel by viewModel<PlaylistsViewModel>()
 
     override fun setup() {
-        val requester = PermissionRequester.instance()
-        lifecycleScope.launch {
-            requester.request(
-                Manifest.permission.CAMERA
-            ).collect { result ->
-                when (result) {
-                    is PermissionResult.Granted -> {
+        binding.btnCreatePlaylist.setOnClickListener {
+            val requester = PermissionRequester.instance()
+            viewLifecycleOwner.lifecycleScope.launch {
+                requester.request(*PermissionRequests.PERMISSIONS).collect { result ->
+                    when(result) {
+                        is PermissionResult.Granted -> findNavController().navigate(R.id.action_fragmentMedia_to_addPlaylistFragment)
+                        is PermissionResult.Denied.DeniedPermanently -> PermissionRequests.goToSettings(requireContext())
+                        else -> {}
                     }
-
-                    is PermissionResult.Denied.DeniedPermanently -> Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        data = Uri.fromParts("package", requireContext().packageName, null)
-                        startActivity(this)
-                    }
-
-                    is PermissionResult.Denied.NeedsRationale -> {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.permission_is_required_to_create_playlist),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-                    is PermissionResult.Cancelled -> {}
                 }
             }
         }
-        binding.btnCreatePlaylist.setOnClickListener { findNavController().navigate(R.id.action_fragmentMedia_to_addPlaylistFragment) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

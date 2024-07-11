@@ -32,6 +32,7 @@ class FilesRepositoryImpl(private val context: Context) : FileRepository {
     override fun getFromLocalStorage(playlistName: String): Flow<String> = flow {
         val filePath =
             File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlists")
-        emit(File(filePath, "${playlistName}.jpg").toUri().toString())
+        val fileUri = File(filePath, "${playlistName}.jpg").toUri().toString()
+        emit(fileUri)
     }
 }

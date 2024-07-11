@@ -9,9 +9,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import com.example.playlistmaker.core.PermissionRequests
 import com.example.playlistmaker.databinding.ActivityMediaPlayerBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.main.ui.RootActivity
@@ -23,6 +25,9 @@ import com.example.playlistmaker.media_player.ui.models.InPlaylistState
 import com.example.playlistmaker.media_player.ui.models.PlayingState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
+import com.markodevcic.peko.PermissionRequester
+import com.markodevcic.peko.PermissionResult
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -105,12 +110,26 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
 
         binding.btnNewPlaylist.setOnClickListener {
-            Intent(this, RootActivity::class.java).apply {
-                putExtra(FRAGMENT_KEY, FRAGMENT_CODE)
-                startActivity(this)
+            val requester = PermissionRequester.instance()
+            lifecycleScope.launch {
+                requester.request(*PermissionRequests.PERMISSIONS).collect { result ->
+                    when (result) {
+                        is PermissionResult.Granted -> {
+                            Intent(this@MediaPlayerActivity, RootActivity::class.java).apply {
+                                putExtra(FRAGMENT_KEY, FRAGMENT_CODE)
+                                startActivity(this)
+                            }
+                        }
+
+                        is PermissionResult.Denied.DeniedPermanently -> PermissionRequests.goToSettings(
+                            this@MediaPlayerActivity
+                        )
+
+                        else -> {}
+                    }
+                }
             }
         }
-
     }
 
     override fun onResume() {

@@ -59,9 +59,11 @@ class SongsAdapter(private val isHistory: Boolean = false) :
 
     override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
         val track = tracks[position]
-        holder.bind(track)
-        holder.itemView.setOnClickListener {
-            onItemClick?.invoke(track, isHistory)
+        with(holder) {
+            bind(track)
+            itemView.setOnClickListener {
+                onItemClick?.invoke(track, isHistory)
+            }
         }
     }
 }

@@ -33,9 +33,13 @@ class RootActivity : AppCompatActivity() {
         bottomNavView.setupWithNavController(navController)
 
         when (intent.extras?.getInt(MediaPlayerActivity.FRAGMENT_KEY)) {
-            1 -> navController.navigate(R.id.addPlaylistFragment, bundleOf(with(MediaPlayerActivity){
-                FRAGMENT_KEY to FRAGMENT_CODE
-            }))
+            1 -> navController.navigate(
+                R.id.addPlaylistFragment,
+                bundleOf(with(MediaPlayerActivity) {
+                    FRAGMENT_KEY to FRAGMENT_CODE
+                })
+            )
+
             else -> {}
         }
 
