@@ -1,5 +1,6 @@
 package com.example.playlistmaker.new_playlist.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,10 +39,12 @@ class AddPlaylistViewModel(
         }
     }
 
-    fun checkTrack(name: String) {
-        viewModelScope.launch {
-            playlistsInteractor.getPlaylistByName(name).collect { playlist ->
-                renderState(playlist)
+    fun checkPlaylist(name: String) {
+        if (name.isNotEmpty()) {
+            viewModelScope.launch {
+                playlistsInteractor.getPlaylistByName(name).collect { playlist ->
+                    renderState(playlist)
+                }
             }
         }
     }

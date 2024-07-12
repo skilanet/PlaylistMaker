@@ -16,7 +16,6 @@ import com.example.playlistmaker.core.FragmentBinding
 import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
-import com.example.playlistmaker.new_playlist.domain.models.TracksInPlaylist
 import com.example.playlistmaker.new_playlist.presentation.AddPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
@@ -55,7 +54,7 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
         }
         binding.tietPlaylistName.doOnTextChanged { text, _, _, _ ->
             binding.btnSavePlaylist.isEnabled = !text.isNullOrBlank()
-            viewModel.checkTrack(text.toString())
+            viewModel.checkPlaylist(text.toString())
         }
         binding.ivPhotoInput.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -89,7 +88,7 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
         name = binding.tietPlaylistName.text.toString(),
         description = binding.tietPlaylistDescription.text.toString(),
         uri = uri,
-        tracks = TracksInPlaylist(ArrayList()),
+        tracks = emptyList(),
         countOfTracks = 0
     ).also {
         viewModel.clickListener(it)

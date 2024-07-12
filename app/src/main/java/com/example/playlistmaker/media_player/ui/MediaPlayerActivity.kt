@@ -45,6 +45,7 @@ class MediaPlayerActivity : AppCompatActivity() {
     private lateinit var tvNowTime: TextView
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private val adapter = PlaylistsAdapter(this)
+    private var _permissionFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,18 +116,25 @@ class MediaPlayerActivity : AppCompatActivity() {
                 requester.request(*PermissionRequests.PERMISSIONS).collect { result ->
                     when (result) {
                         is PermissionResult.Granted -> {
-                            Intent(this@MediaPlayerActivity, RootActivity::class.java).apply {
-                                putExtra(FRAGMENT_KEY, FRAGMENT_CODE)
-                                startActivity(this)
-                            }
+                            _permissionFlag = true
                         }
 
-                        is PermissionResult.Denied.DeniedPermanently -> PermissionRequests.goToSettings(
-                            this@MediaPlayerActivity
-                        )
+                        is PermissionResult.Denied.DeniedPermanently -> {
+                            _permissionFlag = false
+                            PermissionRequests.goToSettings(
+                                this@MediaPlayerActivity
+                            )
+                        }
 
                         else -> {}
                     }
+                }
+            }
+
+            if (_permissionFlag) {
+                Intent(this@MediaPlayerActivity, RootActivity::class.java).apply {
+                    putExtra(FRAGMENT_KEY, FRAGMENT_CODE)
+                    startActivity(this)
                 }
             }
         }
@@ -176,20 +184,22 @@ class MediaPlayerActivity : AppCompatActivity() {
     }
 
     private fun onItemClick(playlist: Playlist, song: Song) {
-        if (playlist.tracks.tracks.contains(song)) Toast.makeText(
+        if (playlist.tracks.contains(song)) Toast.makeText(
             this,
             getString(R.string.this_track_already_in_playlist, playlist.name), Toast.LENGTH_SHORT
         ).show()
         else {
-            playlist.tracks.tracks.add(song)
-            viewModel.refreshPlaylists(playlist)
+            with(viewModel) {
+                insertSong(song = song, playlistName = playlist.name)
+                refreshPlaylists(playlist)
+                onPlaylistButtonClicked()
+            }
             Toast.makeText(
                 this,
                 getString(R.string.added_to_playlist, playlist.name),
                 Toast.LENGTH_SHORT
             ).show()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            viewModel.onPlaylistButtonClicked()
         }
     }
 

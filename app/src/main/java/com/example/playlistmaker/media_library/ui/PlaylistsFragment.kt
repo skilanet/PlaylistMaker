@@ -1,6 +1,7 @@
 package com.example.playlistmaker.media_library.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,19 +29,28 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
 
     private lateinit var adapter: PlaylistsAdapter
     private val viewModel by viewModel<PlaylistsViewModel>()
+    private var _permissionFlag: Boolean = false
 
     override fun setup() {
         binding.btnCreatePlaylist.setOnClickListener {
             val requester = PermissionRequester.instance()
             viewLifecycleOwner.lifecycleScope.launch {
                 requester.request(*PermissionRequests.PERMISSIONS).collect { result ->
-                    when(result) {
-                        is PermissionResult.Granted -> findNavController().navigate(R.id.action_fragmentMedia_to_addPlaylistFragment)
-                        is PermissionResult.Denied.DeniedPermanently -> PermissionRequests.goToSettings(requireContext())
+                    when (result) {
+                        is PermissionResult.Granted -> {
+                            _permissionFlag = true
+                        }
+                        is PermissionResult.Denied.DeniedPermanently -> {
+                            _permissionFlag = false
+                            PermissionRequests.goToSettings(
+                                requireContext()
+                            )
+                        }
                         else -> {}
                     }
                 }
             }
+            if (_permissionFlag) findNavController().navigate(R.id.action_fragmentMedia_to_addPlaylistFragment)
         }
     }
 
