@@ -1,10 +1,10 @@
 package com.example.playlistmaker.new_playlist.data.impl
 
-import android.util.Log
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.new_playlist.data.converter.PlaylistConverter
 import com.example.playlistmaker.new_playlist.data.dao.PlaylistsDatabase
+import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistSongCrossRef
 import com.example.playlistmaker.new_playlist.domain.repository.PlaylistRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -41,8 +41,16 @@ class PlaylistRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) :
         playlistsDatabase.getPlaylistDao().insertPlaylist(entity)
     }
 
-    override suspend fun insertSong(song: Song, playlistName: String) {
-        val entity = PlaylistConverter.fromModelToEntity(song, playlistName)
-        playlistsDatabase.getPlaylistDao().insertSong(entity)
+    override suspend fun insertSong(playlistId: Int, song: Song) {
+        val entity = PlaylistConverter.fromModelToEntity(song)
+        with(playlistsDatabase.getPlaylistDao()) {
+            insertSong(entity)
+            insertPlaylistSongCrossRef(playlistId, song.trackId)
+        }
+    }
+
+    override suspend fun insertPlaylistSongCrossRef(playlistId: Int, trackId: Int) {
+        val crossRef = PlaylistSongCrossRef(playlistId, trackId)
+        playlistsDatabase.getPlaylistDao().insertPlaylistSongCrossRef(crossRef)
     }
 }

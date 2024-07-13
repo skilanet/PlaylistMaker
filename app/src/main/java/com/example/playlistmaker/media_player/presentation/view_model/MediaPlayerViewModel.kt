@@ -49,8 +49,8 @@ class MediaPlayerViewModel(
         }
     }
 
-    fun insertSong(song: Song, playlistName: String) = viewModelScope.launch {
-        playlistsInteractor.insertSong(song, playlistName)
+    fun insertSong(playlistId: Int, song: Song) = viewModelScope.launch {
+        playlistsInteractor.insertSong(playlistId, song)
     }
 
     private val inPlaylistState = MutableLiveData<InPlaylistState>(InPlaylistState.NotInPlaylist)

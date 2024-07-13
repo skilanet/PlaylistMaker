@@ -10,6 +10,7 @@ object PlaylistConverter {
     fun fromEntitiesToModel(playlistWithSongs: PlaylistWithSongs?) = playlistWithSongs?.let {
         with(it) {
             Playlist(
+                id = playlist.playlistId,
                 name = playlist.name,
                 description = playlist.description,
                 uri = playlist.uri,
@@ -18,9 +19,6 @@ object PlaylistConverter {
             )
         }
     }
-
-
-
 
     private fun fromEntitiesToModel(songEntities: List<SongEntity>?): List<Song> = songEntities?.let {
         it.map { entity -> fromEntityToModel(entity) }
@@ -50,7 +48,7 @@ object PlaylistConverter {
         )
     }
 
-    fun fromModelToEntity(model: Song, playlistName: String) = with(model) {
+    fun fromModelToEntity(model: Song) = with(model) {
         SongEntity(
             trackId = trackId,
             trackName = trackName,
@@ -63,7 +61,6 @@ object PlaylistConverter {
             previewUrl = previewUrl,
             currentTime = currentTime,
             currentDate = currentDate,
-            playlistName = playlistName
         )
     }
 }

@@ -190,7 +190,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         ).show()
         else {
             with(viewModel) {
-                insertSong(song = song, playlistName = playlist.name)
+                insertSong(playlistId = playlist.id, song = song)
                 refreshPlaylists(playlist)
                 onPlaylistButtonClicked()
             }

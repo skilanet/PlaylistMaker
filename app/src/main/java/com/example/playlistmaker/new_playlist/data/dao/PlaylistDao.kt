@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistSongCrossRef
 import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistWithSongs
 
 @Dao
@@ -24,6 +25,9 @@ interface PlaylistDao {
         description: String?,
         uri: String,
     )
+
+    @Insert(entity = PlaylistSongCrossRef::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlaylistSongCrossRef(crossRef: PlaylistSongCrossRef)
 
     @Query("SELECT * FROM playlists_table WHERE name = :name")
     suspend fun getPlaylistByName(name: String): PlaylistEntity

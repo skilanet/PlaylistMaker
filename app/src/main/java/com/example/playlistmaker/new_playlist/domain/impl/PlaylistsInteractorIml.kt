@@ -16,6 +16,6 @@ class PlaylistsInteractorIml(private val repository: PlaylistRepository) : Playl
 
     override suspend fun insertPlaylist(playlist: Playlist) = repository.insertPlaylist(playlist)
 
-    override suspend fun insertSong(song: Song, playlistName: String) =
-        repository.insertSong(song, playlistName)
+    override suspend fun insertSong(playlistId: Int, song: Song) =
+        repository.insertSong(playlistId, song)
 }
