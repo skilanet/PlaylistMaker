@@ -21,7 +21,7 @@ class PlaylistRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) :
     }
 
     override fun getPlaylistByName(name: String): Flow<Playlist?> = flow {
-        playlistsDatabase.getPlaylistDao().getAllPlaylistsWithSongs(name).apply {
+        playlistsDatabase.getPlaylistDao().getPlaylistByName(name).apply {
             val playlist = PlaylistConverter.fromEntitiesToModel(this)
             emit(playlist)
         }

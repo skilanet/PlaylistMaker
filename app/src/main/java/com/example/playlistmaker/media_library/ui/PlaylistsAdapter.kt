@@ -13,7 +13,7 @@ class PlaylistsAdapter(private val context: Context) :
     RecyclerView.Adapter<PlaylistsAdapter.ViewHolder>() {
 
     val playlists: ArrayList<Playlist> = arrayListOf()
-    private val onItemClick: (() -> Unit)? = null
+    var onItemClick: ((Playlist) -> Unit)? = null
 
     inner class ViewHolder(binding: ItemPlaylistGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -43,7 +43,7 @@ class PlaylistsAdapter(private val context: Context) :
         holder.apply {
             bind(playlist = playlists[position])
             itemView.setOnClickListener {
-                onItemClick?.invoke()
+                onItemClick?.invoke(playlists[position])
             }
         }
     }

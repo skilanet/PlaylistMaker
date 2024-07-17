@@ -6,7 +6,7 @@ import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistSong
 
 @Database(
     entities = [PlaylistEntity::class, SongEntity::class, PlaylistSongCrossRef::class],
-    version = 5
+    version = 6
 )
 abstract class PlaylistsDatabase: RoomDatabase() {
     abstract fun getPlaylistDao(): PlaylistDao

@@ -17,5 +17,6 @@ data class SongEntity(
     val primaryGenreName: String,
     val previewUrl: String,
     val currentTime: String,
-    val currentDate: String
+    val currentDate: String,
+    val trackTimeMillis: Int,
 )

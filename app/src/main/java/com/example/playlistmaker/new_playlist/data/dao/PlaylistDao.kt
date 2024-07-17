@@ -29,8 +29,9 @@ interface PlaylistDao {
     @Insert(entity = PlaylistSongCrossRef::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylistSongCrossRef(crossRef: PlaylistSongCrossRef)
 
+    @Transaction
     @Query("SELECT * FROM playlists_table WHERE name = :name")
-    suspend fun getPlaylistByName(name: String): PlaylistEntity
+    suspend fun getPlaylistByName(name: String): PlaylistWithSongs
 
     @Query("SELECT * FROM playlists_table")
     suspend fun getAllPlaylists(): List<PlaylistEntity>

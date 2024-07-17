@@ -1,10 +1,10 @@
 package com.example.playlistmaker.media_library.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +16,8 @@ import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_library.presentation.PlaylistsViewModel
 import com.example.playlistmaker.media_library.ui.models.PlaylistsState
+import com.example.playlistmaker.playlist.ui.PlaylistFragment
+import com.google.gson.Gson
 import com.markodevcic.peko.PermissionRequester
 import com.markodevcic.peko.PermissionResult
 import kotlinx.coroutines.launch
@@ -40,12 +42,14 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
                         is PermissionResult.Granted -> {
                             _permissionFlag = true
                         }
+
                         is PermissionResult.Denied.DeniedPermanently -> {
                             _permissionFlag = false
                             PermissionRequests.goToSettings(
                                 requireContext()
                             )
                         }
+
                         else -> {}
                     }
                 }
@@ -57,12 +61,18 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = PlaylistsAdapter(requireContext())
+        adapter.onItemClick = { playlist -> onItemClick(playlist) }
         binding.rvPlaylists.adapter = adapter
         binding.rvPlaylists.layoutManager =
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         viewModel.observePlaylistState().observe(viewLifecycleOwner) {
             renderState(it)
         }
+    }
+
+    private fun onItemClick(playlist: Playlist) {
+        val bundle = bundleOf(PlaylistFragment.PLAYLIST_KEY to Gson().toJson(playlist))
+        findNavController().navigate(R.id.action_fragmentMedia_to_playlistFragment, bundle)
     }
 
     override fun onResume() {

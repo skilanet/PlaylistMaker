@@ -44,7 +44,8 @@ object PlaylistConverter {
             primaryGenreName = primaryGenreName,
             previewUrl = previewUrl,
             currentTime = currentTime,
-            currentDate = currentDate
+            currentDate = currentDate,
+            trackTimeMillis = trackTimeMillis
         )
     }
 
@@ -61,6 +62,7 @@ object PlaylistConverter {
             previewUrl = previewUrl,
             currentTime = currentTime,
             currentDate = currentDate,
+            trackTimeMillis = trackTimeMillis
         )
     }
 }

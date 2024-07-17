@@ -45,6 +45,14 @@
     <string name="this_track_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
     <plurals name="tracks">
         <item quantity="one">1 трек</item>
-        <item quantity="other">%d треков</item>
+        <item quantity="two">2 трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
+    <plurals name="playlist_time">
+        <item quantity="one">1 минута</item>
+        <item quantity="two">2 минуты</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="other">%1$d минут</item>
     </plurals>
 </resources>
