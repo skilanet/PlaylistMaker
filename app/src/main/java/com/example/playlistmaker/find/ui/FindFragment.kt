@@ -97,7 +97,7 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
                 etFindText.isCursorVisible = etFindText.hasFocus()
                 hideAll()
             } else binding.llHistoryOfSearch.visibility = View.GONE
-            viewModel.searchDebounce(text.toString())
+            viewModel.search(text.toString(), true)
         }
 
         etFindText.setOnFocusChangeListener { _, hasFocus ->
@@ -110,7 +110,7 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
         etFindText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (etFindText.text.isNotEmpty()) {
-                    viewModel.sendRequest(etFindText.text.toString())
+                    viewModel.search(etFindText.text.toString(), false)
                 }
             }
             false

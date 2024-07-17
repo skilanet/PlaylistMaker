@@ -62,12 +62,12 @@ class FindViewModel(
         }
     }
 
-    fun searchDebounce(changedText: String) {
+    fun search(changedText: String, isWithDebounce: Boolean){
         if (lastChangedText == changedText) return
         lastChangedText = changedText
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(SEARCH_DEBOUNCE_DELAY)
+            if (isWithDebounce) delay(SEARCH_DEBOUNCE_DELAY)
             sendRequest(changedText)
         }
     }
