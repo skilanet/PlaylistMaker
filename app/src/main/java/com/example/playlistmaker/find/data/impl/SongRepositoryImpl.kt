@@ -1,5 +1,6 @@
 package com.example.playlistmaker.find.data.impl
 
+import android.util.Log
 import com.example.playlistmaker.find.data.dto.SongResponse
 import com.example.playlistmaker.find.data.mapper.SongMapper
 import com.example.playlistmaker.find.data.repository.SongNetworkClient
@@ -14,7 +15,8 @@ class SongRepositoryImpl(private val networkClient: SongNetworkClient) : SongRep
         val response = networkClient.doRequest(term)
         when (response.resultCode) {
             200 -> with(response as SongResponse) {
-                val data = SongMapper.map(response.results)
+                Log.d("_TAG", "SongRepositoryImpl: $results")
+                val data = SongMapper.map(results)
                 emit(Resource.Success(data, 200))
             }
 

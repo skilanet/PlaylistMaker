@@ -24,7 +24,7 @@ import com.example.playlistmaker.find.presentation.view_model.FindViewModel
 import com.example.playlistmaker.find.ui.states.HistoryState
 import com.example.playlistmaker.find.ui.states.TracksState
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
-import com.example.playlistmaker.util.FragmentBinding
+import com.example.playlistmaker.core.FragmentBinding
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -97,7 +97,7 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
                 etFindText.isCursorVisible = etFindText.hasFocus()
                 hideAll()
             } else binding.llHistoryOfSearch.visibility = View.GONE
-            viewModel.searchDebounce(text.toString())
+            viewModel.search(text.toString(), true)
         }
 
         etFindText.setOnFocusChangeListener { _, hasFocus ->
@@ -110,14 +110,14 @@ class FindFragment : FragmentBinding<FragmentFindBinding>() {
         etFindText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (etFindText.text.isNotEmpty()) {
-                    viewModel.sendRequest(etFindText.text.toString())
+                    viewModel.search(etFindText.text.toString(), false)
                 }
             }
             false
         }
     }
 
-    override fun setupListeners() {
+    override fun setup() {
         binding.ivClear.setOnClickListener {
             etFindText.setText(getString(R.string.empty_string))
             val inputMethodManager =

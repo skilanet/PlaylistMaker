@@ -6,18 +6,20 @@ import com.example.playlistmaker.find.domain.models.Song
 object SongMapper {
 
     fun map(dto: List<SongDto>?): List<Song> = dto?.map { song ->
-        Song(
-            trackId = song.trackId,
-            trackName = song.trackName,
-            artistName = song.artistName,
-            artworkUrl512 = song.artworkUrl512,
-            artworkUrl100 = song.artworkUrl100,
-            collectionName = song.collectionName,
-            country = song.country,
-            primaryGenreName = song.primaryGenreName,
-            previewUrl = song.previewUrl,
-            currentTime = song.currentTime,
-            currentDate = song.currentDate
-        )
+        with(song) {
+            Song(
+                trackId = song.trackId,
+                trackName = trackName ?: "",
+                artistName = artistName ?: "",
+                artworkUrl512 = artworkUrl512,
+                artworkUrl100 = artworkUrl100 ?: "",
+                collectionName = collectionName ?: "",
+                country = country ?: "",
+                primaryGenreName = primaryGenreName ?: "",
+                previewUrl = previewUrl ?: "",
+                currentTime = song.currentTime,
+                currentDate = song.currentDate
+            )
+        }
     } ?: emptyList()
 }

@@ -4,9 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    version = 1,
+    version = 2,
     entities = [SongEntity::class]
 )
-abstract class AppDatabase: RoomDatabase() {
-    abstract fun getDao(): SongsDao
+abstract class FavoriteDatabase: RoomDatabase() {
+    abstract fun getSongDao(): SongsDao
 }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.TrackBaseBinding
+import com.example.playlistmaker.databinding.ItemTrackBinding
 import com.example.playlistmaker.find.domain.models.Song
 
 class SongsAdapter(private val isHistory: Boolean = false) :
@@ -20,7 +20,7 @@ class SongsAdapter(private val isHistory: Boolean = false) :
     var onItemClick: ((Song, Boolean) -> Unit)? = null
 
     inner class SongsViewHolder(
-        private val binding: TrackBaseBinding,
+        private val binding: ItemTrackBinding,
     ) : RecyclerView.ViewHolder(
         binding.root
     ) {
@@ -48,7 +48,7 @@ class SongsAdapter(private val isHistory: Boolean = false) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongsViewHolder =
         SongsViewHolder(
-            TrackBaseBinding.inflate(
+            ItemTrackBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -59,9 +59,11 @@ class SongsAdapter(private val isHistory: Boolean = false) :
 
     override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
         val track = tracks[position]
-        holder.bind(track)
-        holder.itemView.setOnClickListener {
-            onItemClick?.invoke(track, isHistory)
+        with(holder) {
+            bind(track)
+            itemView.setOnClickListener {
+                onItemClick?.invoke(track, isHistory)
+            }
         }
     }
 }

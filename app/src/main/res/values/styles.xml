@@ -49,5 +49,15 @@
         <item name="android:layout_marginBottom">17dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+    
+    <style name="shapeable_imageview">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    
+    <style name="MyAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/yp_blue</item>
+        <item name="colorOnPrimary">@color/yp_blue</item>
+    </style>
 
 </resources>

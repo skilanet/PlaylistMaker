@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaBinding
-import com.example.playlistmaker.util.FragmentBinding
+import com.example.playlistmaker.core.FragmentBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class FragmentMedia : FragmentBinding<FragmentMediaBinding>() {
@@ -16,7 +16,7 @@ class FragmentMedia : FragmentBinding<FragmentMediaBinding>() {
         container: ViewGroup?
     ): FragmentMediaBinding = FragmentMediaBinding.inflate(layoutInflater, container, false)
 
-    override fun setupListeners() {}
+    override fun setup() {}
 
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
