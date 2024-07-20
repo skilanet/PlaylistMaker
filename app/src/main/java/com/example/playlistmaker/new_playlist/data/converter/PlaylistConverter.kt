@@ -20,7 +20,7 @@ object PlaylistConverter {
         }
     }
 
-    private fun fromEntitiesToModel(songEntities: List<SongEntity>?): List<Song> = songEntities?.let {
+    fun fromEntitiesToModel(songEntities: List<SongEntity>?): List<Song> = songEntities?.let {
         it.map { entity -> fromEntityToModel(entity) }
     } ?: emptyList()
 

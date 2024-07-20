@@ -5,12 +5,12 @@ import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.new_playlist.data.converter.PlaylistConverter
 import com.example.playlistmaker.new_playlist.data.dao.PlaylistsDatabase
 import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistSongCrossRef
-import com.example.playlistmaker.new_playlist.domain.repository.PlaylistRepository
+import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class PlaylistRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) :
-    PlaylistRepository {
+class PlaylistsRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) :
+    PlaylistsRepository {
 
     override fun getAllPlaylists(): Flow<List<Playlist>> = flow {
         val playlists = playlistsDatabase.getPlaylistDao().getAllPlaylists().mapNotNull {
@@ -20,11 +20,12 @@ class PlaylistRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) :
         emit(playlists)
     }
 
-    override fun getPlaylistByName(name: String): Flow<Playlist?> = flow {
-        playlistsDatabase.getPlaylistDao().getPlaylistByName(name).apply {
-            val playlist = PlaylistConverter.fromEntitiesToModel(this)
-            emit(playlist)
-        }
+    override fun getPlaylistById(id: Int): Flow<Playlist?> = flow {
+        emit(
+            PlaylistConverter.fromEntitiesToModel(
+                playlistsDatabase.getPlaylistDao().getPlaylistById(id)
+            )
+        )
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {

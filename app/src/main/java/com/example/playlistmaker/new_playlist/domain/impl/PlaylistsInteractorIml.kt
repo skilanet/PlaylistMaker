@@ -2,15 +2,13 @@ package com.example.playlistmaker.new_playlist.domain.impl
 
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
-import com.example.playlistmaker.new_playlist.domain.repository.PlaylistRepository
+import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsRepository
 import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsInteractor
 import kotlinx.coroutines.flow.Flow
 
-class PlaylistsInteractorIml(private val repository: PlaylistRepository) : PlaylistsInteractor {
+class PlaylistsInteractorIml(private val repository: PlaylistsRepository) : PlaylistsInteractor {
     override fun getAllPlaylists(): Flow<List<Playlist>> = repository.getAllPlaylists()
-
-    override fun getPlaylistByName(name: String): Flow<Playlist?> =
-        repository.getPlaylistByName(name)
+    override fun getPlaylistById(id: Int): Flow<Playlist?> = repository.getPlaylistById(id)
 
     override suspend fun updatePlaylist(playlist: Playlist) = repository.updatePlaylist(playlist)
 
@@ -18,4 +16,5 @@ class PlaylistsInteractorIml(private val repository: PlaylistRepository) : Playl
 
     override suspend fun insertSong(playlistId: Int, song: Song) =
         repository.insertSong(playlistId, song)
+
 }

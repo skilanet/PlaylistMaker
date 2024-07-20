@@ -191,7 +191,7 @@ class MediaPlayerActivity : AppCompatActivity() {
         else {
             with(viewModel) {
                 insertSong(playlistId = playlist.id, song = song)
-                refreshPlaylists(playlist)
+                refreshPlaylists()
             }
             Toast.makeText(
                 this,

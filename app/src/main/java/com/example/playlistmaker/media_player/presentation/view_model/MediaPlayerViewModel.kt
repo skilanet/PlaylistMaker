@@ -55,16 +55,6 @@ class MediaPlayerViewModel(
 
     private val inPlaylistState = MutableLiveData<InPlaylistState>(InPlaylistState.NotInPlaylist)
     fun observeInPlaylistState(): LiveData<InPlaylistState> = inPlaylistState
-    private fun updateInPlaylistState(newState: InPlaylistState) =
-        inPlaylistState.postValue(newState)
-
-    fun onPlaylistButtonClicked() {
-        when (inPlaylistState.value) {
-            is InPlaylistState.InPlaylist -> updateInPlaylistState(InPlaylistState.NotInPlaylist)
-            is InPlaylistState.NotInPlaylist -> updateInPlaylistState(InPlaylistState.InPlaylist)
-            else -> {}
-        }
-    }
 
     private val playlistsState = MutableLiveData<PlaylistsState>()
     fun observePlaylistsState(): LiveData<PlaylistsState> = playlistsState
@@ -80,9 +70,8 @@ class MediaPlayerViewModel(
         }
     }
 
-    fun refreshPlaylists(playlist: Playlist) {
+    fun refreshPlaylists() {
         viewModelScope.launch {
-            playlistsInteractor.updatePlaylist(playlist)
             getPlaylists()
         }
     }
@@ -144,7 +133,7 @@ class MediaPlayerViewModel(
         playingState.postValue(PlayingState.Paused(getCurrentTime()))
     }
 
-    fun onRelease() {
+    private fun onRelease() {
         mediaPlayer.stop()
         mediaPlayer.release()
         playingState.postValue(PlayingState.Default)

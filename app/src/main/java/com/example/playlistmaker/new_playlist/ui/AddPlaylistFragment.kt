@@ -2,6 +2,7 @@ package com.example.playlistmaker.new_playlist.ui
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +18,14 @@ import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
 import com.example.playlistmaker.new_playlist.presentation.AddPlaylistViewModel
+import com.example.playlistmaker.playlist.ui.PlaylistFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
@@ -34,6 +39,7 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
     private var imageFlag = false
     private var _uri: Uri = Uri.EMPTY
     private val viewModel by viewModel<AddPlaylistViewModel>()
+    private var editFlag = false
 
     override fun setup() {
         binding.btnSavePlaylist.isEnabled = !binding.tietPlaylistName.text.isNullOrBlank()
@@ -48,23 +54,39 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.observePlaylistState().observe(viewLifecycleOwner) {}
+        editFlag = arguments?.getBoolean(PlaylistFragment.EDIT_KEY) ?: false
+        Log.d("_TAG", "flag: $editFlag")
+        if (editFlag) {
+            binding.tvTitle.setText(R.string.edit)
+            viewModel.getPlaylist(requireArguments().getInt(PlaylistFragment.EDIT_ID_KEY))
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.playlistStateFlow.filterNotNull().collectLatest {
+                    withContext(Dispatchers.Main) {
+                        _uri = Uri.parse(it.uri)
+                        binding.ivPhotoInput.setImageURI(Uri.parse(it.uri))
+                        binding.tietPlaylistName.setText(it.name)
+                        binding.tietPlaylistDescription.setText(it.description ?: "")
+                    }
+                }
+            }
+        }
         binding.ivBack.setOnClickListener {
             chooseExitMode()
         }
         binding.tietPlaylistName.doOnTextChanged { text, _, _, _ ->
             binding.btnSavePlaylist.isEnabled = !text.isNullOrBlank()
-            viewModel.checkPlaylist(text.toString())
         }
         binding.ivPhotoInput.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         binding.btnSavePlaylist.setOnClickListener {
             if (_uri != Uri.EMPTY) {
-                viewModel.putImageToLocalStorage(
-                    _uri.toString(),
-                    binding.tietPlaylistName.text.toString()
-                )
+                if (imageFlag) {
+                    viewModel.putImageToLocalStorage(
+                        _uri.toString(),
+                        binding.tietPlaylistName.text.toString()
+                    )
+                }
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.fileState.filter { it.isNotEmpty() }.collectLatest { uri ->
                         createPlaylist(uri)
@@ -91,7 +113,7 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
         tracks = emptyList(),
         countOfTracks = 0
     ).also {
-        viewModel.clickListener(it)
+        viewModel.clickListener(it, editFlag)
     }
 
     private val pickMedia =

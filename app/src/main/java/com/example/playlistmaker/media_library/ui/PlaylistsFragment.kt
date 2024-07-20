@@ -71,7 +71,7 @@ class PlaylistsFragment : FragmentBinding<FragmentPlaylistsBinding>() {
     }
 
     private fun onItemClick(playlist: Playlist) {
-        val bundle = bundleOf(PlaylistFragment.PLAYLIST_KEY to Gson().toJson(playlist))
+        val bundle = bundleOf(PlaylistFragment.PLAYLIST_KEY to playlist.id)
         findNavController().navigate(R.id.action_fragmentMedia_to_playlistFragment, bundle)
     }
 
