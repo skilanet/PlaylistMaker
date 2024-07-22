@@ -40,7 +40,6 @@ class MediaPlayerViewModel(
 
     private val favoriteState = MutableLiveData<FavoriteState>()
     fun observeFavoriteState(): LiveData<FavoriteState> = favoriteState
-    private fun updateFavoriteState(newState: FavoriteState) = favoriteState.postValue(newState)
     private fun initFavoriteState() {
         viewModelScope.launch {
             favoriteSongsInteractor.getTrackByTrackId(song.trackId).collect { song ->
@@ -77,8 +76,8 @@ class MediaPlayerViewModel(
     }
 
     private fun processResult(song: Song?) {
-        if (song == null) updateFavoriteState(FavoriteState.NotInFavorite)
-        else updateFavoriteState(FavoriteState.InFavorite)
+        if (song == null) favoriteState.value = FavoriteState.NotInFavorite
+        else favoriteState.value = FavoriteState.InFavorite
     }
 
     private fun initMediaPlayer() {
@@ -107,14 +106,14 @@ class MediaPlayerViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
                     favoriteSongsInteractor.deleteSongByTrackId(song.trackId)
                 }
-                updateFavoriteState(FavoriteState.NotInFavorite)
+                favoriteState.value = FavoriteState.NotInFavorite
             }
 
             is FavoriteState.NotInFavorite -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     favoriteSongsInteractor.insertSong(song)
                 }
-                updateFavoriteState(FavoriteState.InFavorite)
+                favoriteState.value = FavoriteState.InFavorite
             }
 
             else -> {}

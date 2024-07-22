@@ -1,7 +1,6 @@
 package com.example.playlistmaker.new_playlist.data.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -17,14 +16,10 @@ interface PlaylistDao {
     @Insert(entity = SongEntity::class, OnConflictStrategy.REPLACE)
     suspend fun insertSong(songEntity: SongEntity)
 
-    @Query("UPDATE playlists_table SET name = :name," +
-            " description = :description, " +
-            "uri = :uri ")
-    suspend fun updatePlaylist(
-        name: String,
-        description: String?,
-        uri: String,
-    )
+    @Query("UPDATE playlists_table SET name = :newName, " +
+            "description = :newDescription, " +
+            "uri = :newUri WHERE playlistId = :id")
+    suspend fun updatePlaylist(id: Int, newName: String, newDescription: String, newUri: String)
 
     @Insert(entity = PlaylistSongCrossRef::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylistSongCrossRef(crossRef: PlaylistSongCrossRef)
@@ -49,7 +44,6 @@ interface PlaylistDao {
     @Query("SELECT * FROM PlaylistSongCrossRef WHERE trackId = :trackId")
     suspend fun getAllPlaylistsByTrackId(trackId: Int): List<PlaylistSongCrossRef>
 
-    @Transaction
-    @Delete
-    suspend fun delete
+    @Query("DELETE FROM playlists_table WHERE playlistId = :playlistId")
+    suspend fun deletePlaylistById(playlistId: Int)
 }

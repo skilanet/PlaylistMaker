@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.core.FragmentBinding
+import com.example.playlistmaker.core.LogConstants
 import com.example.playlistmaker.core.SongsAdapter
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.find.domain.models.Song
@@ -44,24 +46,33 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
     }
 
     override fun createBinding(
-        layoutInflater: LayoutInflater,
-        container: ViewGroup?
+        layoutInflater: LayoutInflater, container: ViewGroup?
     ): FragmentPlaylistBinding = FragmentPlaylistBinding.inflate(layoutInflater, container, false)
 
     private lateinit var viewModel: PlaylistViewmodel
-    private lateinit var deleteDialog: MaterialAlertDialogBuilder
+    private lateinit var deleteTrackDialog: MaterialAlertDialogBuilder
+    private lateinit var deletePlaylistDialog: MaterialAlertDialogBuilder
     private var trackId by Delegates.notNull<Int>()
     private var playlistId by Delegates.notNull<Int>()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
     override fun setup() {
-        deleteDialog = MaterialAlertDialogBuilder(requireContext(), R.style.MyAlertDialogTheme)
-            .setTitle(R.string.delete_tarck)
-            .setMessage(R.string.are_you_sure_to_delete_track)
-            .setNeutralButton(R.string.cancel) { _, _ -> }
-            .setPositiveButton(R.string.yes) { _, _ ->
-                viewModel.deleteTrackFromDB(trackId)
-            }
+        deleteTrackDialog = deleteDialogCreator(
+            requireContext(),
+            title = R.string.delete_tarck,
+            message = R.string.are_you_sure_to_delete_track
+        ) { viewModel.deleteTrackFromDB(trackId) }
+        deletePlaylistDialog = deleteDialogCreator(
+            requireContext(),
+            title = R.string.delete_playlist,
+            message = R.string.do_you_want_to_delete_plylist
+        ) {
+            Log.d(LogConstants.DELETE_TAG, "Fragment: id = $playlistId")
+            viewModel.deletePlaylist(
+                playlistId
+            )
+            findNavController().navigateUp()
+        }
     }
 
     val adapter = SongsAdapter()
@@ -88,7 +99,7 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
         adapter.onLongItemClick = { currentId: Int ->
             Log.d("_TAG", "id = $currentId")
             trackId = currentId
-            deleteDialog.show()
+            deleteTrackDialog.show()
         }
         binding.rvPlaylistTracks.adapter = adapter
         binding.rvPlaylistTracks.layoutManager =
@@ -116,14 +127,12 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             sharePlaylist(requireContext())
         }
         binding.tvDelete.setOnClickListener {
-            findNavController().navigateUp()
-//            viewModel.deletePlaylist()
+            deletePlaylistDialog.show()
         }
         binding.tvEdit.setOnClickListener {
             findNavController().navigate(
                 R.id.action_playlistFragment_to_addPlaylistFragment, bundleOf(
-                    EDIT_KEY to true,
-                    EDIT_ID_KEY to playlistId
+                    EDIT_KEY to true, EDIT_ID_KEY to playlistId
                 )
             )
         }
@@ -207,7 +216,8 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
         if (tracks.isEmpty()) {
             Toast.makeText(
                 context,
-                getString(R.string.this_playlist_not_contains_list_of_tracks), Toast.LENGTH_SHORT
+                getString(R.string.this_playlist_not_contains_list_of_tracks),
+                Toast.LENGTH_SHORT
             ).show()
             return
         }
@@ -222,4 +232,16 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             startActivity(this)
         }
     }
+
+    private fun deleteDialogCreator(
+        context: Context,
+        @StringRes title: Int,
+        @StringRes message: Int,
+        positiveAction: (() -> Unit)
+    ): MaterialAlertDialogBuilder =
+        MaterialAlertDialogBuilder(context, R.style.MyAlertDialogTheme).setTitle(title)
+            .setMessage(message).setNeutralButton(R.string.cancel) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                positiveAction()
+            }
 }

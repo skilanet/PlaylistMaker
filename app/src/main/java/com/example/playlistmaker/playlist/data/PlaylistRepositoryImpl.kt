@@ -1,8 +1,8 @@
 package com.example.playlistmaker.playlist.data
 
+import com.example.playlistmaker.core.PlaylistConverter
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
-import com.example.playlistmaker.new_playlist.data.converter.PlaylistConverter
 import com.example.playlistmaker.new_playlist.data.dao.PlaylistsDatabase
 import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistSongCrossRef
 import com.example.playlistmaker.playlist.domain.repository.PlaylistRepository
@@ -34,5 +34,18 @@ class PlaylistRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) :
 
     override suspend fun getAllPlaylistsByTrackId(trackId: Int): List<PlaylistSongCrossRef> {
         return playlistsDatabase.getPlaylistDao().getAllPlaylistsByTrackId(trackId)
+    }
+
+    override suspend fun deletePlaylistById(playlistId: Int) {
+        val playlist = playlistsDatabase.getPlaylistDao().getPlaylistById(playlistId)
+        playlist.songs?.let {
+            it.map { songEntity ->
+                deleteTrackById(
+                    songEntity.trackId,
+                    playlistId
+                )
+            }
+        }
+        playlistsDatabase.getPlaylistDao().deletePlaylistById(playlistId)
     }
 }

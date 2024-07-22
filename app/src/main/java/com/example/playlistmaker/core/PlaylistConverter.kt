@@ -1,4 +1,4 @@
-package com.example.playlistmaker.new_playlist.data.converter
+package com.example.playlistmaker.core
 
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
@@ -48,6 +48,10 @@ object PlaylistConverter {
             trackTimeMillis = trackTimeMillis
         )
     }
+
+    fun fromModelsToEntities(models: List<Song>?) = models?.let { _models ->
+        _models.map { model -> fromModelToEntity(model) }
+    } ?: emptyList()
 
     fun fromModelToEntity(model: Song) = with(model) {
         SongEntity(

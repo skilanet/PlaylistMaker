@@ -118,7 +118,7 @@
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="300dp"
+        app:behavior_peekHeight="200dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
@@ -136,7 +136,8 @@
             android:layout_gravity="center"
             android:importantForAccessibility="no"
             android:src="@drawable/error_image"
-            app:layout_constraintTag="iv_error_image" />
+            app:layout_constraintTag="iv_error_image"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_playlist_not_contains_tracks"
@@ -148,13 +149,13 @@
             android:gravity="center"
             android:text="@string/empty_playlist_tracks"
             android:textSize="16sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_playlist_tracks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:listitem="@layout/item_track" />
     </LinearLayout>
 

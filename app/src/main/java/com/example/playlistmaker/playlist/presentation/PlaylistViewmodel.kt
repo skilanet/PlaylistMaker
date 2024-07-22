@@ -8,6 +8,8 @@ import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.playlist.domain.repository.PlaylistInteractor
 import com.example.playlistmaker.playlist.ui.model.SongsInPlaylistState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -43,6 +45,12 @@ class PlaylistViewmodel(
             playlistInteractor.getSongsInPlaylistByPlaylistId(playlistId).collect {
                 renderFlow(it)
             }
+        }
+    }
+
+    fun deletePlaylist(playlistId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            playlistInteractor.deletePlaylistById(playlistId)
         }
     }
 

@@ -1,8 +1,10 @@
 package com.example.playlistmaker.new_playlist.data.impl
 
+import android.util.Log
+import com.example.playlistmaker.core.LogConstants
+import com.example.playlistmaker.core.PlaylistConverter
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
-import com.example.playlistmaker.new_playlist.data.converter.PlaylistConverter
 import com.example.playlistmaker.new_playlist.data.dao.PlaylistsDatabase
 import com.example.playlistmaker.new_playlist.data.dao.relationship.PlaylistSongCrossRef
 import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsRepository
@@ -29,11 +31,12 @@ class PlaylistsRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) 
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {
-        val entity = PlaylistConverter.fromModelToEntity(playlist)
+        Log.d(LogConstants.UPDATE_TAG, "Repository $playlist")
         playlistsDatabase.getPlaylistDao().updatePlaylist(
-            name = entity.name,
-            description = entity.description,
-            uri = entity.uri
+            id = playlist.id,
+            newName = playlist.name,
+            newDescription = playlist.description ?: "",
+            newUri = playlist.uri
         )
     }
 

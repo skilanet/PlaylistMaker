@@ -2,7 +2,6 @@ package com.example.playlistmaker.new_playlist.ui
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +54,6 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         editFlag = arguments?.getBoolean(PlaylistFragment.EDIT_KEY) ?: false
-        Log.d("_TAG", "flag: $editFlag")
         if (editFlag) {
             binding.tvTitle.setText(R.string.edit)
             viewModel.getPlaylist(requireArguments().getInt(PlaylistFragment.EDIT_ID_KEY))
