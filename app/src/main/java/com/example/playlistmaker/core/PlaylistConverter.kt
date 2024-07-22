@@ -49,10 +49,6 @@ object PlaylistConverter {
         )
     }
 
-    fun fromModelsToEntities(models: List<Song>?) = models?.let { _models ->
-        _models.map { model -> fromModelToEntity(model) }
-    } ?: emptyList()
-
     fun fromModelToEntity(model: Song) = with(model) {
         SongEntity(
             trackId = trackId,

@@ -18,8 +18,8 @@ interface PlaylistDao {
 
     @Query("UPDATE playlists_table SET name = :newName, " +
             "description = :newDescription, " +
-            "uri = :newUri WHERE playlistId = :id")
-    suspend fun updatePlaylist(id: Int, newName: String, newDescription: String, newUri: String)
+            "uri = :newUri WHERE playlistId = :currentId")
+    suspend fun updatePlaylist(currentId: Int, newName: String, newDescription: String, newUri: String): Int
 
     @Insert(entity = PlaylistSongCrossRef::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylistSongCrossRef(crossRef: PlaylistSongCrossRef)

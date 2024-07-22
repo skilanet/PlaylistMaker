@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.playlist.domain.repository.PlaylistInteractor
+import com.example.playlistmaker.playlist.ui.model.PlaylistState
 import com.example.playlistmaker.playlist.ui.model.SongsInPlaylistState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,16 +24,16 @@ class PlaylistViewmodel(
         getPlaylist(playlistId)
     }
 
-    private val _playlistState: MutableStateFlow<Pair<Playlist, Int>?> = MutableStateFlow(null)
-    val playlistState: StateFlow<Pair<Playlist, Int>?> = _playlistState
+    private val playlistState = MutableLiveData<PlaylistState>()
+    fun observePlaylistState(): LiveData<PlaylistState> = playlistState
 
     private val songsInPlaylistState = MutableLiveData<SongsInPlaylistState>()
     fun songsInPlaylistState(): LiveData<SongsInPlaylistState> = songsInPlaylistState
 
-    private fun getPlaylist(id: Int) {
+    fun getPlaylist(id: Int) {
         viewModelScope.launch {
             playlistInteractor.getPlaylistById(id).collect {
-                _playlistState.value = renderState(it)
+                playlistState.value = renderState(it)
             }
         }
     }
@@ -54,9 +53,9 @@ class PlaylistViewmodel(
         }
     }
 
-    private fun renderState(playlist: Playlist?): Pair<Playlist, Int>? {
-        return if (playlist == null) null
-        else Pair(playlist, calculateTime(playlist.tracks))
+    private fun renderState(playlist: Playlist?): PlaylistState {
+        return if (playlist == null) PlaylistState.PlaylistNotReceived
+        else PlaylistState.PlaylistReceived(Pair(playlist, calculateTime(playlist.tracks)))
     }
 
     private fun calculateTime(array: List<Song>?): Int {

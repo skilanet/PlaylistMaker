@@ -17,6 +17,7 @@ import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
 import com.example.playlistmaker.new_playlist.presentation.AddPlaylistViewModel
+import com.example.playlistmaker.new_playlist.ui.models.PlaylistEditState
 import com.example.playlistmaker.playlist.ui.PlaylistFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +38,7 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
     private lateinit var exitDialog: MaterialAlertDialogBuilder
     private var imageFlag = false
     private var _uri: Uri = Uri.EMPTY
+    private var _id = 0
     private val viewModel by viewModel<AddPlaylistViewModel>()
     private var editFlag = false
 
@@ -55,8 +57,14 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
         super.onViewCreated(view, savedInstanceState)
         editFlag = arguments?.getBoolean(PlaylistFragment.EDIT_KEY) ?: false
         if (editFlag) {
+            viewModel.observeEditState().observe(viewLifecycleOwner) {
+                renderState(it)
+            }
             binding.tvTitle.setText(R.string.edit)
-            viewModel.getPlaylist(requireArguments().getInt(PlaylistFragment.EDIT_ID_KEY))
+            requireArguments().getInt(PlaylistFragment.EDIT_ID_KEY).also {
+                viewModel.getPlaylist(it)
+                _id = it
+            }
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.playlistStateFlow.filterNotNull().collectLatest {
                     withContext(Dispatchers.Main) {
@@ -78,22 +86,9 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         binding.btnSavePlaylist.setOnClickListener {
-            if (_uri != Uri.EMPTY) {
-                if (imageFlag) {
-                    viewModel.putImageToLocalStorage(
-                        _uri.toString(),
-                        binding.tietPlaylistName.text.toString()
-                    )
-                }
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.fileState.filter { it.isNotEmpty() }.collectLatest { uri ->
-                        createPlaylist(uri)
-                    }
-                }
-            } else {
-                createPlaylist("")
-            }
-            closeFragment()
+            if (imageFlag) createPlaylistIfImageEdited()
+            else if (editFlag && _uri != Uri.EMPTY) createPlaylist(_uri.toString())
+            else createPlaylist("")
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
@@ -104,14 +99,32 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
         })
     }
 
+    private fun createPlaylistIfImageEdited() {
+        viewModel.putImageToLocalStorage(
+            _uri.toString(),
+            binding.tietPlaylistName.text.toString()
+        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.fileState.filter { it.isNotEmpty() }.collectLatest { uri ->
+                createPlaylist(uri)
+            }
+        }
+    }
+
     private fun createPlaylist(uri: String) = Playlist(
+        id = _id,
         name = binding.tietPlaylistName.text.toString(),
         description = binding.tietPlaylistDescription.text.toString(),
         uri = uri,
         tracks = emptyList(),
         countOfTracks = 0
     ).also {
-        viewModel.clickListener(it, editFlag)
+        if (editFlag) {
+            viewModel.updatePlaylist(it)
+        } else {
+            viewModel.insertPlaylist(it)
+            closeFragment()
+        }
     }
 
     private val pickMedia =
@@ -135,5 +148,12 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
                 requireActivity().finish()
             } else findNavController().navigateUp()
         } else findNavController().navigateUp()
+    }
+
+    private fun renderState(state: PlaylistEditState) {
+        when (state) {
+            is PlaylistEditState.EditFinished -> closeFragment()
+            else -> {}
+        }
     }
 }

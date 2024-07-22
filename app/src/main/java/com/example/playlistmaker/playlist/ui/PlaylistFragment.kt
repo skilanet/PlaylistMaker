@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,25 +12,21 @@ import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.core.FragmentBinding
-import com.example.playlistmaker.core.LogConstants
 import com.example.playlistmaker.core.SongsAdapter
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.media_player.ui.MediaPlayerActivity
 import com.example.playlistmaker.playlist.presentation.PlaylistViewmodel
+import com.example.playlistmaker.playlist.ui.model.PlaylistState
 import com.example.playlistmaker.playlist.ui.model.SongsInPlaylistState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
@@ -67,7 +62,6 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             title = R.string.delete_playlist,
             message = R.string.do_you_want_to_delete_plylist
         ) {
-            Log.d(LogConstants.DELETE_TAG, "Fragment: id = $playlistId")
             viewModel.deletePlaylist(
                 playlistId
             )
@@ -79,17 +73,18 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val id = requireArguments().getInt(PLAYLIST_KEY)
-
+        playlistId = requireArguments().getInt(PLAYLIST_KEY)
         viewModel = getViewModel {
-            parametersOf(id)
+            parametersOf(playlistId)
         }
 
         viewModel.songsInPlaylistState().observe(viewLifecycleOwner) {
             renderState(it)
         }
 
-        renderState()
+        viewModel.observePlaylistState().observe(viewLifecycleOwner) {
+            renderState(it)
+        }
 
         binding.ivBack.setOnClickListener {
             findNavController().navigateUp()
@@ -97,7 +92,6 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
 
         adapter.onItemClick = { song: Song, _: Boolean -> onItemClick(song) }
         adapter.onLongItemClick = { currentId: Int ->
-            Log.d("_TAG", "id = $currentId")
             trackId = currentId
             deleteTrackDialog.show()
         }
@@ -138,6 +132,11 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylist(playlistId)
+    }
+
     private fun onItemClick(song: Song) {
         findNavController().navigate(
             R.id.action_playlistFragment_to_mediaPlayerActivity,
@@ -145,12 +144,16 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
         )
     }
 
-    private fun renderState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.playlistState.filterNotNull().collectLatest {
-                setInfo(it.first, it.second)
-                setAdapter(it.first.tracks)
+    private fun renderState(state: PlaylistState) {
+        when (state) {
+            is PlaylistState.PlaylistReceived -> {
+                with(state.info) {
+                    setInfo(first, second)
+                    setAdapter(first.tracks)
+                }
             }
+
+            else -> {}
         }
     }
 

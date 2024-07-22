@@ -1,7 +1,5 @@
 package com.example.playlistmaker.new_playlist.data.impl
 
-import android.util.Log
-import com.example.playlistmaker.core.LogConstants
 import com.example.playlistmaker.core.PlaylistConverter
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
@@ -30,14 +28,13 @@ class PlaylistsRepositoryImpl(private val playlistsDatabase: PlaylistsDatabase) 
         )
     }
 
-    override suspend fun updatePlaylist(playlist: Playlist) {
-        Log.d(LogConstants.UPDATE_TAG, "Repository $playlist")
-        playlistsDatabase.getPlaylistDao().updatePlaylist(
-            id = playlist.id,
-            newName = playlist.name,
-            newDescription = playlist.description ?: "",
-            newUri = playlist.uri
-        )
+    override fun updatePlaylist(playlist: Playlist): Flow<Int> = flow {
+        with(playlist) {
+            playlistsDatabase.getPlaylistDao().updatePlaylist(id, name, description ?: "", uri)
+                .also {
+                    emit(it)
+                }
+        }
     }
 
     override suspend fun insertPlaylist(playlist: Playlist) {
