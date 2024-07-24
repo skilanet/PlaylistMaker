@@ -1,5 +1,6 @@
 package com.example.playlistmaker.playlist.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,9 @@ class PlaylistViewmodel(
     private val songsInPlaylistState = MutableLiveData<SongsInPlaylistState>()
     fun songsInPlaylistState(): LiveData<SongsInPlaylistState> = songsInPlaylistState
 
+    private val aboutTracksInPlaylistState = MutableLiveData<Pair<Int, Int>>()
+    fun observeAboutTracksInPlaylistState(): LiveData<Pair<Int, Int>> = aboutTracksInPlaylistState
+
     fun getPlaylist(id: Int) {
         viewModelScope.launch {
             playlistInteractor.getPlaylistById(id).collect {
@@ -38,11 +42,12 @@ class PlaylistViewmodel(
         }
     }
 
+
     fun deleteTrackFromDB(trackId: Int) {
         viewModelScope.launch {
             playlistInteractor.deleteTrackById(trackId, playlistId)
             playlistInteractor.getSongsInPlaylistByPlaylistId(playlistId).collect {
-                renderFlow(it)
+                renderState(it)
             }
         }
     }
@@ -55,7 +60,14 @@ class PlaylistViewmodel(
 
     private fun renderState(playlist: Playlist?): PlaylistState {
         return if (playlist == null) PlaylistState.PlaylistNotReceived
-        else PlaylistState.PlaylistReceived(Pair(playlist, calculateTime(playlist.tracks)))
+        else {
+            aboutTracksInPlaylistState.value =
+                Pair(
+                    calculateTime(playlist.tracks).also { Log.d("_TAG", it.toString()) },
+                    playlist.countOfTracks
+                )
+            PlaylistState.PlaylistReceived(playlist)
+        }
     }
 
     private fun calculateTime(array: List<Song>?): Int {
@@ -63,11 +75,10 @@ class PlaylistViewmodel(
         return SimpleDateFormat("mm", Locale.getDefault()).format(time).toInt()
     }
 
-    private fun renderFlow(tracks: List<Song>) {
-        songsInPlaylistState.postValue(
+    private fun renderState(tracks: List<Song>) {
+        songsInPlaylistState.value =
             if (tracks.isEmpty()) SongsInPlaylistState.Empty
             else SongsInPlaylistState.Content(tracks)
-        )
-
+        aboutTracksInPlaylistState.value = Pair(calculateTime(tracks), tracks.size)
     }
 }

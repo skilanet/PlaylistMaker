@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -68,10 +69,19 @@ class AddPlaylistFragment : FragmentBinding<FragmentCreatePlaylistBinding>() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.playlistStateFlow.filterNotNull().collectLatest {
                     withContext(Dispatchers.Main) {
-                        _uri = Uri.parse(it.uri)
-                        binding.ivPhotoInput.setImageURI(Uri.parse(it.uri))
+                        if (it.uri.isEmpty()) binding.ivPhotoInput.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                resources,
+                                R.drawable.placeholder,
+                                requireContext().theme
+                            )
+                        ) else {
+                            _uri = Uri.parse(it.uri)
+                            binding.ivPhotoInput.setImageURI(_uri)
+                        }
                         binding.tietPlaylistName.setText(it.name)
                         binding.tietPlaylistDescription.setText(it.description ?: "")
+                        binding.btnSavePlaylist.text = getString(R.string.save)
                     }
                 }
             }

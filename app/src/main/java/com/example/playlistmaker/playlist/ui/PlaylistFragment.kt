@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -86,6 +87,10 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             renderState(it)
         }
 
+        viewModel.observeAboutTracksInPlaylistState().observe(viewLifecycleOwner) {
+            renderState(it)
+        }
+
         binding.ivBack.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -147,12 +152,11 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
     private fun renderState(state: PlaylistState) {
         when (state) {
             is PlaylistState.PlaylistReceived -> {
-                with(state.info) {
-                    setInfo(first, second)
-                    setAdapter(first.tracks)
+                with(state.playlist) {
+                    setInfo(this)
+                    setAdapter(tracks)
                 }
             }
-
             else -> {}
         }
     }
@@ -169,10 +173,23 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
         }
     }
 
-    private fun setInfo(playlist: Playlist, time: Int) {
+    private fun setInfo(playlist: Playlist) {
         playlistId = playlist.id
-        binding.ivPlaylistCover.setImageURI(Uri.parse(playlist.uri))
-        binding.ivPlaylistCoverSmall.setImageURI(Uri.parse(playlist.uri))
+        if (playlist.uri.isEmpty()) {
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.placeholder,
+                requireContext().theme
+            ).also {
+                binding.ivPlaylistCover.setImageDrawable(it)
+                binding.ivPlaylistCoverSmall.setImageDrawable(it)
+            }
+        } else {
+            Uri.parse(playlist.uri).also {
+                binding.ivPlaylistCover.setImageURI(it)
+                binding.ivPlaylistCoverSmall.setImageURI(it)
+            }
+        }
         playlist.name.also {
             binding.tvPlaylistName.text = it
             binding.tvPlaylistNameSmall.text = it
@@ -181,11 +198,13 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             isVisible = !playlist.description.isNullOrBlank()
             if (isVisible) text = playlist.description.toString()
         }
+    }
+
+    private fun renderState(info: Pair<Int, Int>) {
         binding.tvPlaylistTime.text = resources.getQuantityString(
-            R.plurals.playlist_time, time, time
+            R.plurals.playlist_time, info.first, info.first
         )
-        val tracks = playlist.countOfTracks
-        resources.getQuantityString(R.plurals.tracks, tracks, tracks).also {
+        resources.getQuantityString(R.plurals.tracks, info.second, info.second).also {
             binding.tvPlaylistCountOfTracks.text = it
             binding.tvPlaylistCountOfTracksSmall.text = it
         }
@@ -203,6 +222,7 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
     }
 
     private fun showEmpty() {
+        adapter.tracks.clear()
         binding.rvPlaylistTracks.isVisible = false
         binding.tvPlaylistNotContainsTracks.isVisible = true
         binding.ivErrorImage.isVisible = true

@@ -53,6 +53,7 @@
     <string name="edit">Редактировать</string>
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="do_you_want_to_delete_plylist">Хотите удалить плейлист?</string>
+    <string name="save">Сохранить</string>
     <plurals name="tracks">
         <item quantity="one">1 трек</item>
         <item quantity="two">2 трека</item>

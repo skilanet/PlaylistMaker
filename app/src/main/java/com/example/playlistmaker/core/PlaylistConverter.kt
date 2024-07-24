@@ -14,7 +14,7 @@ object PlaylistConverter {
                 name = playlist.name,
                 description = playlist.description,
                 uri = playlist.uri,
-                tracks = fromEntitiesToModel(songs),
+                tracks = fromEntitiesToModel(songs).reversed(),
                 countOfTracks = songs?.size ?: 0
             )
         }
