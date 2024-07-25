@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -109,6 +110,12 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
 
         val tracksBottomSheet = binding.llBottomSheetTracks
         val bottomSheetContainer = binding.clBottomSheetMore
+        binding.ivSharePlaylist.doOnNextLayout {
+            val location = IntArray(2)
+            binding.ivSharePlaylist.getLocationOnScreen(location)
+            val y = location[1]
+            BottomSheetBehavior.from(tracksBottomSheet).peekHeight = binding.root.height - y
+        }
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -157,6 +164,7 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
                     setAdapter(tracks)
                 }
             }
+
             else -> {}
         }
     }

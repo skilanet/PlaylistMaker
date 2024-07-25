@@ -118,7 +118,8 @@
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
         app:behavior_hideable="false"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="visible">
 
         <View
             android:layout_width="50dp"
@@ -165,8 +166,8 @@
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
         app:behavior_hideable="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="visible">
         <View
             android:id="@+id/view"
             android:layout_width="50dp"
