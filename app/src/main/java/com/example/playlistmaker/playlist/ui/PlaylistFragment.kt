@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +52,7 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
     private var trackId by Delegates.notNull<Int>()
     private var playlistId by Delegates.notNull<Int>()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var tracksBottomSheet: LinearLayout
 
     override fun setup() {
         deleteTrackDialog = deleteDialogCreator(
@@ -108,14 +109,8 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             sharePlaylist(requireContext())
         }
 
-        val tracksBottomSheet = binding.llBottomSheetTracks
+        tracksBottomSheet = binding.llBottomSheetTracks
         val bottomSheetContainer = binding.clBottomSheetMore
-        binding.ivSharePlaylist.doOnNextLayout {
-            val location = IntArray(2)
-            binding.ivSharePlaylist.getLocationOnScreen(location)
-            val y = location[1]
-            BottomSheetBehavior.from(tracksBottomSheet).peekHeight = binding.root.height - y
-        }
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -147,6 +142,13 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
     override fun onResume() {
         super.onResume()
         viewModel.getPlaylist(playlistId)
+        binding.ivSharePlaylist.postDelayed({
+            binding.ivSharePlaylist.requestLayout()
+            val location = IntArray(2)
+            binding.ivSharePlaylist.getLocationOnScreen(location)
+            val y = location[1]
+            BottomSheetBehavior.from(tracksBottomSheet).peekHeight = binding.root.height - y
+        }, 100)
     }
 
     private fun onItemClick(song: Song) {

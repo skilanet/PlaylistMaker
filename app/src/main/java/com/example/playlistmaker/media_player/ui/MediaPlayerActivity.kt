@@ -87,7 +87,7 @@ class MediaPlayerActivity : AppCompatActivity() {
 
         Glide.with(this.applicationContext).load(song.artworkUrl512)
             .into(binding.ivAlbumArtwork)
-        binding.tvAlbumTextTop.text = song.collectionName
+        binding.tvAlbumTextTop.text = song.trackName
         binding.tvTrackAuthorTop.text = song.artistName
         binding.tvDurationText.text = song.currentTime
         binding.tvAlbumText.text = song.collectionName

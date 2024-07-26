@@ -16,6 +16,8 @@ import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsInterac
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -41,9 +43,10 @@ class MediaPlayerViewModel(
     fun observeFavoriteState(): LiveData<FavoriteState> = favoriteState
     private fun initFavoriteState() {
         viewModelScope.launch {
-            favoriteSongsInteractor.getTrackByTrackId(song.trackId).collect { song ->
-                processResult(song)
-            }
+            favoriteSongsInteractor.getTrackByTrackId(song.trackId).filterNotNull()
+                .collectLatest { song ->
+                    processResult(song)
+                }
         }
     }
 
