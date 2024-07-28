@@ -43,8 +43,7 @@ class MediaPlayerViewModel(
     fun observeFavoriteState(): LiveData<FavoriteState> = favoriteState
     private fun initFavoriteState() {
         viewModelScope.launch {
-            favoriteSongsInteractor.getTrackByTrackId(song.trackId).filterNotNull()
-                .collectLatest { song ->
+            favoriteSongsInteractor.getTrackByTrackId(song.trackId).collectLatest { song ->
                     processResult(song)
                 }
         }

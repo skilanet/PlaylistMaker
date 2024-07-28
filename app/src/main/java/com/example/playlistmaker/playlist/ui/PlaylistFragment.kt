@@ -125,6 +125,7 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
         binding.tvShare.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             sharePlaylist(requireContext())
         }
         binding.tvDelete.setOnClickListener {
