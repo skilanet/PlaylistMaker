@@ -18,7 +18,8 @@ object SongMapper {
                 primaryGenreName = primaryGenreName ?: "",
                 previewUrl = previewUrl ?: "",
                 currentTime = song.currentTime,
-                currentDate = song.currentDate
+                currentDate = song.currentDate,
+                trackTimeMillis = song.trackTimeMillis
             )
         }
     } ?: emptyList()

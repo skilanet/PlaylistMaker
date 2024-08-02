@@ -12,4 +12,5 @@ data class Song(
     val previewUrl: String,
     val currentTime: String,
     val currentDate: String,
+    val trackTimeMillis: Int,
 )

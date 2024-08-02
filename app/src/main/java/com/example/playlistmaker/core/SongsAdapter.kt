@@ -2,6 +2,8 @@ package com.example.playlistmaker.core
 
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,6 +20,7 @@ class SongsAdapter(private val isHistory: Boolean = false) :
 
     var tracks = ArrayList<Song>()
     var onItemClick: ((Song, Boolean) -> Unit)? = null
+    var onLongItemClick: ((Int) -> Unit)? = null
 
     inner class SongsViewHolder(
         private val binding: ItemTrackBinding,
@@ -59,10 +62,14 @@ class SongsAdapter(private val isHistory: Boolean = false) :
 
     override fun onBindViewHolder(holder: SongsViewHolder, position: Int) {
         val track = tracks[position]
-        with(holder) {
-            bind(track)
-            itemView.setOnClickListener {
+        holder.bind(track)
+        with(holder.itemView) {
+            setOnClickListener {
                 onItemClick?.invoke(track, isHistory)
+            }
+            setOnLongClickListener {
+                onLongItemClick?.invoke(track.trackId)
+                return@setOnLongClickListener false
             }
         }
     }

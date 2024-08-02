@@ -1,6 +1,5 @@
 package com.example.playlistmaker.new_playlist.presentation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.media_library.domain.models.Playlist
 import com.example.playlistmaker.new_playlist.domain.repository.FileInteractor
 import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsInteractor
-import com.example.playlistmaker.new_playlist.ui.models.PlaylistExistsState
+import com.example.playlistmaker.new_playlist.ui.models.PlaylistEditState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -19,41 +19,33 @@ class AddPlaylistViewModel(
     private val fileInteractor: FileInteractor
 ) : ViewModel() {
 
-    private val playlistState =
-        MutableLiveData<PlaylistExistsState>(PlaylistExistsState.PlaylistNotExists)
     private val _fileState = MutableStateFlow("")
-
-    fun observePlaylistState(): LiveData<PlaylistExistsState> = playlistState
     val fileState: StateFlow<String> = _fileState
 
-    fun clickListener(playlist: Playlist) {
+    private val _playlistStateFlow = MutableStateFlow<Playlist?>(null)
+    val playlistStateFlow: StateFlow<Playlist?> = _playlistStateFlow
+
+    private val updateState = MutableLiveData<PlaylistEditState>()
+    fun observeEditState(): LiveData<PlaylistEditState> = updateState
+
+    fun insertPlaylist(playlist: Playlist) {
+        viewModelScope.launch(Dispatchers.IO) { playlistsInteractor.insertPlaylist(playlist) }
+    }
+
+    fun updatePlaylist(playlist: Playlist) {
+        updateState.postValue(PlaylistEditState.NowInEditing)
         viewModelScope.launch {
-            when (playlistState.value) {
-                is PlaylistExistsState.PlaylistNotExists -> playlistsInteractor.insertPlaylist(
-                    playlist
-                )
-
-                is PlaylistExistsState.PlaylistExists -> playlistsInteractor.updatePlaylist(playlist)
-                else -> {}
+            playlistsInteractor.updatePlaylist(playlist).collectLatest {
+                updateState.postValue(PlaylistEditState.EditFinished)
             }
         }
     }
 
-    fun checkPlaylist(name: String) {
-        if (name.isNotEmpty()) {
-            viewModelScope.launch {
-                playlistsInteractor.getPlaylistByName(name).collect { playlist ->
-                    renderState(playlist)
-                }
+    fun getPlaylist(id: Int) {
+        viewModelScope.launch {
+            playlistsInteractor.getPlaylistById(id).collect {
+                _playlistStateFlow.value = it
             }
-        }
-    }
-
-    private fun renderState(playlist: Playlist?) {
-        if (playlist == null) {
-            playlistState.value = PlaylistExistsState.PlaylistNotExists
-        } else {
-            playlistState.value = PlaylistExistsState.PlaylistExists
         }
     }
 

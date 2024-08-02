@@ -1,7 +1,6 @@
 package com.example.playlistmaker.media_player.presentation.view_model
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +16,8 @@ import com.example.playlistmaker.new_playlist.domain.repository.PlaylistsInterac
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -40,12 +41,11 @@ class MediaPlayerViewModel(
 
     private val favoriteState = MutableLiveData<FavoriteState>()
     fun observeFavoriteState(): LiveData<FavoriteState> = favoriteState
-    private fun updateFavoriteState(newState: FavoriteState) = favoriteState.postValue(newState)
     private fun initFavoriteState() {
         viewModelScope.launch {
-            favoriteSongsInteractor.getTrackByTrackId(song.trackId).collect { song ->
-                processResult(song)
-            }
+            favoriteSongsInteractor.getTrackByTrackId(song.trackId).collectLatest { song ->
+                    processResult(song)
+                }
         }
     }
 
@@ -55,16 +55,6 @@ class MediaPlayerViewModel(
 
     private val inPlaylistState = MutableLiveData<InPlaylistState>(InPlaylistState.NotInPlaylist)
     fun observeInPlaylistState(): LiveData<InPlaylistState> = inPlaylistState
-    private fun updateInPlaylistState(newState: InPlaylistState) =
-        inPlaylistState.postValue(newState)
-
-    fun onPlaylistButtonClicked() {
-        when (inPlaylistState.value) {
-            is InPlaylistState.InPlaylist -> updateInPlaylistState(InPlaylistState.NotInPlaylist)
-            is InPlaylistState.NotInPlaylist -> updateInPlaylistState(InPlaylistState.InPlaylist)
-            else -> {}
-        }
-    }
 
     private val playlistsState = MutableLiveData<PlaylistsState>()
     fun observePlaylistsState(): LiveData<PlaylistsState> = playlistsState
@@ -80,16 +70,15 @@ class MediaPlayerViewModel(
         }
     }
 
-    fun refreshPlaylists(playlist: Playlist) {
+    fun refreshPlaylists() {
         viewModelScope.launch {
-            playlistsInteractor.updatePlaylist(playlist)
             getPlaylists()
         }
     }
 
     private fun processResult(song: Song?) {
-        if (song == null) updateFavoriteState(FavoriteState.NotInFavorite)
-        else updateFavoriteState(FavoriteState.InFavorite)
+        if (song == null) favoriteState.value = FavoriteState.NotInFavorite
+        else favoriteState.value = FavoriteState.InFavorite
     }
 
     private fun initMediaPlayer() {
@@ -118,14 +107,14 @@ class MediaPlayerViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
                     favoriteSongsInteractor.deleteSongByTrackId(song.trackId)
                 }
-                updateFavoriteState(FavoriteState.NotInFavorite)
+                favoriteState.value = FavoriteState.NotInFavorite
             }
 
             is FavoriteState.NotInFavorite -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     favoriteSongsInteractor.insertSong(song)
                 }
-                updateFavoriteState(FavoriteState.InFavorite)
+                favoriteState.value = FavoriteState.InFavorite
             }
 
             else -> {}
@@ -144,7 +133,7 @@ class MediaPlayerViewModel(
         playingState.postValue(PlayingState.Paused(getCurrentTime()))
     }
 
-    fun onRelease() {
+    private fun onRelease() {
         mediaPlayer.stop()
         mediaPlayer.release()
         playingState.postValue(PlayingState.Default)
@@ -171,6 +160,5 @@ class MediaPlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         onRelease()
-        Log.i("LIFECYCLE_TAG", "viewmodel: onCleared")
     }
 }

@@ -19,7 +19,7 @@ class PlaylistsAdapter(private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
         private val cover = binding.ivPlaylistImageView
         private val playlistName = binding.tvPlaylistName
-        val countOfTracks = binding.tvCountOfSongs
+        private val countOfTracks = binding.tvCountOfSongs
         fun bind(playlist: Playlist) {
             if (playlist.uri.isNotEmpty()) {
                 cover.setImageURI(Uri.parse(playlist.uri))

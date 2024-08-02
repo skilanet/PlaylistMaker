@@ -18,7 +18,8 @@ object Converter {
                 primaryGenreName = entity.primaryGenreName,
                 previewUrl = entity.previewUrl,
                 currentTime = entity.currentTime,
-                currentDate = entity.currentDate
+                currentDate = entity.currentDate,
+                trackTimeMillis = entity.trackTimeMillis
             )
         }
     } ?: emptyList()
@@ -34,7 +35,8 @@ object Converter {
         primaryGenreName = song.primaryGenreName,
         previewUrl = song.previewUrl,
         currentTime = song.currentTime,
-        currentDate = song.currentDate
+        currentDate = song.currentDate,
+        trackTimeMillis = song.trackTimeMillis
     )
 
     fun fromEntityToModel(entity: SongEntity?): Song? {
@@ -49,7 +51,8 @@ object Converter {
             primaryGenreName = entity.primaryGenreName,
             previewUrl = entity.previewUrl,
             currentTime = entity.currentTime,
-            currentDate = entity.currentDate
+            currentDate = entity.currentDate,
+            trackTimeMillis = entity.trackTimeMillis
         )
         else null
     }

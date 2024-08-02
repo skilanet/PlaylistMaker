@@ -43,8 +43,27 @@
     <string name="permission_is_required_to_create_playlist">Для создания плейлиста необходимо разрешение!</string>
     <string name="added_to_playlist">Добавлено в плейлист %1$s</string>
     <string name="this_track_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
+    <string name="empty_playlist_tracks">В вашем плейлист нет ни одного трека</string>
+    <string name="delete_tarck">Удалить трек</string>
+    <string name="are_you_sure_to_delete_track">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="this_playlist_not_contains_list_of_tracks">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_info">Редактировать информацию</string>
+    <string name="delete">Удалить плейлист</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="do_you_want_to_delete_plylist">Хотите удалить плейлист?</string>
+    <string name="save">Сохранить</string>
     <plurals name="tracks">
         <item quantity="one">1 трек</item>
-        <item quantity="other">%d треков</item>
+        <item quantity="two">2 трека</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
+    <plurals name="playlist_time">
+        <item quantity="one">1 минута</item>
+        <item quantity="two">2 минуты</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="other">%1$d минут</item>
     </plurals>
 </resources>

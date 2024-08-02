@@ -1,4 +1,4 @@
-package com.example.playlistmaker.new_playlist.data.converter
+package com.example.playlistmaker.core
 
 import com.example.playlistmaker.find.domain.models.Song
 import com.example.playlistmaker.media_library.domain.models.Playlist
@@ -14,13 +14,13 @@ object PlaylistConverter {
                 name = playlist.name,
                 description = playlist.description,
                 uri = playlist.uri,
-                tracks = fromEntitiesToModel(songs),
+                tracks = fromEntitiesToModel(songs).reversed(),
                 countOfTracks = songs?.size ?: 0
             )
         }
     }
 
-    private fun fromEntitiesToModel(songEntities: List<SongEntity>?): List<Song> = songEntities?.let {
+    fun fromEntitiesToModel(songEntities: List<SongEntity>?): List<Song> = songEntities?.let {
         it.map { entity -> fromEntityToModel(entity) }
     } ?: emptyList()
 
@@ -44,7 +44,8 @@ object PlaylistConverter {
             primaryGenreName = primaryGenreName,
             previewUrl = previewUrl,
             currentTime = currentTime,
-            currentDate = currentDate
+            currentDate = currentDate,
+            trackTimeMillis = trackTimeMillis
         )
     }
 
@@ -61,6 +62,7 @@ object PlaylistConverter {
             previewUrl = previewUrl,
             currentTime = currentTime,
             currentDate = currentDate,
+            trackTimeMillis = trackTimeMillis
         )
     }
 }
