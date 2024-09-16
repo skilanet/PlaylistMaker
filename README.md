@@ -22,7 +22,7 @@ This application was created to explore various technologies in the field of And
 * Navigation: Single Activity + Jetpack Navigation
 * DI: Koin
 * Data Storage: SharedPreference, Room, Internal Storage
-* Other: Glide, Peke, ViewPager2, LiveData
+* Other: Glide, Peko, ViewPager2, LiveData
 
 ## Installation
 
