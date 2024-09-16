@@ -5,11 +5,12 @@
 
 ## Overview
 
-This application was created to explore various technologies in the field of Android development. It
-uses the iTunes api to get a list of tracks. It has the ability to listen to a 30-second segment of
-a track.
-Also, the last 10 tracks are saved to the history, Tracks can be added to favorites. You can also
-create a playlist and add a track to it.
+This application was created to explore various technologies in the field of Android development. 
+ - It uses the iTunes api to get a list of tracks.
+ - It has the ability to listen to a 30-second segment of a track.
+ - The last 10 tracks are saved to the history. You have ability to clear all history
+ - Tracks can be added to favorites. Also you can delete track from history
+ - You can also create a playlist and add a track to it. You can delete created playlist
 
 ## Technology stack
 
