@@ -12,5 +12,9 @@
 * DI: Koin
 * Хранение данных: SharedPreferencce, Room, Internal Storage
 * Другое: Glide, Peke, ViewPager2, LiveData
-## Запуск
+## Установка
 Приложение адаптировано под большинство мобильных устройств с minSdk = 26 (Android 8.0)
+
+[<img src="https://github.com/user-attachments/assets/da5473b2-f392-4d9e-82c8-733809cc06ba"
+    alt="Get it on GitHub"
+    height="80">](https://github.com/skilanet/PlaylistMaker/releases/tag/v1.0.0)
