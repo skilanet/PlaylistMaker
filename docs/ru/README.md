@@ -6,11 +6,11 @@
 * Язык программирования: Kotlin
 * Архитектура: Clean Architecture, MVVM
 * Сетевые запросы: Retrofit
-* Асинхронное программировани: Kotlin Coroutines, Flow
+* Асинхронное программирование: Kotlin Coroutines, Flow
 * UI: XML
 * Навигация: Single Activity + Jetpack Navigation
 * DI: Koin
-* Хранение данных: SharedPreferencce, Room, Internal Storage
+* Хранение данных: SharedPreference, Room, Internal Storage
 * Другое: Glide, Peke, ViewPager2, LiveData
 ## Установка
 Приложение адаптировано под большинство мобильных устройств с minSdk = 26 (Android 8.0)
