@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" android:minSdkVersion="33" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" android:minSdkVersion="33" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" android:minSdkVersion="33" />
+
 
     <application
         android:name=".App"
@@ -19,19 +25,9 @@
             android:name=".media_player.ui.MediaPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".media_library.ui.MediaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".find.ui.FindActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".settings.ui.SettingsActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".main.ui.MainActivity"
-            android:exported="true">
+            android:name=".main.ui.RootActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

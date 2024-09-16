@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_find"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/background"
+    android:orientation="vertical"
+    tools:context=".find.ui.FindFragment">
+
+    <Toolbar
+        android:id="@+id/find_toolbar"
+        style="@style/toolbar"
+        android:title="@string/toolbar_find_title" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
+
+        <EditText
+            style="@style/find_text_style"
+            android:id="@+id/et_find_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/find_custom"
+            android:drawableStart="@drawable/fragment_find_search_icon"
+            android:drawablePadding="10dp"
+            android:hint="@string/hint_find"
+            android:textSize="16sp"
+            android:inputType="text"
+            android:fontFamily="@font/ys_display_regular"
+            android:padding="10dp"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_shape"
+            android:importantForAutofill="no" />
+
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="30dp"
+            android:background="@color/find_background"
+            android:src="@drawable/clear"
+            android:visibility="gone"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp">
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="140dp"
+            android:indeterminateTint="@color/yp_blue"
+            android:visibility="gone" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_nothing_not_found"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                style="@style/error_iv"
+                android:importantForAccessibility="no"
+                android:src="@drawable/error_image" />
+
+            <TextView
+                style="@style/error_tv"
+                android:text="@string/nothing_not_found" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_no_internet_connection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                style="@style/error_iv"
+                android:importantForAccessibility="no"
+                android:src="@drawable/no_internet_connection" />
+
+            <TextView
+                style="@style/error_tv"
+                android:text="@string/no_internet_connection_text"/>
+
+            <Button
+                android:id="@+id/btn_update"
+                style="@style/btn_update_clear"
+                android:text="@string/update" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_history_of_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/tv_history_title"
+                style="@style/history_of_search_title"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ys_display_medium"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="12dp"
+                android:text="@string/history_of_search"
+                android:layout_marginTop="24dp"
+                android:textSize="19sp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_history_of_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:visibility="visible"/>
+
+                    <Button
+                        android:id="@+id/btn_clear_search_history"
+                        style="@style/btn_update_clear"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/clear" />
+                </LinearLayout>
+
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_find_show_track"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+    </FrameLayout>
+
+
+</LinearLayout>

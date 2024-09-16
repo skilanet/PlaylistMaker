@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".playlist.ui.PlaylistFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E6E8EB">
+
+        <ImageView
+            android:id="@+id/iv_playlist_cover"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            app:layout_constraintDimensionRatio="w,1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/button_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/yp_black" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_16_start"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <TextView
+            android:id="@+id/tv_playlist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:textColor="@color/yp_black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/guideline_16_start"
+            app:layout_constraintTop_toBottomOf="@id/iv_playlist_cover"
+            tools:text="Best songs 2021" />
+
+        <TextView
+            android:id="@+id/tv_playlist_description"
+            style="@style/fragment_playlist_text"
+            app:layout_constraintStart_toEndOf="@id/guideline_16_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_playlist_name"
+            tools:text="2022" />
+
+        <TextView
+            android:id="@+id/tv_playlist_time"
+            style="@style/fragment_playlist_text"
+            app:layout_constraintStart_toEndOf="@id/guideline_16_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_playlist_description"
+            tools:text="300 минут" />
+
+        <ImageView
+            android:id="@+id/iv_dot"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/dot"
+            app:layout_constraintBottom_toBottomOf="@id/tv_playlist_time"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintStart_toEndOf="@id/tv_playlist_time"
+            app:layout_constraintTop_toTopOf="@id/tv_playlist_time"
+            app:tint="@color/yp_black" />
+
+        <TextView
+            android:id="@+id/tv_playlist_count_of_tracks"
+            style="@style/fragment_playlist_text"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_playlist_time"
+            app:layout_constraintStart_toEndOf="@id/iv_dot"
+            tools:text="98 треков" />
+
+        <ImageView
+            android:id="@+id/iv_share_playlist"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="19dp"
+            android:importantForAccessibility="no"
+            android:scaleType="center"
+            android:src="@drawable/share_16dp"
+            app:layout_constraintStart_toEndOf="@id/guideline_16_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_playlist_time"
+            app:tint="@color/yp_black" />
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="24dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:importantForAccessibility="no"
+            android:scaleType="center"
+            android:src="@drawable/more"
+            app:layout_constraintBottom_toBottomOf="@id/iv_share_playlist"
+            app:layout_constraintStart_toEndOf="@id/iv_share_playlist"
+            app:layout_constraintTop_toTopOf="@id/iv_share_playlist" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_sheet_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_background"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="visible">
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bottom_sheet_rectangle" />
+
+        <ImageView
+            android:id="@+id/iv_error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:src="@drawable/error_image"
+            app:layout_constraintTag="iv_error_image"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_playlist_not_contains_tracks"
+            style="@style/text_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:gravity="center"
+            android:text="@string/empty_playlist_tracks"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_playlist_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            tools:listitem="@layout/item_track" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bottom_sheet_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_background"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="visible">
+        <View
+            android:id="@+id/view"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bottom_sheet_rectangle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_playlist_cover_small"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="13dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/placeholder"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tv_playlist_name_small"
+            style="@style/text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/ys_display_regular"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintStart_toEndOf="@id/iv_playlist_cover_small"
+            app:layout_constraintTop_toTopOf="@id/iv_playlist_cover_small"
+            tools:text="Best songs 2021" />
+
+        <TextView
+            android:id="@+id/tv_playlist_count_of_tracks_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_playlist_cover_small"
+            app:layout_constraintStart_toStartOf="@id/tv_playlist_name_small"
+            app:layout_constraintTop_toBottomOf="@id/tv_playlist_name_small"
+            tools:text="98 треков" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_16_start_bottom_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_44_end_bottom_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="44dp" />
+
+        <TextView
+            android:id="@+id/tv_share"
+            style="@style/fragment_playlist_bottom_sheet_text"
+            android:layout_marginTop="36dp"
+            android:text="@string/share"
+            app:layout_constraintTop_toBottomOf="@id/tv_playlist_count_of_tracks_small"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_edit"
+            style="@style/fragment_playlist_bottom_sheet_text"
+            android:text="@string/edit_info"
+            app:layout_constraintTop_toBottomOf="@id/tv_share"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_delete"
+            style="@style/fragment_playlist_bottom_sheet_text"
+            android:text="@string/delete"
+            app:layout_constraintTop_toBottomOf="@id/tv_edit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints"
+            android:layout_marginBottom="128dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

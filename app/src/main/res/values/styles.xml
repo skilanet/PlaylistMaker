@@ -49,5 +49,25 @@
         <item name="android:layout_marginBottom">17dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+    
+    <style name="shapeable_imageview">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    
+    <style name="MyAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/yp_blue</item>
+        <item name="colorOnPrimary">@color/yp_blue</item>
+    </style>
+
+
+    <style name="fragment_playlist_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
 
 </resources>
